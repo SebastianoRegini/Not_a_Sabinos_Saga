@@ -22,6 +22,7 @@ public class Room {
     private Room east;
     private Room west;
     private ExternalInventory in_room;
+    private boolean accessible = false;
 
     //  CONSTRUCTORS
     public Room(){
