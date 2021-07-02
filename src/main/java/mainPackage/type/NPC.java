@@ -12,15 +12,13 @@ package mainPackage.type;
 public class NPC {
     
     //  ATTRIBUTES
-    private ExternalInventory inv;
+   
     
     //  CONSTRUCTORS
     public NPC() {
     }
 
-    public NPC(ExternalInventory inv) {
-        this.inv = inv;
-    }
+ 
     
     //  IN-GAME METHODS
     public void dialog(){

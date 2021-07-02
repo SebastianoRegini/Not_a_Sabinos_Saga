@@ -10,7 +10,7 @@ package mainPackage.type;
  * @author sebre
  */
 public class Room {
-    
+
     //  ATTRIBUTES
     private int id;
     private String name;
@@ -21,11 +21,10 @@ public class Room {
     private Room south;
     private Room east;
     private Room west;
-    private ExternalInventory in_room;
+   
     private boolean accessible = false;
 
     //  CONSTRUCTORS
-    public Room(){
-        
-    }
+    
+    
 }

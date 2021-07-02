@@ -9,14 +9,13 @@ package mainPackage.type;
  *
  * @author sebre
  */
-public class Inventory extends ExternalInventory{
+public class Inventory {
     
     //  ATTRIBUTES
     private int id = -1;
 
     //  CONSTRUCTOR
     public Inventory(int slots, GameObject[] list, int id) {
-        super(slots, list);
         this.id = id;
     }
 
