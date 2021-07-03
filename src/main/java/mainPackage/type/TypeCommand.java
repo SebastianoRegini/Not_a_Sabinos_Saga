@@ -5,17 +5,10 @@
  */
 package mainPackage.type;
 
-/**
- *
- * @author sebre
- */
-public class TypeCommand {
-
     /**
-     * @param args the command line arguments
+     *
+     * @author MS_C
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    public enum TypeCommand {
+        END, INVENTORY, NORD, SOUTH, EAST, WEST, OPEN, CLOSE, WALK_TO, PICK_UP, TALK_TO, GIVE, USE, LOOK_AT
     }
-    
-}

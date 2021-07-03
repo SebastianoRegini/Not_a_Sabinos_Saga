@@ -22,6 +22,11 @@ public class Inventory {
     public Inventory(int slots) {
         this.slots = slots;
     }
+    
+    //  UTILITY METHOD
+    private boolean isFull() {
+        return (containing.size() >= slots);
+    }
 
     //  GETTERS AND SETTERS
     public int getSlots() {
@@ -44,11 +49,7 @@ public class Inventory {
     public void expand(int otherSlots) {
         setSlots(this.slots + otherSlots);
     }
-
-    private boolean isFull() {
-        return (containing.size() >= slots);
-    }
-
+ 
     public void add(GameObject obj) {
         if (!this.isFull()) {
             containing.add(obj);

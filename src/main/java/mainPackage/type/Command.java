@@ -5,10 +5,82 @@
  */
 package mainPackage.type;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
 /**
  *
- * @author sebre
+ * @author MS_C
  */
 public class Command {
+    
+    //  ATTRIBUTES
+    private final TypeCommand type;
+    private final String name;
+    private Set<String> synonyms;
+
+    //  CONSTRUCTORS
+    public Command(TypeCommand type, String name) {
+        this.type = type;
+        this.name = name;
+    }
+
+    public Command(TypeCommand type, String name, Set<String> synonyms) {
+        this.type = type;
+        this.name = name;
+        this.synonyms = synonyms;
+    }
+
+    //  GETTERS
+    public TypeCommand getType() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Set<String> getSynonyms() {
+        return synonyms;
+    }
+
+    //  SETTERS
+    public void setSynonyms(Set<String> synonyms) {
+        this.synonyms = synonyms;
+    }
+    
+    public void setSynonyms(String[] synonyms) {
+        this.synonyms = new HashSet<>(Arrays.asList(synonyms));
+    }
+    
+    //  OVERRIDES
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + Objects.hashCode(this.type);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Command other = (Command) obj;
+        if (this.type != other.type) {
+            return false;
+        }
+        return true;
+    }
+
     
 }
