@@ -7,13 +7,14 @@ package mainPackage.type;
 
 /**
  *
- * @author sebre
+ * @author MS_C
  */
 public class GameObject {
     
     //  ATTRIBUTES
-    private boolean pickupable = false;
-    private boolean openable = false;
-    private boolean visible = true;
+    private final int id;
+    private String name;
+    private String description;
+    
     
 }
