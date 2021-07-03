@@ -5,31 +5,67 @@
  */
 package mainPackage.type;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
- * @author sebre
+ * @author MS_C
  */
 public class Inventory {
-    
+
     //  ATTRIBUTES
-    private int id = -1;
+    private int slots;
+    private List<GameObject> containing = new ArrayList<>();
 
     //  CONSTRUCTOR
-    public Inventory(int slots, GameObject[] list, int id) {
-        this.id = id;
+    public Inventory(int slots) {
+        this.slots = slots;
     }
 
     //  GETTERS AND SETTERS
-    public int getId() {
-        return id;
+    public int getSlots() {
+        return slots;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setSlots(int slots) {
+        this.slots = slots;
+    }
+
+    public List<GameObject> getContaining() {
+        return containing;
+    }
+
+    public void setContaining(List<GameObject> containing) {
+        this.containing = containing;
     }
 
     //  IN-GAME METHODS
-    public void add(GameObject obj) {
+    public void expand(int otherSlots) {
+        setSlots(this.slots + otherSlots);
+    }
 
+    private boolean isFull() {
+        return (containing.size() >= slots);
+    }
+
+    public void add(GameObject obj) {
+        if (!this.isFull()) {
+            containing.add(obj);
+        } else {
+            System.out.println("L'inventario è pieno!");
+        }
+    }
+
+    public void remove(GameObject obj) {
+        if (containing.isEmpty()) {
+            System.out.println("L'inventario è vuoto!");
+        } else {
+            if (containing.contains(obj)) {
+                containing.remove(obj);
+            } else {
+                System.out.println("L'elemento non è presente nell'inventario!");
+            }
+        }
     }
 }
