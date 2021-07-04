@@ -5,6 +5,8 @@
  */
 package mainPackage.type;
 
+import java.util.Set;
+
 /**
  *
  * @author MS_C
@@ -13,8 +15,16 @@ public class GameObject {
     
     //  ATTRIBUTES
     private final int id;
+    
     private String name;
+    
     private String description;
     
+    private String hint;
     
+    private Set<String> synonyms;
+    
+    private boolean pickupable;
+    
+    private boolean visible;
 }
