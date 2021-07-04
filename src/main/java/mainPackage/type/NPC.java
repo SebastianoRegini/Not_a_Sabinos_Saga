@@ -7,7 +7,7 @@ package mainPackage.type;
 
 /**
  *
- * @author sebre
+ * @author MS_C
  */
 public class NPC {
     

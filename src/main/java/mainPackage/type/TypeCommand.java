@@ -9,6 +9,7 @@ package mainPackage.type;
      *
      * @author MS_C
      */
+
     public enum TypeCommand {
-        END, INVENTORY, NORD, SOUTH, EAST, WEST, OPEN, CLOSE, WALK_TO, PICK_UP, TALK_TO, GIVE, USE, LOOK_AT
+        END, INVENTORY, NORD, SOUTH, EAST, WEST, OPEN, WALK_TO, PICK_UP, TALK_TO, DROP, USE, LOOK_AT, THINK_ABOUT
     }
