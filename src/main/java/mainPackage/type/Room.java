@@ -186,6 +186,14 @@ public class Room {
         setToggle_dose(D);
     }
     
+    public void add(GameObject o){
+        this.getObj().add(o);
+    }
+    
+     public void remove(GameObject o){
+        this.getObj().remove(o);
+    }
+    
     // OVERRIDE
 
     @Override
