@@ -18,28 +18,16 @@ public class Command {
     
     //  ATTRIBUTES
     private final TypeCommand type;
-    private final String name;
     private Set<String> synonyms;
 
     //  CONSTRUCTORS
-    public Command(TypeCommand type, String name) {
+    public Command(TypeCommand type) {
         this.type = type;
-        this.name = name;
-    }
-
-    public Command(TypeCommand type, String name, Set<String> synonyms) {
-        this.type = type;
-        this.name = name;
-        this.synonyms = synonyms;
     }
 
     //  GETTERS
     public TypeCommand getType() {
         return type;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Set<String> getSynonyms() {

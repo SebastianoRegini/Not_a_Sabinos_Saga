@@ -7,7 +7,7 @@ package mainPackage.parser;
 
 /**
  *
- * @author sebre
+ * @author MS_C
  */
 public class Parser {
     
