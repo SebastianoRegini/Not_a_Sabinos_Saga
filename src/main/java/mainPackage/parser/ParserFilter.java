@@ -7,6 +7,7 @@ package mainPackage.parser;
 
 import mainPackage.type.Command;
 import mainPackage.type.GameObject;
+import mainPackage.type.NPC;
 
 /**
  *
@@ -19,12 +20,15 @@ public class ParserFilter {
     private GameObject object;
     
     private GameObject inventory_obj;
+    
+    private NPC person;
 
     // CONSTRUCTOR
-    public ParserFilter(Command command, GameObject object, GameObject inventory_obj) {
+    public ParserFilter(Command command, GameObject object, GameObject inventory_obj, NPC person) {
         this.command = command;
         this.object = object;
         this.inventory_obj = inventory_obj;
+        this.person = person;
     }
     
     // SETTERS
@@ -40,6 +44,10 @@ public class ParserFilter {
         this.inventory_obj = inventory_obj;
     }
 
+    public void setPerson(NPC person) {
+        this.person = person;
+    }
+
     // GETTERS
     public Command getCommand() {
         return command;
@@ -52,6 +60,9 @@ public class ParserFilter {
     public GameObject getInventory_obj() {
         return inventory_obj;
     }
-    
+
+    public NPC getPerson() {
+        return person;
+    }
     
 }
