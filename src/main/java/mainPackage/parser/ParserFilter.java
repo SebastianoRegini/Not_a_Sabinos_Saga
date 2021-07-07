@@ -19,15 +19,15 @@ public class ParserFilter {
     
     private GameObject object;
     
-    private GameObject inventory_obj;
+    private GameObject inventoryObj;
     
     private NPC person;
 
     // CONSTRUCTOR
-    public ParserFilter(Command command, GameObject object, GameObject inventory_obj, NPC person) {
+    public ParserFilter(Command command, GameObject object, GameObject inventoryObj, NPC person) {
         this.command = command;
         this.object = object;
-        this.inventory_obj = inventory_obj;
+        this.inventoryObj = inventoryObj;
         this.person = person;
     }
     
@@ -40,8 +40,8 @@ public class ParserFilter {
         this.object = object;
     }
 
-    public void setInventory_obj(GameObject inventory_obj) {
-        this.inventory_obj = inventory_obj;
+    public void setInventoryObj(GameObject inventoryObj) {
+        this.inventoryObj = inventoryObj;
     }
 
     public void setPerson(NPC person) {
@@ -57,8 +57,8 @@ public class ParserFilter {
         return object;
     }
 
-    public GameObject getInventory_obj() {
-        return inventory_obj;
+    public GameObject getInventoryObj() {
+        return inventoryObj;
     }
 
     public NPC getPerson() {

@@ -41,9 +41,9 @@ public class Parser {
         return -1;
     }
 
-    private int whatNPC(String token, List<NPC> NPCs) {
-        for (int i = 0; i < NPCs.size(); i++) {
-            if (NPCs.get(i).getName().equalsIgnoreCase(token) || NPCs.get(i).getSynonyms().contains(token)) {
+    private int whatNPC(String token, List<NPC> npcs) {
+        for (int i = 0; i < npcs.size(); i++) {
+            if (npcs.get(i).getName().equalsIgnoreCase(token) || npcs.get(i).getSynonyms().contains(token)) {
                 return i;
             }
         }
@@ -51,22 +51,72 @@ public class Parser {
     }
 
     //  Parse
-    public ParserFilter parse(String player_comm, List<Command> commands, List<GameObject> ext_obj, List<NPC> NPCs, List<GameObject> inventory) {
-        List<String> filteredWords = UWManager.removeWords(player_comm, uselessWords);
+    public ParserFilter parse(String playerComm, List<Command> commands, List<GameObject> extObj, List<NPC> npcs, List<GameObject> inventory) {
+        List<String> filteredWords = UWManager.removeWords(playerComm, uselessWords);
 
         if (!filteredWords.isEmpty()) {
-            return null;
-            
+            int commandIndex = whatCommand(filteredWords.get(0), commands);
+            if (commandIndex > -1) {
+                if (filteredWords.size() > 1) {
+                    //Istanziazione variabili indice
+                    int objectIndex;
+                    int npcIndex;
+                    int inventoryIndex;
+
+                    //Controllo Oggetto
+                    objectIndex = whatObject(filteredWords.get(1), extObj);
+                    if (objectIndex > -1) {
+                        return new ParserFilter(commands.get(commandIndex), extObj.get(objectIndex), null, null);
+                    }
+
+                    //Controllo NPC
+                    npcIndex = whatNPC(filteredWords.get(1), npcs);
+                    if (npcIndex > -1) {
+                        if (filteredWords.size() > 2) {
+                            //Controllo NPC+OggettoInventario
+                            inventoryIndex = whatObject(filteredWords.get(2), inventory);
+                            if (inventoryIndex > -1) {
+                                return new ParserFilter(commands.get(commandIndex), null, inventory.get(inventoryIndex), npcs.get(npcIndex));
+                            } else {
+                                return new ParserFilter(commands.get(commandIndex), null, null, npcs.get(npcIndex));
+                            }
+                        } else {
+                            return new ParserFilter(commands.get(commandIndex), null, null, npcs.get(npcIndex));
+                        }
+                    }
+
+                    //Controllo OggettoInventario
+                    inventoryIndex = whatObject(filteredWords.get(1), inventory);
+                    if (inventoryIndex>-1){
+                        if (filteredWords.size() > 2){
+                            //Controllo OggettoInventario+Oggetto
+                            //Controllo OggettoInventario+NPC
+                        } else {
+                            return new ParserFilter(commands.get(commandIndex), null,inventory.get(inventoryIndex),null);
+                        }
+                    }
+                    
+                    //Ritorno nel caso in cui non ricopra nessuna delle categorie
+                    return new ParserFilter(commands.get(commandIndex), null, null, null);
+                    
+                } else {
+                    return new ParserFilter(commands.get(commandIndex), null, null, null);
+                }
+            } else {
+                return new ParserFilter(null, null, null, null);
+            }
         } else {
-            return null;
+            return new ParserFilter(null, null, null, null);
         }
     }
 }
 
-//  GESTIAMO I SEGUENTI COMANDI
-/*
+/*  GESTIAMO I SEGUENTI COMANDI
+     <comando>
+     <comando> <NPC>
+     <comando> <NPC> <oggettoInventario>
      <comando> <oggetto>
      <comando> <oggettoInventario>
-     <comando> <oggettoInentario> <NPC>
+     <comando> <oggettoInventario> <NPC>
      <comando> <oggettoInventario> <oggetto>
-*/
+ */
