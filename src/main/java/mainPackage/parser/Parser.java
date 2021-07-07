@@ -19,7 +19,12 @@ import mainPackage.type.NPC;
 public class Parser {
 
     //  ATTRIBUTES
-    private Set<String> uselessWords;
+    private final Set<String> uselessWords;
+
+    //  CONSTRUCTOR
+    public Parser(Set<String> uselessWords) {
+        this.uselessWords = uselessWords;
+    }
 
     //  METHODS
     //  Recognize things
@@ -73,6 +78,7 @@ public class Parser {
                     npcIndex = whatNPC(filteredWords.get(1), npcs);
                     if (npcIndex > -1) {
                         if (filteredWords.size() > 2) {
+
                             //Controllo NPC+OggettoInventario
                             inventoryIndex = whatObject(filteredWords.get(2), inventory);
                             if (inventoryIndex > -1) {
@@ -87,18 +93,30 @@ public class Parser {
 
                     //Controllo OggettoInventario
                     inventoryIndex = whatObject(filteredWords.get(1), inventory);
-                    if (inventoryIndex>-1){
-                        if (filteredWords.size() > 2){
+                    if (inventoryIndex > -1) {
+                        if (filteredWords.size() > 2) {
+
                             //Controllo OggettoInventario+Oggetto
-                            //Controllo OggettoInventario+NPC
+                            objectIndex = whatObject(filteredWords.get(2), extObj);
+                            if (objectIndex > -1) {
+                                return new ParserFilter(commands.get(commandIndex), extObj.get(objectIndex), inventory.get(inventoryIndex), null);
+
+                            } else if ((npcIndex = whatNPC(filteredWords.get(2), npcs)) > -1) {
+
+                                //Controllo OggettoInventario+NPC
+                                return new ParserFilter(commands.get(commandIndex), null, inventory.get(inventoryIndex), npcs.get(npcIndex));
+
+                            } else {
+                                return new ParserFilter(commands.get(commandIndex), null, inventory.get(inventoryIndex), null);
+                            }
                         } else {
-                            return new ParserFilter(commands.get(commandIndex), null,inventory.get(inventoryIndex),null);
+                            return new ParserFilter(commands.get(commandIndex), null, inventory.get(inventoryIndex), null);
                         }
                     }
-                    
+
                     //Ritorno nel caso in cui non ricopra nessuna delle categorie
                     return new ParserFilter(commands.get(commandIndex), null, null, null);
-                    
+
                 } else {
                     return new ParserFilter(commands.get(commandIndex), null, null, null);
                 }
