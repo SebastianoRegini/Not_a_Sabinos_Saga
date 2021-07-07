@@ -11,5 +11,6 @@ package mainPackage.type;
      */
 
     public enum TypeCommand {
-        END, INVENTORY, NORD, SOUTH, EAST, WEST, OPEN, WALK_TO, PICK_UP, TALK_TO, DROP, USE, LOOK_AT, THINK_ABOUT
+        END, INVENTORY, NORD, SOUTH, EAST, WEST, OPEN, WALK_TO, PICK_UP, TALK_TO, DROP, USE, LOOK_AT, THINK_ABOUT,
+        SAVE, LOAD
     }
