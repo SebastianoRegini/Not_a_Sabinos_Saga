@@ -12,7 +12,6 @@ import java.util.List;
  *
  * @author MS_C
  */
-
 public class Room {
 
     //  ATTRIBUTES
@@ -39,13 +38,12 @@ public class Room {
     private boolean west_lock = false;
 
     private Room toggle_dose = null; //Nella Room normale, sarà la stanza alternativa, nella Dose Room sarà la stanza normale
-    
+
     private boolean visited = false;
 
     private final List<GameObject> obj = new ArrayList<>();
 
     //  CONSTRUCTORS
-
     public Room(int id, String name, String prefix, String suffix, String description_look) {
         this.id = id;
         this.name = name;
@@ -53,9 +51,8 @@ public class Room {
         this.suffix = suffix;
         this.description_look = description_look;
     }
-    
-    // SETTERS
 
+    // SETTERS
     public void setNorth(Room north) {
         this.north = north;
     }
@@ -95,9 +92,8 @@ public class Room {
     public void setVisited(boolean visited) {
         this.visited = visited;
     }
-    
-    // GETTERS
 
+    // GETTERS
     public int getId() {
         return id;
     }
@@ -161,41 +157,47 @@ public class Room {
     public List<GameObject> getObj() {
         return obj;
     }
-    
-    
+
     // OURS METHODS
-    
-    public void constructBoundary(Room N, Room S, Room E, Room W, Room D, boolean n, boolean s, boolean e, boolean w){
+    public void constructBoundary(Room N, Room S, Room E, Room W, Room D, boolean n, boolean s, boolean e, boolean w) {
         //Limiti nord
         setNorth(N);
         setNorth_lock(n);
-        
+
         //Limiti sud
         setSouth(S);
         setSouth_lock(s);
-        
+
         //Limiti est
         setEast(E);
         setEast_lock(e);
-        
+
         //Limiti ovest
         setWest(W);
         setWest_lock(w);
-        
+
         //Limite alternativo
         setToggle_dose(D);
     }
-    
-    public void add(GameObject o){
+
+    public void add(GameObject o) {
         this.getObj().add(o);
     }
-    
-     public void remove(GameObject o){
+
+    public void remove(GameObject o) {
         this.getObj().remove(o);
     }
-    
-    // OVERRIDE
 
+    public void printRoom() {
+        if (visited) {
+            System.out.println("Sei in " + getName() + ".");
+        } else {
+            System.out.println(getPrefix() + ". Sei in " + getName() + ". " + getSuffix());
+            setVisited(true);   //  TODO possiamo cambiare -><-
+        }
+    }
+
+    // OVERRIDED METHODS
     @Override
     public int hashCode() {
         int hash = 3;
@@ -220,5 +222,5 @@ public class Room {
         }
         return true;
     }
-    
+
 }
