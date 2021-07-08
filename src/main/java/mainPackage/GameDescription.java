@@ -6,14 +6,11 @@
 package mainPackage;
 
 import java.io.PrintStream;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import mainPackage.parser.ParserFilter;
 import mainPackage.type.Command;
-import mainPackage.type.GameObject;
 import mainPackage.type.Inventory;
-import mainPackage.type.NPC;
 import mainPackage.type.Room;
 
 /**
@@ -27,9 +24,9 @@ public abstract class GameDescription {
     //  perché verranno piazzati tutti nelle stanze o negli
     //  oggetti contenitori
     
-    private List<Room> rooms = new ArrayList<>();
+    private final List<Room> rooms = new ArrayList<>();
 
-    private List<Command> commands = new ArrayList<>();
+    private final List<Command> commands = new ArrayList<>();
 
     private Inventory inventory;
 

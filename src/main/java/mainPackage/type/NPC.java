@@ -15,7 +15,6 @@ import java.util.Set;
  *
  * @author MS_C
  */
-//TODO: Mappa dialoghi e relativi metodi
 public class NPC {
 
     //  ATTRIBUTES
@@ -60,8 +59,12 @@ public class NPC {
     }
     
     //  OTHER METHODS
-    public void put(Integer index, String dialogue){
-        interactions.put(index, dialogue);
+    public void putInteraction(Integer index, String dialogue){
+        getInteractions().put(index, dialogue);
+    }
+    
+    public String getInteraction(Integer index){
+        return getInteractions().get(index);
     }
     
 }
