@@ -4,21 +4,24 @@
  * and open the template in the editor.
  */
 
- /*TODO: Boolean per la divisa; Inventario dose; Metodi per caricamento da DB, con relative SQLException
- */
-//TODO: COMANDO OPEN MODIFICATO
-/* Nel momento in cui il personaggio esegue il comando OPEN, si entra in un ciclo while
-       dal quale è possibile uscire solo con il comando CLOSE.
-       All'interno è possibile eseguire i comandi PICK_UP, LOOK_UP e HINT un numero indefinito
-       di volte. */
+ /*
+TODO: Boolean per la divisa;
+TODO: Inventario dose;
+TODO: Metodi per caricamento da DB, con relative SQLException;
+TODO: Comando OPEN modificato;
+       [ Nel momento in cui il personaggio esegue il comando OPEN, si entra in un ciclo while
+         dal quale è possibile uscire solo con il comando CLOSE.
+         All'interno è possibile eseguire i comandi PICK_UP, LOOK_UP e HINT un numero indefinito
+         di volte. ]
+TODO: Inserire tramite END o QUIT la chiusura del gioco tra i comandi, usando exit(0);
+TODO: Richiamare il costruttore di Inventory per inizializzare gli slots;
+*/
 package mainPackage.game;
 
+import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
 import mainPackage.parser.ParserFilter;
 import mainPackage.GameDescription;
-import mainPackage.type.NPC;
 
 /*
  *
@@ -26,10 +29,7 @@ import mainPackage.type.NPC;
  * @author MS_C
  */
 public class NASS extends GameDescription {
-    
-    //  METHODS
-    
-    
+
     //  OVERRIDED METHODS
     @Override
     public void init() {
@@ -40,9 +40,9 @@ public class NASS extends GameDescription {
     public void nextMove(ParserFilter funnel, PrintStream out) {
 
     }
-    
+
     @Override
-    public void printStart(){
+    public void printStart() {
         //  TODO sistemare la formattazione
         System.out.println(""
                 + "==============================================================\n"
@@ -70,21 +70,29 @@ public class NASS extends GameDescription {
                 + "    quello che sembra! Vabbè tranquillo, tanto ora Sabino   \n"
                 + "    ti spiega tutto, ciao ciao...                           \n"
                 + "    Ah, dimenticavo, hai solo x minuti per evadere! Siiii,  \n"
-                + "    lo so, prima avevo parlato di 'ore', ma che vuoi da me:  \n"
-                + "    gli sviluppatori di sto gioco sono dei cani e non lo hanno \n"
-                + "    fatto durare nemmeno il tempo di una pennichella..."
+                + "    lo so, prima avevo parlato di 'ore', ma che vuoi da me: \n"
+                + "    gli sviluppatori di sto gioco sono dei cani e non lo    \n"
+                + "    hanno fatto durare nemmeno il tempo di una              \n"
+                + "    pennichella...                                           \n"
                 + "==============================================================\n");
+        System.out.println("[ Premi INVIO per continuare ]");
+
+        try {
+            System.in.read();
+        } catch (IOException ex) {
+            System.err.println("Errore nella lettura dell'invio. " + ex.getMessage());
+        }
     }
-    
+
     @Override
     public boolean save() {
-        
+
         return true;    //  MODIFICAREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
     }
 
     @Override
     public GameDescription load() {
-        
+
         return null;    //  MODIFICAREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
     }
 }

@@ -42,6 +42,8 @@ public class Room {
     private boolean visited = false;
 
     private final List<GameObject> obj = new ArrayList<>();
+    
+    private List<NPC> npcs = new ArrayList<>();
 
     //  CONSTRUCTORS
     public Room(int id, String name, String prefix, String suffix, String description_look) {
@@ -158,6 +160,10 @@ public class Room {
         return obj;
     }
 
+    public List<NPC> getNpcs() {
+        return npcs;
+    }
+
     // OURS METHODS
     public void constructBoundary(Room N, Room S, Room E, Room W, Room D, boolean n, boolean s, boolean e, boolean w) {
         //Limiti nord
@@ -180,12 +186,20 @@ public class Room {
         setToggle_dose(D);
     }
 
-    public void add(GameObject o) {
+    public void addO(GameObject o) {
         this.getObj().add(o);
     }
 
-    public void remove(GameObject o) {
+    public void removeO(GameObject o) {
         this.getObj().remove(o);
+    }
+    
+    public void addN(NPC c) {
+        this.getNpcs().add(c);
+    }
+
+    public void removeN(NPC c) {
+        this.getNpcs().remove(c);
     }
 
     public void printRoom() {
