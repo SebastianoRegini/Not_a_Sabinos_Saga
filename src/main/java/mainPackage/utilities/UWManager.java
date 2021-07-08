@@ -1,9 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package mainPackage.parser;
+ * NOT A SABINO'S SAGA - MS_C ©2021
+ * This is surely not a Sabino's Saga. Anyway, Sabino is still here...
+*/
+
+package mainPackage.utilities;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,7 +23,7 @@ public class UWManager {
 
     public static Set<String> loadWords(File fW) {
 
-        //  Nuovo insieme per inserire le parole da 
+        //  Nuovo insieme per inserire le parole da non considerare
         Set<String> setWords = new HashSet<>();
 
         try {
@@ -43,12 +43,12 @@ public class UWManager {
         return setWords;
     }
 
-    public static List<String> removeWords(String player_comm, Set<String> uselessWords) {
+    public static List<String> removeWords(String playerComm, Set<String> uselessWords) {
         List<String> usefulWords = new ArrayList<>();
         
-        String[] single_words = player_comm.trim().toLowerCase().split("\\W+");
+        String[] singleWords = playerComm.trim().toLowerCase().split("\\W+");
         
-        for(String temp : single_words){
+        for(String temp : singleWords){
             if(!uselessWords.contains(temp)){
                 usefulWords.add(temp);
             }
