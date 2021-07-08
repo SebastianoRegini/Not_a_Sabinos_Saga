@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * NOT A SABINO'S SAGA - MS_C ©2021
+ * This is surely not a Sabino's Saga. Anyway, Sabino is still here...
  */
 package mainPackage.type;
 
@@ -23,35 +22,35 @@ public class Room {
 
     private final String suffix;
 
-    private final String description_look;
+    private final String descriptionLook;
 
     private Room north = null;
-    private boolean north_lock = false;
+    private boolean northLock = false;
 
     private Room south = null;
-    private boolean south_lock = false;
+    private boolean southLock = false;
 
     private Room east = null;
-    private boolean east_lock = false;
+    private boolean eastLock = false;
 
     private Room west = null;
-    private boolean west_lock = false;
+    private boolean westLock = false;
 
-    private Room toggle_dose = null; //Nella Room normale, sarà la stanza alternativa, nella Dose Room sarà la stanza normale
+    private Room toggleDose = null; //Nella Room normale, sarà la stanza alternativa, nella Dose Room sarà la stanza normale
 
     private boolean visited = false;
 
     private final List<GameObject> obj = new ArrayList<>();
-    
+
     private List<NPC> npcs = new ArrayList<>(); //Rappresenta gli NPC delle stanze adiacenti a this
 
     //  CONSTRUCTORS
-    public Room(int id, String name, String prefix, String suffix, String description_look) {
+    public Room(int id, String name, String prefix, String suffix, String descriptionLook) {
         this.id = id;
         this.name = name;
         this.prefix = prefix;
         this.suffix = suffix;
-        this.description_look = description_look;
+        this.descriptionLook = descriptionLook;
     }
 
     // SETTERS
@@ -71,24 +70,24 @@ public class Room {
         this.west = west;
     }
 
-    public void setNorth_lock(boolean north_lock) {
-        this.north_lock = north_lock;
+    public void setNorthLock(boolean northLock) {
+        this.northLock = northLock;
     }
 
-    public void setSouth_lock(boolean south_lock) {
-        this.south_lock = south_lock;
+    public void setSouthLock(boolean southLock) {
+        this.southLock = southLock;
     }
 
-    public void setEast_lock(boolean east_lock) {
-        this.east_lock = east_lock;
+    public void setEastLock(boolean eastLock) {
+        this.eastLock = eastLock;
     }
 
-    public void setWest_lock(boolean west_lock) {
-        this.west_lock = west_lock;
+    public void setWestLock(boolean westLock) {
+        this.westLock = westLock;
     }
 
-    public void setToggle_dose(Room toggle_dose) {
-        this.toggle_dose = toggle_dose;
+    public void setToggleDose(Room toggleDose) {
+        this.toggleDose = toggleDose;
     }
 
     public void setVisited(boolean visited) {
@@ -112,44 +111,44 @@ public class Room {
         return suffix;
     }
 
-    public String getDescription_look() {
-        return description_look;
+    public String getDescriptionLook() {
+        return descriptionLook;
     }
 
     public Room getNorth() {
         return north;
     }
 
-    public boolean isNorth_lock() {
-        return north_lock;
+    public boolean isNorthLock() {
+        return northLock;
     }
 
     public Room getSouth() {
         return south;
     }
 
-    public boolean isSouth_lock() {
-        return south_lock;
+    public boolean isSouthLock() {
+        return southLock;
     }
 
     public Room getEast() {
         return east;
     }
 
-    public boolean isEast_lock() {
-        return east_lock;
+    public boolean isEastLock() {
+        return eastLock;
     }
 
     public Room getWest() {
         return west;
     }
 
-    public boolean isWest_lock() {
-        return west_lock;
+    public boolean isWestLock() {
+        return westLock;
     }
 
-    public Room getToggle_dose() {
-        return toggle_dose;
+    public Room getToggleDose() {
+        return toggleDose;
     }
 
     public boolean isVisited() {
@@ -168,22 +167,31 @@ public class Room {
     public void constructBoundary(Room N, Room S, Room E, Room W, Room D, boolean n, boolean s, boolean e, boolean w) {
         //Limiti nord
         setNorth(N);
-        setNorth_lock(n);
+        setNorthLock(n);
 
         //Limiti sud
         setSouth(S);
-        setSouth_lock(s);
+        setSouthLock(s);
 
         //Limiti est
         setEast(E);
-        setEast_lock(e);
+        setEastLock(e);
 
         //Limiti ovest
         setWest(W);
-        setWest_lock(w);
+        setWestLock(w);
 
         //Limite alternativo
-        setToggle_dose(D);
+        setToggleDose(D);
+    }
+
+    public void printRoom() {
+        if (visited) {
+            System.out.println("Sei in " + getName() + ".");
+        } else {
+            System.out.println(getPrefix() + ". Sei in " + getName() + ". " + getSuffix());
+            setVisited(true);
+        }
     }
 
     public void addO(GameObject o) {
@@ -193,22 +201,13 @@ public class Room {
     public void removeO(GameObject o) {
         this.getObj().remove(o);
     }
-    
+
     public void addN(NPC c) {
         this.getNpcs().add(c);
     }
 
     public void removeN(NPC c) {
         this.getNpcs().remove(c);
-    }
-
-    public void printRoom() {
-        if (visited) {
-            System.out.println("Sei in " + getName() + ".");
-        } else {
-            System.out.println(getPrefix() + ". Sei in " + getName() + ". " + getSuffix());
-            setVisited(true);   //  TODO possiamo cambiare -><-
-        }
     }
 
     // OVERRIDED METHODS

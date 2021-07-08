@@ -1,8 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+ * NOT A SABINO'S SAGA - MS_C ©2021
+ * This is surely not a Sabino's Saga. Anyway, Sabino is still here...
+*/
+
 package mainPackage.type;
 
 /*
@@ -49,15 +49,15 @@ public class ContainerObject extends GameObject {
     }
 
     //  OURS METHODS
-    public void add(GameObject o) {
+    public void addO(GameObject o) {
         this.getContained().add(o);
     }
 
-    public void remove(GameObject o) {
+    public void removeO(GameObject o) {
         this.getContained().remove(o);
     }
 
-    public boolean contains(GameObject o) {
+    public boolean containsO(GameObject o) {
         return getContained().contains(o);
     }
 }

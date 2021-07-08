@@ -1,12 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package mainPackage.type;
+ * NOT A SABINO'S SAGA - MS_C ©2021
+ * This is surely not a Sabino's Saga. Anyway, Sabino is still here...
+*/
 
-import java.util.LinkedList;
-import java.util.Queue;
+package mainPackage.type;
 
 /**
  *
@@ -15,50 +12,48 @@ import java.util.Queue;
 public class DoseGun {
 
     //  ATTRIBUTES
+    private final int magazine;
     private int ammo;
-    private Queue<GameObject> load = new LinkedList<>();
 
     //  CONSTRUCTOR
-    public DoseGun(int ammo) {
+    public DoseGun(int magazine, int ammo) {
+        this.magazine = magazine;
         this.ammo = ammo;
     }
 
-    //  UTILITY METHOD
-    private boolean isFull() {
-        return (load.size() >= ammo);
+    // GETTERS
+    public int getMagazine() {
+        return magazine;
     }
 
-    //  GETTERS AND SETTERS
     public int getAmmo() {
         return ammo;
     }
 
-    public void setAmmo(int ammo) {
-        this.ammo = ammo;
+    // OTHER METHODS
+    public boolean isFull() {
+        return !(getAmmo() < getMagazine());
     }
 
-    public Queue<GameObject> getLoad() {
-        return load;
+    public boolean isEmpty() {
+        return !(getAmmo() > 0);
     }
 
-    public void setLoad(Queue<GameObject> load) {
-        this.load = load;
-    }
-
-    //  IN-GAME METHODS
-    public void add(GameObject obj) {
-        if (!this.isFull()) {
-            load.add(obj);
+    public boolean addAmmo() {
+        if (isFull()) {
+            return false;
         } else {
-            System.out.println("La pistola è piena!");
+            ++ammo;
+            return true;
         }
     }
 
-    public void remove(GameObject obj) {
-        if (load.isEmpty()) {
-            System.out.println("La pistola è scarica!");
+    public boolean shootAmmo() {
+        if (isEmpty()) {
+            return false;
         } else {
-            load.remove(obj);
+            --ammo;
+            return true;
         }
     }
 }
