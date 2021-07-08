@@ -6,10 +6,11 @@
 package mainPackage;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Scanner;
 import java.util.Set;
+import mainPackage.game.NASS;
 import mainPackage.parser.Parser;
+import mainPackage.parser.ParserFilter;
 import mainPackage.parser.UWManager;
 
 /**
@@ -39,7 +40,7 @@ public class Starter {
         //  GAME INTRO
         game.printStart();
         
-        //  SABINO DIALOGUE
+        //  TODO: SABINO DIALOGUE
         
         //  STARTING ROOM
         game.getInRoom().printRoom();
@@ -48,13 +49,15 @@ public class Starter {
         Scanner in = new Scanner(System.in);
         do{
           String newCommand = in.nextLine();
-          
-          
+          ParserFilter filter = parser.parse(newCommand, game.getCommands(), game.getInRoom().getObj(), game.getInRoom().getNpcs(), game.getInventory().getContaining());
+          game.nextMove(filter, System.out);
+          System.out.println();
         }while(in.hasNextLine());
     }
 
     public static void main(String[] args) {
-
+        Starter starter = new Starter(new NASS());
+        starter.start();
     }
 
 }

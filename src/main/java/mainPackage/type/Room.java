@@ -43,7 +43,7 @@ public class Room {
 
     private final List<GameObject> obj = new ArrayList<>();
     
-    private List<NPC> npcs = new ArrayList<>();
+    private List<NPC> npcs = new ArrayList<>(); //Rappresenta gli NPC delle stanze adiacenti a this
 
     //  CONSTRUCTORS
     public Room(int id, String name, String prefix, String suffix, String description_look) {
