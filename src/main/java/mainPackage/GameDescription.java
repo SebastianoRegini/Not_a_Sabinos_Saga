@@ -31,8 +31,6 @@ public abstract class GameDescription {
 
     private List<Command> commands = new ArrayList<>();
 
-    private List<NPC> npcs = new ArrayList<>();
-
     private Inventory inventory;
 
     private Room inRoom;
@@ -49,10 +47,6 @@ public abstract class GameDescription {
 
     public List<Command> getCommands() {
         return commands;
-    }
-
-    public List<NPC> getNpcs() {
-        return npcs;
     }
 
     public Inventory getInventory() {

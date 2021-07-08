@@ -7,6 +7,7 @@ package mainPackage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.Set;
 import mainPackage.parser.Parser;
 import mainPackage.parser.UWManager;
@@ -43,6 +44,13 @@ public class Starter {
         //  STARTING ROOM
         game.getInRoom().printRoom();
         
+        //  MANAGING STARTING GAME
+        Scanner in = new Scanner(System.in);
+        do{
+          String newCommand = in.nextLine();
+          
+          
+        }while(in.hasNextLine());
     }
 
     public static void main(String[] args) {

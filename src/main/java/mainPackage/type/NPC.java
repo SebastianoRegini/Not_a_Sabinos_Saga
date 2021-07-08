@@ -6,7 +6,9 @@
 package mainPackage.type;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -19,19 +21,16 @@ public class NPC {
     //  ATTRIBUTES
     private final int id;
 
-    private String name;
-
-    private boolean prisoner;
+    private final String name;
 
     private Set<String> synonyms;
-
-    private Room in_room = null; //Stanza in cui si trova l'NPC
+    
+    private final Map<Integer, String> interactions = new HashMap<>();
 
     //  CONSTRUCTORS
     public NPC(int id, String name, boolean prisoner) {
         this.id = id;
         this.name = name;
-        this.prisoner = prisoner;
     }
 
     //  SETTERS
@@ -43,10 +42,6 @@ public class NPC {
         this.synonyms = new HashSet<>(Arrays.asList(synonyms));
     }
 
-    public void setIn_room(Room in_room) {
-        this.in_room = in_room;
-    }
-
     //  GETTERS
     public int getId() {
         return id;
@@ -56,16 +51,17 @@ public class NPC {
         return name;
     }
 
-    public boolean isPrisoner() {
-        return prisoner;
-    }
-
     public Set<String> getSynonyms() {
         return synonyms;
     }
-
-    public Room getIn_room() {
-        return in_room;
+    
+    public Map<Integer, String> getInteractions() {
+        return interactions;
     }
-
+    
+    //  OTHER METHODS
+    public void put(Integer index, String dialogue){
+        interactions.put(index, dialogue);
+    }
+    
 }
