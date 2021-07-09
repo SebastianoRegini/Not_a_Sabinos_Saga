@@ -14,6 +14,7 @@ TODO: Comando OPEN modificato;
          di volte. ]
 TODO: Inserire tramite END o QUIT la chiusura del gioco tra i comandi, usando exit(0);
 TODO: Richiamare il costruttore di Inventory per inizializzare gli slots;
+TODO: Per comando OPEN, usare condizione con istanceof per capire se è un ContainerObject
 */
 package mainPackage.game;
 
@@ -32,7 +33,7 @@ public class NASS extends GameDescription {
     //  OVERRIDED METHODS
     @Override
     public void init() {
-
+       
     }
 
     @Override
