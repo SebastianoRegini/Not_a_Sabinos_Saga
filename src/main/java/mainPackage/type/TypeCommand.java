@@ -20,13 +20,15 @@ public enum TypeCommand {
     PICK_UP(8),
     DROP(9),
     USE(10),
-    LOOK(11),
-    INTERACT(12),
-    THINK_ABOUT(13),
-    SAVE(14),
-    LOAD(15),
-    END(16),
-    DOSE(17); //Comando esclusivo per la dose e la pistola per dosi
+    GIVE(11),
+    LOOK(12),
+    INTERACT(13),
+    THINK_ABOUT(14),
+    DOSE(15), //Comando esclusivo per la dose e la pistola per dosi
+    SAVE(16),
+    LOAD(17),
+    END(18);
+     
 
     private final int code;
 
