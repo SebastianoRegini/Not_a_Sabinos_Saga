@@ -53,7 +53,7 @@ public class Room {
         this.descriptionLook = descriptionLook;
     }
 
-    // SETTERS
+    //  SETTERS
     public void setNorth(Room north) {
         this.north = north;
     }
@@ -94,7 +94,7 @@ public class Room {
         this.visited = visited;
     }
 
-    // GETTERS
+    //  GETTERS
     public int getId() {
         return id;
     }
@@ -163,51 +163,34 @@ public class Room {
         return npcs;
     }
 
-    // OURS METHODS
-    public void constructBoundary(Room N, Room S, Room E, Room W, Room D, boolean n, boolean s, boolean e, boolean w) {
-        //Limiti nord
-        setNorth(N);
-        setNorthLock(n);
-
-        //Limiti sud
-        setSouth(S);
-        setSouthLock(s);
-
-        //Limiti est
-        setEast(E);
-        setEastLock(e);
-
-        //Limiti ovest
-        setWest(W);
-        setWestLock(w);
-
-        //Limite alternativo
-        setToggleDose(D);
-    }
+    //  OTHER METHODS
 
     public void printRoom() {
-        if (visited) {
-            System.out.println("Sei in " + getName() + ".");
+        if (isVisited()) {
+            System.out.println("Sei in " + getName().toUpperCase() + ".");
+            System.out.println(getSuffix());
         } else {
-            System.out.println(getPrefix() + ". Sei in " + getName() + ". " + getSuffix());
+            System.out.println(getPrefix());
+            System.out.println("Sei in " + getName().toUpperCase() + ".");
+            System.out.println(getSuffix());
             setVisited(true);
         }
     }
 
-    public void addO(GameObject o) {
+    public void addObj(GameObject o) {
         this.getObj().add(o);
     }
 
-    public void removeO(GameObject o) {
+    public void removeObj(GameObject o) {
         this.getObj().remove(o);
     }
 
-    public void addN(NPC c) {
-        this.getNpcs().add(c);
+    public void placeNpc(NPC n) {
+        this.getNpcs().add(n);
     }
 
-    public void removeN(NPC c) {
-        this.getNpcs().remove(c);
+    public void moveNpc(NPC n) {
+        this.getNpcs().remove(n);
     }
 
     // OVERRIDED METHODS

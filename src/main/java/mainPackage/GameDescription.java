@@ -6,6 +6,7 @@
 package mainPackage;
 
 import java.io.PrintStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import mainPackage.parser.ParserFilter;
@@ -55,7 +56,7 @@ public abstract class GameDescription {
     }
 
     //  ABSTRACT METHODS
-    public abstract void init();
+    public abstract void init() throws SQLException;
 
     public abstract void nextMove(ParserFilter funnel, PrintStream out);
 
