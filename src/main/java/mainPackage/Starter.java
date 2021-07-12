@@ -1,11 +1,11 @@
 /*
  * NOT A SABINO'S SAGA - MS_C ©2021
  * This is surely not a Sabino's Saga. Anyway, Sabino is still here...
-*/
-
+ */
 package mainPackage;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.Set;
 import mainPackage.game.NASS;
@@ -27,32 +27,34 @@ public class Starter {
 
         //  Game initialization
         this.game = game;
-        //  TODO gestire l'errore (probabilmente SQLEXCEPTION)
-        this.game.init();
+        try {
+            this.game.init();
+        } catch (SQLException sql) {
+            System.err.println("Init SQL Error: " + sql.getMessage());
+        }
 
         //  Parser initialization
-            Set<String> uselessWords = UWManager.loadWords(new File("./resources/UselessWords.dat"));
-            parser = new Parser(uselessWords);
+        Set<String> uselessWords = UWManager.loadWords(new File("./resources/UselessWords.dat"));
+        parser = new Parser(uselessWords);
     }
-    
-    public void start(){
-        
+
+    public void start() {
+
         //  GAME INTRO
         game.printStart();
-        
+
         //  TODO: SABINO DIALOGUE
-        
         //  STARTING ROOM
         game.getInRoom().printRoom();
-        
+
         //  MANAGING STARTING GAME
         Scanner in = new Scanner(System.in);
-        do{
-          String newCommand = in.nextLine();
-          ParserFilter filter = parser.parse(newCommand, game.getCommands(), game.getInRoom().getObj(), game.getInRoom().getNpcs(), game.getInventory().getContaining());
-          game.nextMove(filter, System.out);
-          System.out.println();
-        }while(in.hasNextLine());
+        do {
+            String newCommand = in.nextLine();
+            ParserFilter filter = parser.parse(newCommand, game.getCommands(), game.getInRoom().getObj(), game.getInRoom().getNpcs(), game.getInventory().getContaining());
+            game.nextMove(filter, System.out);
+            System.out.println();
+        } while (in.hasNextLine());
     }
 
     public static void main(String[] args) {
