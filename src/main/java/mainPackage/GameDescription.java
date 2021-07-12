@@ -1,10 +1,10 @@
 /*
  * NOT A SABINO'S SAGA - MS_C ©2021
  * This is surely not a Sabino's Saga. Anyway, Sabino is still here...
-*/
-
+ */
 package mainPackage;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,7 +24,6 @@ public abstract class GameDescription {
     //  Non inseriamo la lista degli oggetti/oggetti contenitori
     //  perché verranno piazzati tutti nelle stanze o negli
     //  oggetti contenitori
-    
     private final List<Room> rooms = new ArrayList<>();
 
     private final List<Command> commands = new ArrayList<>();
@@ -36,6 +35,10 @@ public abstract class GameDescription {
     //  SETTERS
     public void setInRoom(Room inRoom) {
         this.inRoom = inRoom;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 
     //  GETTERS
@@ -61,10 +64,14 @@ public abstract class GameDescription {
     public abstract void nextMove(ParserFilter funnel, PrintStream out);
 
     public abstract void printStart();
+
+    public abstract boolean save() throws IOException;
+
+    public abstract GameDescription load() throws IOException, ClassNotFoundException;
     
-    public abstract boolean save();
+    public abstract void printEnd();
     
-    public abstract GameDescription load();
-    
+    public abstract void gameOver();
+
     //  TODO Inserire metodo astratto per l'epilogo, con vari messaggi a seconda dello score finale
 }
