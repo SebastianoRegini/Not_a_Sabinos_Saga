@@ -5,24 +5,27 @@
 
  /*
 TODO: Boolean per la divisa;
-TODO: Inventario dose;
-TODO: Assegnare la DoseGun
 TODO: Comando OPEN modificato;
        [ Nel momento in cui il personaggio esegue il comando OPEN, si entra in un ciclo while
          dal quale è possibile uscire solo con il comando CLOSE.
          All'interno è possibile eseguire i comandi PICK_UP, LOOK_UP e HINT un numero indefinito
          di volte. ]
 TODO: Inserire tramite END o QUIT la chiusura del gioco tra i comandi, usando exit(0);
-TODO: Richiamare il costruttore di Inventory per inizializzare gli slots;
 TODO: Per comando OPEN, usare condizione con istanceof per capire se è un ContainerObject
  */
 package mainPackage.game;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.sql.SQLException;
 import mainPackage.parser.ParserFilter;
 import mainPackage.GameDescription;
+import mainPackage.type.DoseGun;
+import mainPackage.type.Inventory;
 import mainPackage.type.Room;
 import static mainPackage.utilities.NassDB.*;
 
@@ -33,13 +36,21 @@ import static mainPackage.utilities.NassDB.*;
  */
 public class NASS extends GameDescription {
 
+    private int passcode = 0;
+
+    private Inventory alternativeInventory = new Inventory(3); //TODO: cambiare slot
+    
+    private DoseGun gun = new DoseGun(10,2); //TODO: cambiare magazine and ammo
+    
+    private boolean guardUniform = false;
+
     //  OVERRIDED METHODS
     @Override
     public void init() throws SQLException {
-        
+
         //  COMMANDS
         initCommands(getCommands());
-        
+
         //   NORMAL ROOMS CONSTRUCTION
         Room parcheggio = initRoom(0, getRooms());
         Room ufficio = initRoom(1, getRooms());
@@ -75,40 +86,39 @@ public class NASS extends GameDescription {
         Room corridoioIniziale_1 = initRoom(29, getRooms());
 
         //   MAP (boundaries)
-        initBoundaries(parcheggio,getRooms());
-        initBoundaries(ufficio,getRooms());
-        initBoundaries(ingressoPrincipale,getRooms());
-        initBoundaries(corridoioTorretta,getRooms());
-        initBoundaries(passaggioCucina,getRooms());
-        initBoundaries(entrataZonaCarcere,getRooms());
-        initBoundaries(angoloCorridoio,getRooms());
-        initBoundaries(spogliatoio,getRooms());
-        initBoundaries(corridoioSpogliatoio,getRooms());
-        initBoundaries(cucina,getRooms());
-        initBoundaries(mensa,getRooms());
-        initBoundaries(corridoioMensa,getRooms());
-        initBoundaries(torreOsservazione,getRooms());
-        initBoundaries(incrocioCorridoioIniziale,getRooms());
-        initBoundaries(corridoioInterno,getRooms());
-        initBoundaries(incrocioPrincipale,getRooms());
-        initBoundaries(corridoioCortile,getRooms());
-        initBoundaries(cortile,getRooms());
-        initBoundaries(corridoioIniziale,getRooms());
-        
-        initBoundaries(ghorigapec,getRooms());
-        initBoundaries(ingressoPrincipale_1,getRooms());
-        initBoundaries(angoloCorridoio_1,getRooms());
-        initBoundaries(corridoioMensa_1,getRooms());
-        initBoundaries(torreOsservazione_1,getRooms());
-        initBoundaries(incrocioCorridoioIniziale_1,getRooms());
-        initBoundaries(corridoioInterno_1,getRooms());
-        initBoundaries(incrocioPrincipale_1,getRooms());
-        initBoundaries(corridoioCortile_1,getRooms());
-        initBoundaries(corridoioCortile_2,getRooms());
-        initBoundaries(corridoioIniziale_1,getRooms());
-        
+        initBoundaries(parcheggio, getRooms());
+        initBoundaries(ufficio, getRooms());
+        initBoundaries(ingressoPrincipale, getRooms());
+        initBoundaries(corridoioTorretta, getRooms());
+        initBoundaries(passaggioCucina, getRooms());
+        initBoundaries(entrataZonaCarcere, getRooms());
+        initBoundaries(angoloCorridoio, getRooms());
+        initBoundaries(spogliatoio, getRooms());
+        initBoundaries(corridoioSpogliatoio, getRooms());
+        initBoundaries(cucina, getRooms());
+        initBoundaries(mensa, getRooms());
+        initBoundaries(corridoioMensa, getRooms());
+        initBoundaries(torreOsservazione, getRooms());
+        initBoundaries(incrocioCorridoioIniziale, getRooms());
+        initBoundaries(corridoioInterno, getRooms());
+        initBoundaries(incrocioPrincipale, getRooms());
+        initBoundaries(corridoioCortile, getRooms());
+        initBoundaries(cortile, getRooms());
+        initBoundaries(corridoioIniziale, getRooms());
+
+        initBoundaries(ghorigapec, getRooms());
+        initBoundaries(ingressoPrincipale_1, getRooms());
+        initBoundaries(angoloCorridoio_1, getRooms());
+        initBoundaries(corridoioMensa_1, getRooms());
+        initBoundaries(torreOsservazione_1, getRooms());
+        initBoundaries(incrocioCorridoioIniziale_1, getRooms());
+        initBoundaries(corridoioInterno_1, getRooms());
+        initBoundaries(incrocioPrincipale_1, getRooms());
+        initBoundaries(corridoioCortile_1, getRooms());
+        initBoundaries(corridoioCortile_2, getRooms());
+        initBoundaries(corridoioIniziale_1, getRooms());
+
         //  OBJECTS IN ROOMS
-        
         //  NPC IN ROOMS
         initNpcInRoom(ingressoPrincipale);
         initNpcInRoom(angoloCorridoio);
@@ -117,17 +127,16 @@ public class NASS extends GameDescription {
         initNpcInRoom(corridoioInterno);
         initNpcInRoom(corridoioCortile);
         initNpcInRoom(corridoioIniziale);
-        
+
         initNpcInRoom(ingressoPrincipale_1);
         initNpcInRoom(angoloCorridoio_1);
         initNpcInRoom(corridoioMensa_1);
         initNpcInRoom(torreOsservazione_1);
         initNpcInRoom(corridoioInterno_1);
-        initNpcInRoom(corridoioCortile_1);
+        initNpcInRoom(corridoioCortile_2);
         initNpcInRoom(corridoioIniziale_1);
-        
-        //Inventario, dose gun (vedi sopra)
-        
+
+        setInventory(new Inventory(4)); //TODO: cambiare slot
         setInRoom(corridoioIniziale);
     }
 
@@ -180,14 +189,31 @@ public class NASS extends GameDescription {
     }
 
     @Override
-    public boolean save() {
+    public boolean save() throws IOException {
+        ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream("./saves/NASS.dat"));
+        outStream.writeObject(this);
+        outStream.close();
 
-        return true;    //  MODIFICAREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+        return true; //Indica se il file è stato salvato
     }
 
     @Override
-    public GameDescription load() {
+    public GameDescription load() throws IOException, ClassNotFoundException {
+        ObjectInputStream inStream = new ObjectInputStream(new FileInputStream("./saves/NASS.dat"));
+        NASS game = (NASS) inStream.readObject();
+        inStream.close();
 
-        return null;    //  MODIFICAREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+        return game;
+    }
+    
+    @Override
+    public void printEnd(){
+        
+    }
+    
+    @Override
+    public void gameOver(){
+        //Stamperà il messaggio di game over
+        System.exit(0);
     }
 }
