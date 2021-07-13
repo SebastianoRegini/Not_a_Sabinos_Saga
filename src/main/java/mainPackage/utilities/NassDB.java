@@ -401,7 +401,7 @@ public class NassDB {
         ResultSet rs = pstm.executeQuery();
 
         while (rs.next()) {
-            aliases.add(rs.getString(1));
+            aliases.add(rs.getString(1).toLowerCase());
         }
 
         rs.close();
