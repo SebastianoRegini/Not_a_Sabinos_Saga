@@ -39,9 +39,9 @@ public class NASS extends GameDescription {
     private int passcode = 0;
 
     private Inventory alternativeInventory = new Inventory(3); //TODO: cambiare slot
-    
-    private DoseGun gun = new DoseGun(10,2); //TODO: cambiare magazine and ammo
-    
+
+    private DoseGun gun = new DoseGun(10, 2); //TODO: cambiare magazine and ammo
+
     private boolean guardUniform = false;
 
     //  OVERRIDED METHODS
@@ -142,14 +142,19 @@ public class NASS extends GameDescription {
 
     @Override
     public void nextMove(ParserFilter funnel, PrintStream out) {
-
+        
+        //Catena di IF sul tipo di comando
+//         if (funnel.getCommand().getType() == CommandType.NORD) {
+//                output = commandNorth(p, output);
+//
+//            } else if
     }
 
     @Override
     public void printStart() {
         //  TODO sistemare la formattazione
         System.out.println(""
-                + "==============================================================\n"
+                + "============================================================\n"
                 + "    BENVENUTO IN NASS                                       \n"
                 + "    In quest'avventura, sfortunatamente, non vestirai i     \n"
                 + "    panni di Sabino Ciampa, ma del suo coinquilino che,     \n"
@@ -177,8 +182,8 @@ public class NASS extends GameDescription {
                 + "    lo so, prima avevo parlato di 'ore', ma che vuoi da me: \n"
                 + "    gli sviluppatori di sto gioco sono dei cani e non lo    \n"
                 + "    hanno fatto durare nemmeno il tempo di una              \n"
-                + "    pennichella...                                           \n"
-                + "==============================================================\n");
+                + "    pennichella...                                          \n"
+                + "============================================================\n");
         System.out.println("[ Premi INVIO per continuare ]");
 
         try {
@@ -205,15 +210,58 @@ public class NASS extends GameDescription {
 
         return game;
     }
-    
+
     @Override
-    public void printEnd(){
-        
+    public void printEnd() {
+
     }
-    
+
     @Override
-    public void gameOver(){
+    public void gameOver() {
         //Stamperà il messaggio di game over
         System.exit(0);
+    }
+
+    @Override
+    public void help() throws InterruptedException {
+        System.out.println(""
+                + "Lo so, lo so, la brutta aria che emana questo postaccio e\n"
+                + "il pensiero che, se non ti sbrigassi, ci resteresti secco\n"
+                + "non sono amici della concentrazione, quindi ecco un paio \n"
+                + "di indicazioni, nel caso in cui ti dovessero sfuggire... \n");
+
+        Thread.sleep(3000);
+
+        System.out.println(""
+                + "===========================================================================================================================\n"
+                + "                                                      AIUTO COMANDI                                                        \n"
+                + "  Per muoverti all'interno del gioco, usa i seguenti comandi:                                                              \n"
+                + "    >> NORD -> Spostati in direzione NORD                                                                                  \n"
+                + "    >> SUD -> Spostati in direzione SUD                                                                                    \n"
+                + "    >> EST -> Spostati in direzione EST                                                                                    \n"
+                + "    >> OVEST -> Spostati in direzione OVEST                                                                                \n"
+                + "    >> APRI <contenitore> -> Apre un contenitore                                                                           \n"
+                + "    >> CHIUDI <contenitore> -> Chiude un contenitore                                                                       \n"
+                + "    >> INVENTARIO -> Mostra il contenuto del tuo inventario                                                                \n"
+                + "    >> PRENDI <oggetto> -> Metti l'oggetto nell'inventario                                                                 \n"
+                + "    >> LASCIA <oggetto> -> Lascia l'oggetto nella stanza                                                                   \n"
+                + "    >> USA <ogg_inventario> -> Usa un oggetto presente nell'inventario                                                     \n"
+                + "    >> DAI <ogg_inventario A <personaggio> -> Dai un tuo oggetto ad un...soggetto                                          \n"
+                + "    >> GUARDA -> Osserva l'ambiente circostante, oppure un oggetto specifico                                               \n"
+                + "    >> INTERAGISCI CON <personaggio>/<oggetto> -> Ti permette di interagire con qualcuno o qualcosa                        \n"
+                + "    >> RIFLETTI SU <oggetto> -> Ti permette di esaminare meglio un oggetto                                                 \n"
+                + "    >> SPARATI UNA DOSE -> Sai l'arma di Sabino? Bene, in questo modo potrai utilizzarla. Niente di illegale eh! O quasi...\n"
+                + "    >> SALVA -> Salva la partita                                                                                           \n"
+                + "    >> CARICA -> Carica la partita                                                                                         \n"
+                + "    >> ESCI -> Esci dal gioco (magari ti avesse fatto uscire dal carcere, eh?)                                             \n"
+                + "===========================================================================================================================\n"
+        );
+        
+        Thread.sleep(3000);
+        
+        System.out.println(""
+                + "Il comando INTERAGISCI è un comando abbastanza universale, usalo con saggezza!\n\n"
+                + "Ovviamente potrei aver dimenticato qualcosa,ma sono certo che te la saprai cavare...    \n");
+
     }
 }
