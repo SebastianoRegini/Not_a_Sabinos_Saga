@@ -72,6 +72,8 @@ public abstract class GameDescription {
     public abstract void printEnd();
     
     public abstract void gameOver();
+    
+    public abstract void help() throws InterruptedException;
 
     //  TODO Inserire metodo astratto per l'epilogo, con vari messaggi a seconda dello score finale
 }

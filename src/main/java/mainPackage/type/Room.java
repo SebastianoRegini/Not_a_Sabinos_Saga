@@ -14,13 +14,13 @@ import java.util.List;
 public class Room {
 
     //  ATTRIBUTES
-    private final int id;
+    private int id;
 
     private final String name;
 
     private final String prefix;
 
-    private final String suffix;
+    private String suffix;
 
     private final String descriptionLook;
 
@@ -54,6 +54,14 @@ public class Room {
     }
 
     //  SETTERS
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
+    }
+
     public void setNorth(Room north) {
         this.north = north;
     }
@@ -164,7 +172,6 @@ public class Room {
     }
 
     //  OTHER METHODS
-
     public void printRoom() {
         if (isVisited()) {
             System.out.println("Sei in " + getName().toUpperCase() + ".");

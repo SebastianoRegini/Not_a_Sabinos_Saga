@@ -293,7 +293,7 @@ public class NassDB {
                 rs = pstm.executeQuery();
 
                 while (rs.next()) {
-                    GameObject obj = new GameObject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getBoolean(5), rs.getBoolean(6));
+                    GameObject obj = new GameObject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getBoolean(5), rs.getBoolean(6));
                     obj.setSynonyms(aliases);
                     room.addObj(obj);
                 }
@@ -335,7 +335,7 @@ public class NassDB {
                 rs = pstm.executeQuery();
 
                 while (rs.next()) {
-                    ContainerObject objCont = new ContainerObject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getBoolean(5), rs.getBoolean(6), rs.getBoolean(7));
+                    ContainerObject objCont = new ContainerObject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getBoolean(5), rs.getBoolean(6), rs.getBoolean(7));
                     objCont.setSynonyms(aliases);
                     objCont.setContained(contained);
                     room.addObj(objCont);
@@ -450,7 +450,7 @@ public class NassDB {
                 rs = pstm.executeQuery();
 
                 while (rs.next()) {
-                    GameObject objCont = new GameObject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getBoolean(5), rs.getBoolean(6));
+                    GameObject objCont = new GameObject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getBoolean(5), rs.getBoolean(6));
                     objCont.setSynonyms(aliases);
                     contained.add(objCont);
                 }
