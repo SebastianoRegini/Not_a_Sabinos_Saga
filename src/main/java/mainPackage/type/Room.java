@@ -174,12 +174,20 @@ public class Room {
     //  OTHER METHODS
     public void printRoom() {
         if (isVisited()) {
-            System.out.println("Sei in " + getName().toUpperCase() + ".");
-            System.out.println(getSuffix());
+            System.out.println("----------------------------------------");
+            System.out.println("Sei in " + getName().toUpperCase() + ".\n");
+            if (!getSuffix().equals("")) {
+                System.out.println(getSuffix() + "\n");
+            }
         } else {
-            System.out.println(getPrefix());
-            System.out.println("Sei in " + getName().toUpperCase() + ".");
-            System.out.println(getSuffix());
+            System.out.println("----------------------------------------");
+            if (!getPrefix().equals("")) {
+                System.out.println(getPrefix() + "\n");
+            }
+            System.out.println("Sei in " + getName().toUpperCase() + ".\n");
+            if (!getSuffix().equals("")) {
+                System.out.println(getSuffix() + "\n");
+            }
             setVisited(true);
         }
     }

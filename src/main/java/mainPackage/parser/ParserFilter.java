@@ -22,6 +22,8 @@ public class ParserFilter {
     private GameObject inventoryObj;
     
     private NPC person;
+    
+    //TODO: Ci può essere utile un ExtraWords per stringhe che non sono stopwords
 
     // CONSTRUCTOR
     public ParserFilter(Command command, GameObject object, GameObject inventoryObj, NPC person) {

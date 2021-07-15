@@ -58,7 +58,7 @@ public class Parser {
     //  Parse
     public ParserFilter parse(String playerComm, List<Command> commands, List<GameObject> extObj, List<NPC> npcs, List<GameObject> inventory) {
         List<String> filteredWords = UWManager.removeWords(playerComm, uselessWords);
-
+        
         if (!filteredWords.isEmpty()) {
             int commandIndex = whatCommand(filteredWords.get(0), commands);
             if (commandIndex > -1) {
