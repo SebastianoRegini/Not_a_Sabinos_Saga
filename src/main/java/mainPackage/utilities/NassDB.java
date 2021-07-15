@@ -36,7 +36,7 @@ public class NassDB {
 
     //  SELECT STRINGS
     //  Commands
-    private static final String SELECT_COMMAND_TYPES = "SELECT type FROM command";
+    private static final String SELECT_COMMAND_TYPES = "SELECT DISTINCT type FROM command";
 
     //  Rooms and Boundaries
     private static final String SELECT_ROOM = "SELECT * FROM room WHERE id=";
@@ -44,7 +44,7 @@ public class NassDB {
 
     //  Objects and Objects in room/container
     private static final String SELECT_OBJECT = "SELECT * FROM object WHERE id=";
-    private static final String SELECT_OB_ROOM = "SELECT idObj FROM ro WHERE idRoom=";
+    private static final String SELECT_OB_ROOM = "SELECT idObject FROM ro WHERE idRoom=";
     private static final String SELECT_CON_ROOM = "SELECT idContainer FROM rc WHERE idRoom=";
     private static final String SELECT_CONTAINER = "SELECT * FROM container WHERE id=";
     private static final String SELECT_OB_CONT = "SELECT idObject FROM oc WHERE idContainer=";
@@ -63,7 +63,7 @@ public class NassDB {
     //  MANAGE CONNECTION AND DISCONNECTION
     public static void connectDB() throws SQLException {
         Properties dbProp = new Properties();
-        dbProp.setProperty("users", "Sabino");
+        dbProp.setProperty("user", "Sabino");
         dbProp.setProperty("password", "Ciampa");
         connection = DriverManager.getConnection(CONNECTION_STRING, dbProp);
     }
@@ -156,6 +156,12 @@ public class NassDB {
                     use.setSynonyms(aliases);
                     commands.add(use);
 
+                } else if (code == TypeCommand.GIVE.getTypeCode()) { //Se il codice è del comando DAI
+
+                    Command give = new Command(TypeCommand.GIVE);
+                    give.setSynonyms(aliases);
+                    commands.add(give);
+
                 } else if (code == TypeCommand.LOOK.getTypeCode()) { //Se il codice è del comando GUARDA
 
                     Command look = new Command(TypeCommand.LOOK);
@@ -173,6 +179,12 @@ public class NassDB {
                     Command think = new Command(TypeCommand.THINK_ABOUT);
                     think.setSynonyms(aliases);
                     commands.add(think);
+
+                } else if (code == TypeCommand.DOSE.getTypeCode()) { //Se il codice è del comando DOSE
+
+                    Command dose = new Command(TypeCommand.DOSE);
+                    dose.setSynonyms(aliases);
+                    commands.add(dose);
 
                 } else if (code == TypeCommand.SAVE.getTypeCode()) { //Se il codice è del comando SALVA
 
@@ -192,6 +204,12 @@ public class NassDB {
                     end.setSynonyms(aliases);
                     commands.add(end);
 
+                } else if (code == TypeCommand.HELP.getTypeCode()) { //Se il codice è del comando AIUTO
+
+                    Command help = new Command(TypeCommand.HELP);
+                    help.setSynonyms(aliases);
+                    commands.add(help);
+
                 }
             } catch (SQLException ex) {
                 System.err.println("SQL Error: " + ex.getMessage());
@@ -206,7 +224,7 @@ public class NassDB {
         ResultSet rs = pstm.executeQuery();
         Room r = null;
         while (rs.next()) {
-            r = new Room(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
+            r = new Room(rs.getInt(1), rs.getString(2).trim(), rs.getString(3).trim(), rs.getString(4).trim(), rs.getString(5).trim());
             map.add(r);
         }
 
@@ -293,7 +311,7 @@ public class NassDB {
                 rs = pstm.executeQuery();
 
                 while (rs.next()) {
-                    GameObject obj = new GameObject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getBoolean(5), rs.getBoolean(6));
+                    GameObject obj = new GameObject(rs.getInt(1), rs.getString(2).trim(), rs.getString(3).trim(), rs.getString(4).trim(), rs.getBoolean(5), rs.getBoolean(6));
                     obj.setSynonyms(aliases);
                     room.addObj(obj);
                 }
@@ -335,7 +353,7 @@ public class NassDB {
                 rs = pstm.executeQuery();
 
                 while (rs.next()) {
-                    ContainerObject objCont = new ContainerObject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getBoolean(5), rs.getBoolean(6), rs.getBoolean(7));
+                    ContainerObject objCont = new ContainerObject(rs.getInt(1), rs.getString(2).trim(), rs.getString(3).trim(), rs.getString(4).trim(), rs.getBoolean(5), rs.getBoolean(6), rs.getBoolean(7));
                     objCont.setSynonyms(aliases);
                     objCont.setContained(contained);
                     room.addObj(objCont);
@@ -377,7 +395,7 @@ public class NassDB {
                 rs = pstm.executeQuery();
 
                 while (rs.next()) {
-                    NPC npc = new NPC(rs.getInt(1), rs.getString(2));
+                    NPC npc = new NPC(rs.getInt(1), rs.getString(2).trim());
                     npc.setSynonyms(aliases);
                     npc.setInteractions(dialogues);
 
@@ -401,7 +419,7 @@ public class NassDB {
         ResultSet rs = pstm.executeQuery();
 
         while (rs.next()) {
-            aliases.add(rs.getString(1).toLowerCase());
+            aliases.add(rs.getString(1).toLowerCase().trim());
         }
 
         rs.close();
@@ -417,7 +435,7 @@ public class NassDB {
         ResultSet rs = pstm.executeQuery();
 
         while (rs.next()) {
-            dialogues.put(rs.getInt(1), rs.getString(2));
+            dialogues.put(rs.getInt(1), rs.getString(2).trim());
         }
 
         rs.close();
@@ -446,11 +464,11 @@ public class NassDB {
             try {
                 Set<String> aliases = selectAliases(SELECT_OBJECT_ALIASES, idObj);
 
-                pstm = connection.prepareStatement(SELECT_OBJECT, idObj);
+                pstm = connection.prepareStatement(SELECT_OBJECT + idObj);
                 rs = pstm.executeQuery();
 
                 while (rs.next()) {
-                    GameObject objCont = new GameObject(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getBoolean(5), rs.getBoolean(6));
+                    GameObject objCont = new GameObject(rs.getInt(1), rs.getString(2).trim(), rs.getString(3).trim(), rs.getString(4).trim(), rs.getBoolean(5), rs.getBoolean(6));
                     objCont.setSynonyms(aliases);
                     contained.add(objCont);
                 }

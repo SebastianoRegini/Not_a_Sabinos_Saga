@@ -53,7 +53,6 @@ public class Starter {
             String newCommand = in.nextLine();
             ParserFilter filter = parser.parse(newCommand, game.getCommands(), game.getInRoom().getObj(), game.getInRoom().getNpcs(), game.getInventory().getContaining());
             game.nextMove(filter, System.out);
-            System.out.println();
         } while (in.hasNextLine());
     }
 

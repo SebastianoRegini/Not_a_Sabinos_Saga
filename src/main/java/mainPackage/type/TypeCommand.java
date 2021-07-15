@@ -27,7 +27,8 @@ public enum TypeCommand {
     DOSE(15), //Comando esclusivo per la dose e la pistola per dosi
     SAVE(16),
     LOAD(17),
-    END(18);
+    END(18),
+    HELP(19);
      
 
     private final int code;

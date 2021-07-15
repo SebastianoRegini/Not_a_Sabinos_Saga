@@ -1,8 +1,7 @@
 /*
  * NOT A SABINO'S SAGA - MS_C ©2021
  * This is surely not a Sabino's Saga. Anyway, Sabino is still here...
-*/
-
+ */
 package mainPackage.type;
 
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.List;
 public class Inventory {
 
     //  ATTRIBUTES
-    private int slots;
+    private final int slots;
 
     private List<GameObject> containing = new ArrayList<>();
 
@@ -25,10 +24,6 @@ public class Inventory {
     }
 
     //  SETTERS
-    public void setSlots(int slots) {
-        this.slots = slots;
-    }
-
     public void setContaining(List<GameObject> containing) {
         this.containing = containing;
     }
@@ -43,32 +38,24 @@ public class Inventory {
     }
 
     //  UTILITY METHOD
-    private boolean isFull() {
+    public boolean isFull() {
         return (containing.size() >= slots);
     }
 
-    //  IN-GAME METHODS
-    public void expand(int otherSlots) {
-        setSlots(this.slots + otherSlots);
+    public boolean isEmpty() {
+        return (containing.isEmpty());
     }
 
+    //  IN-GAME METHODS
     public void add(GameObject obj) {
-        if (!this.isFull()) {
-            containing.add(obj);
-        } else {
-            System.out.println("L'inventario è pieno!");
-        }
+        containing.add(obj);
     }
 
     public void remove(GameObject obj) {
-        if (containing.isEmpty()) {
-            System.out.println("L'inventario è vuoto!");
-        } else {
-            if (containing.contains(obj)) {
-                containing.remove(obj);
-            } else {
-                System.out.println("L'elemento non è presente nell'inventario!");
-            }
-        }
+            containing.remove(obj);
+    }
+    
+    public boolean contains(GameObject obj){
+        return containing.contains(obj);
     }
 }
