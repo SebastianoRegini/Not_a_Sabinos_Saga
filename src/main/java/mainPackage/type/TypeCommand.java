@@ -4,11 +4,13 @@
  */
 package mainPackage.type;
 
+import java.io.Serializable;
+
 /**
  *
  * @author MS_C
  */
-public enum TypeCommand {
+public enum TypeCommand implements Serializable{
 
     NORTH(1),
     SOUTH(2),

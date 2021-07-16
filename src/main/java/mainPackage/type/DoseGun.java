@@ -5,11 +5,13 @@
 
 package mainPackage.type;
 
+import java.io.Serializable;
+
 /**
  *
  * @author MS_C
  */
-public class DoseGun {
+public class DoseGun implements Serializable{
 
     //  ATTRIBUTES
     private final int magazine;

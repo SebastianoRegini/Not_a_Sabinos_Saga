@@ -4,6 +4,7 @@
  */
 package mainPackage.type;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  *
  * @author MS_C
  */
-public class Inventory {
+public class Inventory implements Serializable{
 
     //  ATTRIBUTES
     private final int slots;

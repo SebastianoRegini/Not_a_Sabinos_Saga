@@ -5,11 +5,6 @@
 
 package mainPackage.type;
 
-/*
-        TODO: Mettere dei controlli nell'init del gioco per la rimozione di oggetti
-        1) Se il contenitore contiene l'elemento
-        2) Se c'è spazio nel tuo inventario
- */
 import java.util.ArrayList;
 import java.util.List;
 

@@ -23,8 +23,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.sql.SQLException;
+import java.util.Scanner;
 import mainPackage.parser.ParserFilter;
 import mainPackage.GameDescription;
+import mainPackage.type.ContainerObject;
 import mainPackage.type.DoseGun;
 import mainPackage.type.GameObject;
 import mainPackage.type.Inventory;
@@ -41,11 +43,11 @@ public class NASS extends GameDescription {
 
     private int passcode = 0;
 
-    private Inventory alternativeInventory = new Inventory(3); //TODO: cambiare slot
-
-    private DoseGun gun = new DoseGun(16, 8);
+    private DoseGun gun;
 
     private boolean guardUniform = false;
+
+    private boolean inContainer = false;
 
     //  OVERRIDED METHODS
     @Override
@@ -165,6 +167,9 @@ public class NASS extends GameDescription {
 
         //  STARTING
         setInventory(new Inventory(6));
+        setAlternativeInventory(new Inventory(4));
+        gun = new DoseGun(16, 8);
+
         setInRoom(corridoioIniziale);
     }
 
@@ -177,53 +182,102 @@ public class NASS extends GameDescription {
 
             switch (funnel.getCommand().getType()) {
                 case NORTH:
-                    if (getInRoom().getNorth() == null) {
-                        out.println("Non è possibile andare a nord!");
-                    } else if (getInRoom().isNorthLock()) {
-                        out.println("La porta a nord è chiusa a chiave!");
+                    if (inContainer) {
+                        out.println("Devi prima chiudere il contenitore!");
                     } else {
-                        setInRoom(getInRoom().getNorth());
-                        getInRoom().printRoom();
+                        if (getInRoom().getNorth() == null) {
+                            out.println("Non è possibile andare a nord!");
+                        } else if (getInRoom().isNorthLock()) {
+                            out.println("La porta a nord è chiusa a chiave!");
+                        } else {
+                            setInRoom(getInRoom().getNorth());
+                            getInRoom().printRoom();
+                        }
                     }
                     break;
 
                 case SOUTH:
-                    if (getInRoom().getSouth() == null) {
-                        out.println("Non è possibile andare a sud!");
-                    } else if (getInRoom().isSouthLock()) {
-                        out.println("La porta a sud è chiusa a chiave!");
+                    if (inContainer) {
+                        out.println("Devi prima chiudere il contenitore!");
                     } else {
-                        setInRoom(getInRoom().getSouth());
-                        getInRoom().printRoom();
+                        if (getInRoom().getSouth() == null) {
+                            out.println("Non è possibile andare a sud!");
+                        } else if (getInRoom().isSouthLock()) {
+                            out.println("La porta a sud è chiusa a chiave!");
+                        } else {
+                            setInRoom(getInRoom().getSouth());
+                            getInRoom().printRoom();
+                        }
                     }
                     break;
 
                 case EAST:
-                    if (getInRoom().getEast() == null) {
-                        out.println("Non è possibile andare ad est!");
-                    } else if (getInRoom().isEastLock()) {
-                        out.println("La porta ad est è chiusa a chiave!");
+                    if (inContainer) {
+                        out.println("Devi prima chiudere il contenitore!");
                     } else {
-                        setInRoom(getInRoom().getEast());
-                        getInRoom().printRoom();
+                        if (getInRoom().getEast() == null) {
+                            out.println("Non è possibile andare ad est!");
+                        } else if (getInRoom().isEastLock()) {
+                            out.println("La porta ad est è chiusa a chiave!");
+                        } else {
+                            setInRoom(getInRoom().getEast());
+                            getInRoom().printRoom();
+                        }
                     }
                     break;
 
                 case WEST:
-                    if (getInRoom().getWest() == null) {
-                        out.println("Non è possibile andare ad ovest!");
-                    } else if (getInRoom().isWestLock()) {
-                        out.println("La porta ad ovest è chiusa a chiave!");
+                    if (inContainer) {
+                        out.println("Devi prima chiudere il contenitore!");
                     } else {
-                        setInRoom(getInRoom().getWest());
-                        getInRoom().printRoom();
+                        if (getInRoom().getWest() == null) {
+                            out.println("Non è possibile andare ad ovest!");
+                        } else if (getInRoom().isWestLock()) {
+                            out.println("La porta ad ovest è chiusa a chiave!");
+                        } else {
+                            setInRoom(getInRoom().getWest());
+                            getInRoom().printRoom();
+                        }
                     }
                     break;
 
                 case OPEN:
+                    if (inContainer) {
+                        out.println("È già aperto!");
+                    } else {
+                        if (funnel.getPerson() == null && funnel.getInventoryObj() == null && funnel.getObject() != null) {
+                            //Se è un oggetto contenitore
+                            if (funnel.getObject() instanceof ContainerObject) {
+                                ContainerObject temporaryContObj = (ContainerObject) funnel.getObject();
+                                if (temporaryContObj.isOpen()) {
+                                    out.println("----------------------------------------");
+                                    out.println("Hai aperto: " + temporaryContObj.getName() + ".");
+                                    if (!temporaryContObj.getContained().isEmpty()) {
+                                        out.println("Al suo interno trovi ");
+                                        for (GameObject item : temporaryContObj.getContained()) {
+                                            out.println(item.getName());
+                                        }
+                                    } else {
+                                        out.println("Non c'è niente dentro.");
+                                    }
+                                } else {
+                                    out.println(temporaryContObj.getName() + " è chiusa a chiave!");
+                                }
+                            } else {
+                                out.println("Non puoi aprire " + funnel.getObject().getName() + ".");
+                            }
+                        } else {
+                            //TODO ok
+                        }
+                    }
                     break;
 
                 case CLOSE:
+                    if (inContainer) {
+
+                    } else {
+                        out.println("Non puoi usare questo comando ora!");
+                    }
                     break;
 
                 case INVENTORY:
@@ -242,8 +296,17 @@ public class NASS extends GameDescription {
                 case PICK_UP:
                     if (funnel.getObject() != null) {
                         if (funnel.getObject().isPickupable()) {
-                            if (!getInventory().isFull()) {
-                                getInventory().add(funnel.getObject());
+
+                            //Controllo se siamo nella stanza alternativa
+                            Inventory temporaryInv;
+                            if (getInRoom().getId() < 19) {
+                                temporaryInv = getInventory();
+                            } else {
+                                temporaryInv = getAlternativeInventory();
+                            }
+
+                            if (!temporaryInv.isFull()) {
+                                temporaryInv.add(funnel.getObject());
                                 getInRoom().removeObj(funnel.getObject());
                                 out.println("----------------------------------------");
                                 out.println("Hai messo in tasca: " + funnel.getObject().getName() + ".");
@@ -260,19 +323,63 @@ public class NASS extends GameDescription {
 
                 case DROP:
                     if (funnel.getInventoryObj() != null) {
-                        getInventory().remove(funnel.getInventoryObj());
-                        getInRoom().addObj(funnel.getInventoryObj());
-                        out.println("----------------------------------------");
-                        out.println("Hai lasciato: " + funnel.getInventoryObj().getName() + " in questa stanza.");
+                        if (getInRoom().getId() > 18) {
+                            out.println("Non è saggio lasciare oggetti qui...");
+                        } else {
+                            getInventory().remove(funnel.getInventoryObj());
+                            getInRoom().addObj(funnel.getInventoryObj());
+                            out.println("----------------------------------------");
+                            out.println("Hai lasciato: " + funnel.getInventoryObj().getName() + " in questa stanza.");
+                        }
                     } else {
                         out.println("Non hai questo oggetto nelle tasche...");
                     }
                     break;
 
                 case USE:
+
                     break;
 
                 case GIVE:
+                    if (funnel.getPerson() != null && funnel.getInventoryObj() != null) {
+                        //Controllo se è Ugo (2)
+                        if (funnel.getPerson().getId() == 2) {
+                            switch (funnel.getInventoryObj().getId()) {
+                                //Oggetto: cellulare (5)
+                                case 5:
+                                    out.println("----------------------------------------");
+                                    out.println(funnel.getPerson().getInteraction(5));
+                                    break;
+
+                                //Oggetto: anello (6)
+                                case 6:
+                                    out.println("----------------------------------------");
+                                    out.println(funnel.getPerson().getInteraction(4));
+                                    break;
+
+                                //Oggetto: orologio (7)
+                                case 7:
+                                    out.println("----------------------------------------");
+                                    out.println(funnel.getPerson().getInteraction(3));
+                                    break;
+                            }
+                            out.println("Spero tu abbia ascoltato bene, non ripeterò ciò che ho detto!");
+                        }
+
+                        //Controllo se è Bambine (11)
+                        if (funnel.getPerson().getId() == 11) {
+                            //Oggetto: bambola di pezza (18)
+                            if (funnel.getInventoryObj().getId() == 18) {
+                                out.println("----------------------------------------");
+                                out.println(funnel.getPerson().getInteraction(2));
+                            }
+                        }
+                        //Altrimenti
+                        out.println("----------------------------------------");
+                        out.println("Non puoi dare " + funnel.getInventoryObj().getName() + " a " + funnel.getPerson().getName() + ".");
+                    } else {
+                        out.println("Puoi dare solo un oggetto delle tue tasche a qualcuno presente in questa stanza.");
+                    }
                     break;
 
                 case LOOK:
@@ -300,11 +407,11 @@ public class NASS extends GameDescription {
                             out.println("----------------------------------------");
                             out.println(getInRoom().getDescriptionLook());
                             out.println("\n* * * * * * * * * * * * * * * * * * * *");
-                            if(getInRoom().getObj().isEmpty()){
+                            if (getInRoom().getObj().isEmpty()) {
                                 out.println("Non ci sono oggetti nella stanza da poter raccogliere.");
-                            } else{
+                            } else {
                                 out.println("Nella stanza ci sono questi oggetti da poter raccogliere:");
-                                for(GameObject item : getInRoom().getObj()){
+                                for (GameObject item : getInRoom().getObj()) {
                                     out.println(item.getName());
                                 }
                             }
@@ -316,35 +423,44 @@ public class NASS extends GameDescription {
                     break;
 
                 case THINK_ABOUT:
-                    
+                    //Se inserisci troppe cose su cui riflettere
+                    if (funnel.getInventoryObj() != null && funnel.getObject() != null) {
+                        out.println("Oh, OH! Troppa roba, con calma giovane! Una cosa alla volta...");
+
+                    } else {
+                        if (funnel.getObject() != null) { //Se hai inserito un oggetto
+                            out.println("----------------------------------------");
+                            out.println(funnel.getObject().getHint());
+                        } else if (funnel.getInventoryObj() != null) { //Se hai inserito un oggetto dell'inventario
+                            out.println("----------------------------------------");
+                            out.println(funnel.getInventoryObj().getHint());
+                        } else if (funnel.getExtraWord() != null) { //Se hai inserito una parola senza significato oppure non presente nelle liste
+                            out.println("----------------------------------------");
+                            out.println("Non farti viaggi astrali su qualsiasi cosa, devi sbrigarti ad evadere!");
+                        } else { //Se non hai inserito nulla oltre al comando
+                            out.println("----------------------------------------");
+                            out.println("Devi riflettere su qualche oggetto...");
+                        }
+                    }
                     break;
 
                 case DOSE:
                     break;
 
-                case SAVE:
-                    break;
-
-                case LOAD:
-                    break;
-
-                case END:
-                    printEnd();
-                    break;
-
                 case HELP:
                     try {
-                    help();
+                    help(out);
                 } catch (InterruptedException ex) {
-                    System.err.println("In questo momento non riesco ad aiutarti");
+                    System.err.println("Interrupted Exception: " + ex.getMessage());
                 }
-
                 break;
-
-                default: //Non dovrebbe servire, perché l'if iniziale esclude a priori comandi non validi
-                    out.println("Non hai messo un comando valido!");
-                    break;
             }
+
+            //Appena viene fatta una mossa, il programma "memorizza" che ci sono modifiche non salvate
+            if (this.isSaved()) {
+                this.setSaved(false);
+            }
+
         } else {
             out.println("Non hai messo un comando valido!");
         }
@@ -353,9 +469,9 @@ public class NASS extends GameDescription {
     }
 
     @Override
-    public void printStart() {
+    public void printStart(PrintStream out) {
         //  TODO sistemare la formattazione
-        System.out.println(""
+        out.println(""
                 + "============================================================\n"
                 + "    BENVENUTO IN NASS                                       \n"
                 + "    In quest'avventura, sfortunatamente, non vestirai i     \n"
@@ -386,7 +502,7 @@ public class NASS extends GameDescription {
                 + "    hanno fatto durare nemmeno il tempo di una              \n"
                 + "    pennichella...                                          \n"
                 + "============================================================\n");
-        System.out.println("[ Premi INVIO per continuare ]");
+        out.println("[ Premi INVIO per continuare ]");
 
         try {
             System.in.read();
@@ -396,12 +512,12 @@ public class NASS extends GameDescription {
     }
 
     @Override
-    public boolean save() throws IOException {
+    public void save() throws IOException {
         ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream("./saves/NASS.dat"));
         outStream.writeObject(this);
         outStream.close();
 
-        return true; //Indica se il file è stato salvato
+        this.setSaved(true); //Indica se il file è stato salvato
     }
 
     @Override
@@ -414,28 +530,28 @@ public class NASS extends GameDescription {
     }
 
     @Override
-    public void printEnd() {
-        //Finale
+    public void printEnd(PrintStream out) {
+        //Roba
         System.exit(0);
     }
 
     @Override
-    public void gameOver() {
+    public void gameOver(PrintStream out) {
         //Stamperà il messaggio di game over
         System.exit(0);
     }
 
     @Override
-    public void help() throws InterruptedException {
-        System.out.println(""
+    public void help(PrintStream out) throws InterruptedException {
+        out.println(""
                 + "Lo so, lo so, la brutta aria che emana questo postaccio e\n"
                 + "il pensiero che, se non ti sbrigassi, ci resteresti secco\n"
                 + "non sono amici della concentrazione, quindi ecco un paio \n"
                 + "di indicazioni, nel caso in cui ti dovessero sfuggire... \n");
 
-        Thread.sleep(3000);
+        Thread.sleep(2000);
 
-        System.out.println(""
+        out.println(""
                 + "===========================================================================================================================\n"
                 + "                                                      AIUTO COMANDI                                                        \n"
                 + "  Per muoverti all'interno del gioco, usa i seguenti comandi:                                                              \n"
@@ -462,7 +578,7 @@ public class NASS extends GameDescription {
 
         Thread.sleep(3000);
 
-        System.out.println(""
+        out.println(""
                 + "Il comando INTERAGISCI è un comando abbastanza universale, usalo con saggezza!\n\n"
                 + "Ovviamente potrei aver dimenticato qualcosa,ma sono certo che te la saprai cavare...    \n");
 
