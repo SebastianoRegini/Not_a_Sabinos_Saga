@@ -4,6 +4,7 @@
  */
 package mainPackage.type;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,7 +15,7 @@ import java.util.Set;
  *
  * @author MS_C
  */
-public class NPC {
+public class NPC implements Serializable{
 
     //  ATTRIBUTES
     private final int id;

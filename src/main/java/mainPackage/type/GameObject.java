@@ -5,6 +5,7 @@
 
 package mainPackage.type;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +14,7 @@ import java.util.Set;
  *
  * @author MS_C
  */
-public class GameObject {
+public class GameObject implements Serializable{
 
     //  ATTRIBUTES
     private final int id;
