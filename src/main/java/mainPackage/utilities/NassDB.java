@@ -126,12 +126,6 @@ public class NassDB {
                     open.setSynonyms(aliases);
                     commands.add(open);
 
-                } else if (code == TypeCommand.CLOSE.getTypeCode()) { //Se il codice è del comando CHIUDI
-
-                    Command close = new Command(TypeCommand.CLOSE);
-                    close.setSynonyms(aliases);
-                    commands.add(close);
-
                 } else if (code == TypeCommand.INVENTORY.getTypeCode()) { //Se il codice è del comando INVENTARIO
 
                     Command inventory = new Command(TypeCommand.INVENTORY);
