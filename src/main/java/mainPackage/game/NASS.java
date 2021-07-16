@@ -10,9 +10,6 @@ TODO: Comando OPEN modificato;
          dal quale è possibile uscire solo con il comando CLOSE.
          All'interno è possibile eseguire i comandi PICK_UP, LOOK_UP e HINT un numero indefinito
          di volte. ]
-TODO: Inserire tramite END o QUIT la chiusura del gioco tra i comandi, usando exit(0);
-TODO: Per comando OPEN, usare condizione con istanceof per capire se è un ContainerObject
-TODO: Attributo booleano save?
  */
 package mainPackage.game;
 
@@ -250,6 +247,7 @@ public class NASS extends GameDescription {
                             if (funnel.getObject() instanceof ContainerObject) {
                                 ContainerObject temporaryContObj = (ContainerObject) funnel.getObject();
                                 if (temporaryContObj.isOpen()) {
+                                    inContainer = true;
                                     out.println("----------------------------------------");
                                     out.println("Hai aperto: " + temporaryContObj.getName() + ".");
                                     if (!temporaryContObj.getContained().isEmpty()) {
@@ -267,14 +265,14 @@ public class NASS extends GameDescription {
                                 out.println("Non puoi aprire " + funnel.getObject().getName() + ".");
                             }
                         } else {
-                            //TODO ok
+                            out.println("Non penso tu abbia capito come si usa questo comando.\n"
+                                    + "Se hai bisogno di chiarimenti, usa AIUTO");
                         }
                     }
                     break;
 
                 case CLOSE:
                     if (inContainer) {
-
                     } else {
                         out.println("Non puoi usare questo comando ora!");
                     }
@@ -470,45 +468,83 @@ public class NASS extends GameDescription {
 
     @Override
     public void printStart(PrintStream out) {
-        //  TODO sistemare la formattazione
-        out.println(""
-                + "============================================================\n"
-                + "    BENVENUTO IN NASS                                       \n"
-                + "    In quest'avventura, sfortunatamente, non vestirai i     \n"
-                + "    panni di Sabino Ciampa, ma del suo coinquilino che,     \n"
-                + "    pur essendo innocente, è stato incastrato e rinchiuso   \n"
-                + "    nel QGFC, il carcere di ''''''massima'''''' sicurezza   \n"
-                + "    della città di...vabbè dai, chi se ne frega di dove     \n"
-                + "    siamo!                                                  \n"
-                + "                                                            \n"
-                + "    Il problema è serio: tra poche ore vedrai la tua        \n"
-                + "    ultima alba, visto che verrai giustiziato...con         \n"
-                + "    la dannata ghigliottina! Ti rendi conto?                \n"
-                + "    Nel 21esimo secolo, ancora appresso alle cagate         \n"
-                + "    medievali!                                              \n"
-                + "                                                            \n"
-                + "    Comunque... il tuo obiettivo è quello di riuscire ad    \n"
-                + "    evadere e, per farlo, ti verrà in aiuto una speciale    \n"
-                + "    ehm...droga...che ha creato il caro Sabino.             \n"
-                + "                                                            \n"
-                + "    Che poi, chi cazz è Sabino!? Mah...                     \n"
-                + "                                                            \n"
-                + "    Attento però! Non sarà così semplice! Non tutto è       \n"
-                + "    quello che sembra! Vabbè tranquillo, tanto ora Sabino   \n"
-                + "    ti spiega tutto, ciao ciao...                           \n"
-                + "    Ah, dimenticavo, hai solo x minuti per evadere! Siiii,  \n"
-                + "    lo so, prima avevo parlato di 'ore', ma che vuoi da me: \n"
-                + "    gli sviluppatori di sto gioco sono dei cani e non lo    \n"
-                + "    hanno fatto durare nemmeno il tempo di una              \n"
-                + "    pennichella...                                          \n"
-                + "============================================================\n");
-        out.println("[ Premi INVIO per continuare ]");
+        out.println("========================================================================================================================\n"
+                + "BENVENUTO IN NASS\n"
+                + "\n"
+                + "In quest'avventura, sfortunatamente, non vestirai i panni di Sabino Ciampa, ma del suo coinquilino che,\n"
+                + "pur essendo innocente, è stato incastrato e rinchiuso nel QGFC, il carcere di ''''''massima'''''' sicurezza\n"
+                + "della città di... lasciamo perdere dove, arrivo al punto.\n"
+                + "Il problema è serio: tra poche ore vedrai la tua ultima alba, visto che verrai giustiziato...\n"
+                + "con la dannata ghigliottina! Ma stiamo scherzando? Nel 21esimo secolo?\n"
+                + "              \n"
+                + "Comunque... il tuo obiettivo è quello di riuscire ad evadere e, per farlo, ti verrà in aiuto una speciale\n"
+                + "ehm...droga...che ha creato il caro Sabino.\n"
+                + "Aspetta un attimo, torno subito...\n"
+                + "\n"
+                + "WAGLIÒ, MA MI SPIEGATE CHI È STO SABINO!?\n"
+                + "HO CAPITO \"SEGUI IL COPIONE\", MA A STO POVERO CRISTO DEVO SPIEGARE LE ROBE O NO?\n"
+                + "SI...SI OK MA... MA COME DIGLI 'LO SCOPRIRAI NEL SECONDO CAPITOLO', MA FIGURATI SE STA ROBACCIA AVRÀ UN...\n"
+                + "COSA SIGNIF... OK BASTA, NARRO STA ROBA, VOI MI PAGATE, E NON VOGLIO SAPERNE PIÙ NIENTE!\n"
+                + "\n"
+                + "Rieccomi.\n"
+                + "\n"
+                + "Ehm... la vera identità di Sabino ti sarà chiara col progredire della storia...\n"
+                + "Attento però! Non sarà così semplice! Non tutto è quello che sembra!\n"
+                + "Dovrai affrontare enigmi *coff* difficili *coff* che ti potranno bloccarti o addirittura portarti alla morte!\n"
+                + "\n"
+                + "Inizi la tua avventura nella tua cella, mentre Sabino ti sta spiegando l'utilizzo di questa sua incredibile invenzione.\n"
+                + "========================================================================================================================");
+        out.println("\nVuoi leggere l'inizio?");
+        Scanner wannaSkip = new Scanner(System.in);
+        String decision = wannaSkip.nextLine();
 
-        try {
-            System.in.read();
-        } catch (IOException ex) {
-            System.err.println("Errore nella lettura dell'invio. " + ex.getMessage());
-        }
+            if (decision.equalsIgnoreCase("SI")) {
+                out.println("\"La pistola è sicura se dentro c'è la dose, altrimenti ti fa un bel buco in testa e basta\" spiega Sabino, ridendo.\n"
+                        + "\"Ma come funziona?\" domani perplesso.\n"
+                        + "\"Molto semplice: ho comprato una normale pistola da Ugo, poi ho rubato una siringa dall'infermieria al piano di sopra ed\n"
+                        + "ho montato tutto insieme. Nel caricatore ci sono le capsule che ho già preparato. Basta puntarti la pistola alla tempia e\n"
+                        + "premere il grilletto: l'ago retrattile verrà spinto fuori dalla canna e arriverà direttamente al tuo cervello,\n"
+                        + "la dose verrà iniettata e farà effetto. Per fortuna questa sostanza riparerà istantaneamente i danni creati dall'ago della siringa.\"\n"
+                        + "\"Ok, e come faccio a capire quante dosi mi rimangono.\"\n"
+                        + "\"Eeeeeeeeeeh... non lo puoi sapere.\"\n"
+                        + "\"Intendevo come faccio a togliere il caricatore per guardarci dentro, non ho mai usato una pist...\"\n"
+                        + "\"Non puoi togliere il caricatore.\"\n"
+                        + "\"Cosa? Perché?\"\n"
+                        + "\"Perché Seba s'è scordato di implementare il comando per farl...ehm...perché la sostanza è altamente instabile,\n"
+                        + "ed il contatto con l'aria potrebbe fare una brutta reazione...\"\n"
+                        + "\"Ah...beh allora ringrazio Seba per non aver implementato il comando, così almeno non muoio come un fesso...\n"
+                        + "Ma come farò a capire se la dose fa effetto?\"\n"
+                        + "\"Credimi, lo capirai...\" termina Sabino, invitandoti ad usare la dose.");
+
+                waiting(out);
+
+                out.println("Prendi la pistola, la punti alla testa, chiudi gli occhi e fai fuoco...\n"
+                        + "Senti qualcosa che si muove sotto di te, un rumore di onde del mare e uno strano senso di squilibrio.\n"
+                        + "Apri gli occhi e scopri di essere su una tavola da surf a forma di crocifisso! Insieme a te c'è Tatiana Shmailyuk\n"
+                        + "che ti sorride e guida il surf verso una gigantesca scolopendra in fiamme!\n"
+                        + "Tatiana ti grida: \"ARE YOU READY!?\"\n"
+                        + "Tu inciampi con le parole: \"A FAR CHE...A...WHAT DOING...DO...CRISTO SANTO!\"\n"
+                        + "La scolopendra vi piomba addosso e passi tra le sue fiamme, ritrovandoti fuori dalla tua cella, con qualche anno in meno\n"
+                        + "per lo spavento.\n"
+                        + "\n"
+                        + "Ti volti e, vedendo Sabino, gli inizi a urlare sottovoce: \"Ma che diavolo è stato!?\", mentre lui non riesce a smettere\n"
+                        + "di ridere.\n"
+                        + "\"Cosa ridi? Ho avuto un mezzo infarto!\"\n"
+                        + "\"Avresti dovuto vedere la tua faccia\" esclama, continuando a ridere.\n"
+                        + "\"Ma vai a fare in cu...ehi, aspetta: ma sono fuori dalla cella!\"\n"
+                        + "Placando le risate, il tuo coinquilino conclude: \"Si, ma ora vedi di far presto e trova la via di fuga... in bocca al lupo\"\n"
+                        + "\"Ok, vado\" rispondi e, riponendo la pistola nella zona interna della parte posteriore del pantalone, la prima cosa che ti\n"
+                        + "chiedi è...");
+
+                waiting(out);
+
+            } else if (decision.equalsIgnoreCase("NO")){
+                
+                out.println("Ok, allora sai già tutto.");
+                waiting(out);
+            }else{
+                out.println("Non ho capito, ma faccio finta che tu voglia saltare l'inizio.");
+            }
     }
 
     @Override
@@ -582,5 +618,14 @@ public class NASS extends GameDescription {
                 + "Il comando INTERAGISCI è un comando abbastanza universale, usalo con saggezza!\n\n"
                 + "Ovviamente potrei aver dimenticato qualcosa,ma sono certo che te la saprai cavare...    \n");
 
+    }
+
+    private void waiting(PrintStream out) {
+        out.println("\n[ Premi INVIO per continuare ]");
+        try {
+            System.in.read();
+        } catch (IOException ex) {
+            System.err.println("Errore nella lettura dell'invio. " + ex.getMessage());
+        }
     }
 }
