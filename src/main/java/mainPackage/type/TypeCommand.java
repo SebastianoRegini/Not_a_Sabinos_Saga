@@ -17,20 +17,19 @@ public enum TypeCommand implements Serializable{
     EAST(3),
     WEST(4),
     OPEN(5),
-    CLOSE(6),
-    INVENTORY(7),
-    PICK_UP(8),
-    DROP(9),
-    USE(10),
-    GIVE(11),
-    LOOK(12),
-    INTERACT(13),
-    THINK_ABOUT(14),
-    DOSE(15), //Comando esclusivo per la dose e la pistola per dosi
-    SAVE(16),
-    LOAD(17),
-    END(18),
-    HELP(19);
+    INVENTORY(6),
+    PICK_UP(7),
+    DROP(8),
+    USE(9),
+    GIVE(10),
+    LOOK(11),
+    INTERACT(12),
+    THINK_ABOUT(13),
+    DOSE(14), //Comando esclusivo per la dose e la pistola per dosi
+    SAVE(15),
+    LOAD(16),
+    END(17),
+    HELP(18);
      
 
     private final int code;
