@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import mainPackage.game.NASS;
 import mainPackage.parser.Parser;
 import mainPackage.parser.ParserFilter;
@@ -46,7 +44,6 @@ public class Starter {
         //  GAME INTRO
         game.printStart(System.out);
 
-        //  TODO: SABINO DIALOGUE
         //  STARTING ROOM
         game.getInRoom().printRoom();
 
