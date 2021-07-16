@@ -293,19 +293,30 @@ public class NASS extends GameDescription {
                         } else if (funnel.getInventoryObj() != null) { //Se hai inserito un oggetto dell'inventario
                             out.println("----------------------------------------");
                             out.println(funnel.getInventoryObj().getDescription());
-                        } else {
+                        } else if (funnel.getExtraWord() != null) { //Se hai inserito una parola senza significato oppure non presente nelle liste
+                            out.println("----------------------------------------");
+                            out.println("Circolare, circolare! Non c'è niente da vedere!");
+                        } else { //Se non hai inserito nulla oltre al comando
                             out.println("----------------------------------------");
                             out.println(getInRoom().getDescriptionLook());
-                            //TODO: stampare oggetti nella stanza
+                            out.println("\n* * * * * * * * * * * * * * * * * * * *");
+                            if(getInRoom().getObj().isEmpty()){
+                                out.println("Non ci sono oggetti nella stanza da poter raccogliere.");
+                            } else{
+                                out.println("Nella stanza ci sono questi oggetti da poter raccogliere:");
+                                for(GameObject item : getInRoom().getObj()){
+                                    out.println(item.getName());
+                                }
+                            }
                         }
                     }
-
                     break;
 
                 case INTERACT:
                     break;
 
                 case THINK_ABOUT:
+                    
                     break;
 
                 case DOSE:
