@@ -136,7 +136,6 @@ public class Starter {
 
                     default:
                         game.nextMove(filter, System.out);
-                        break;
                 }
             } else {
                 System.out.println("Non hai messo un comando valido!");
