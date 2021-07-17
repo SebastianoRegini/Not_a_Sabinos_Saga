@@ -2,11 +2,6 @@
  * NOT A SABINO'S SAGA - MS_C ©2021
  * This is surely not a Sabino's Saga. Anyway, Sabino is still here...
  */
-
- /*
-TODO: Spostare Castorpio da Cortile a Torre dopo USA PESETTO SU CASTORPIO
-TODO: IMPORTANTE! Gestire la presenza del personaggio nelle stanze dosi.
- */
 package mainPackage.game;
 
 import java.io.FileInputStream;
@@ -16,6 +11,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import mainPackage.parser.ParserFilter;
 import mainPackage.GameDescription;
@@ -43,6 +40,8 @@ public class NASS extends GameDescription {
     //  EVENT SWITCHES
     private int eventEnlightRoom = 0;
     private int eventBossQuest = 0;
+
+    private boolean eventTableTape = false;
 
     //  OVERRIDED METHODS
     @Override
@@ -129,6 +128,7 @@ public class NASS extends GameDescription {
         initContainerInRoom(ufficio);
         initObjectInRoom(spogliatoio);
         initContainerInRoom(spogliatoio);
+        initObjectInRoom(corridoioSpogliatoio);
         initObjectInRoom(cucina);
         initObjectInRoom(mensa);
         initObjectInRoom(torreOsservazione);
@@ -165,7 +165,7 @@ public class NASS extends GameDescription {
         setAlternativeInventory(new Inventory(4));
         gun = new DoseGun(16, 8);
 
-        setInRoom(spogliatoio);
+        setInRoom(corridoioIniziale);
     }
 
     @Override
@@ -221,11 +221,12 @@ public class NASS extends GameDescription {
                     if (getInRoom().getWest().getId() == 7 && eventEnlightRoom < 2) {
                         out.println("----------------------------------------");
                         if (eventEnlightRoom == 0) {
-                            out.println("Apri la porta della stanza accanto, ma ti fermi immediatamente quando\n"
-                                    + "vedi, in alto, la spia di una telecamera che punta verso l'interno della stanza stessa.\n"
-                                    + "Per fortuna, le luci della stanza sono spente: forse la telecamera non ti ha visto, quindi richiudi velocemente la porta.\n"
+                            out.println("Apri la porta della stanza accanto, ma ti fermi immediatamente quando vedi, in alto,\n"
+                                    + "la spia di una telecamera che punta verso l'interno della stanza stessa.\n"
+                                    + "Per fortuna, le luci della stanza sono spente: forse la telecamera non ti ha visto, quindi richiudi velocemente la porta.\n\n"
                                     + "Bisogna neutralizzare, in qualche modo, quella telecamera prima di poter entrare.");
                             eventEnlightRoom++;
+                            visibilityChanger(getInRoom(), 10); //Cambia la visibilità della telecamera
                         } else if (eventEnlightRoom == 1) {
                             out.println("Bisogna neutralizzare, in qualche modo, quella telecamera prima di poter entrare.");
                         }
@@ -269,25 +270,27 @@ public class NASS extends GameDescription {
 
                                     //Contenitore: Tasca
                                     case 2:
-                                        out.println("Apri la tasca per vedere cosa c'è dentro, ma il grembiule è vecchio e rovinato:\n"
+                                        out.print("Apri la tasca per vedere cosa c'è dentro, ma il grembiule è vecchio e rovinato:\n"
                                                 + "il tuo tirare, unito al peso della roba al suo interno, la fanno strappare\n"
                                                 + "e fanno cadere a terra un ");
                                         break;
                                 }
 
                                 for (GameObject item : temporaryContObj.getContained()) {
-                                    out.println(item.getName());
+                                    out.println(item.getName().toLowerCase());
+                                    getInRoom().addObj(item);
                                 }
+                                temporaryContObj.getContained().clear(); //Svuoto il ContainerObj
 
                             } else {
-                                out.println("È vuota, hai già aperto " + temporaryContObj.getName() + ".");
+                                out.println("È vuota, hai già aperto la " + temporaryContObj.getName().toLowerCase() + ".");
                             }
 
                         } else {
-                            out.println(temporaryContObj.getName() + " è chiusa a chiave!");
+                            out.println("La " + temporaryContObj.getName().toLowerCase() + " è chiusa a chiave!");
                         }
                     } else {
-                        out.println("Non puoi aprire " + funnel.getObject().getName() + ".");
+                        out.println("Non puoi aprire " + funnel.getObject().getName().toLowerCase() + ".");
                     }
                 } else {
                     out.println("Non penso tu abbia capito come si usa questo comando.\n"
@@ -325,7 +328,7 @@ public class NASS extends GameDescription {
                             temporaryInv.add(funnel.getObject());
                             getInRoom().removeObj(funnel.getObject());
                             out.println("----------------------------------------");
-                            out.println("Hai messo in tasca: " + funnel.getObject().getName() + ".");
+                            out.println("Hai messo in tasca: " + funnel.getObject().getName().toLowerCase() + ".");
                             if (funnel.getObject().getId() == 18) {
                                 guardUniform = true;
                             }
@@ -352,7 +355,7 @@ public class NASS extends GameDescription {
                             getInventory().remove(funnel.getInventoryObj());
                             getInRoom().addObj(funnel.getInventoryObj());
                             out.println("----------------------------------------");
-                            out.println("Hai lasciato: " + funnel.getInventoryObj().getName() + " in questa stanza.");
+                            out.println("Hai lasciato: " + funnel.getInventoryObj().getName().toLowerCase() + " in questa stanza.");
                         }
                     }
                 } else {
@@ -363,7 +366,7 @@ public class NASS extends GameDescription {
             case USE:
                 if (funnel.getInventoryObj() != null) {
                     if (funnel.getPerson() != null && funnel.getObject() != null) {
-                        out.println("Puoi usarlo o su " + funnel.getPerson().getName() + " o su " + funnel.getObject().getName() + ".");
+                        out.println("Puoi usarlo o su " + funnel.getPerson().getName() + " o su " + funnel.getObject().getName().toLowerCase() + ".");
                     } else if (funnel.getPerson() != null) {
 
                         switch (funnel.getPerson().getId()) {
@@ -396,14 +399,13 @@ public class NASS extends GameDescription {
                                     out.println(funnel.getPerson().getInteraction(2));
                                     getInventory().remove(funnel.getInventoryObj());
                                 } else {
-                                    out.println("Non puoi usare " + funnel.getInventoryObj().getName() + " su " + funnel.getPerson().getName() + ".");
+                                    out.println("Non puoi usare " + funnel.getInventoryObj().getName().toLowerCase() + " su " + funnel.getPerson().getName() + ".");
                                 }
                                 break;
 
                             //Se è chiunque altro    
                             default:
                                 out.println("Non puoi usare oggetti su " + funnel.getPerson().getName() + ".");
-                                break;
                         }
 
                     } else if (funnel.getObject() != null) {
@@ -414,8 +416,9 @@ public class NASS extends GameDescription {
                             case 11:
                                 if (funnel.getObject().getId() == 10) {
                                     eventEnlightRoom = 2;
+                                    funnel.getObject().setVisible(false);
                                     out.println("Sporgendoti, sei riuscito a coprire l'obiettivo della telecamera con la carta stagnola.\n"
-                                            + "Hai acceso la luce e ora, finalmente, ci vedi. La prima cosa che \"fiuti\" è...");
+                                            + "Hai acceso la luce con l'interruttore proprio vicino alla porta e ora, finalmente, puoi entrare.");
                                 }
                                 getInventory().remove(funnel.getInventoryObj());
                                 break;
@@ -432,7 +435,7 @@ public class NASS extends GameDescription {
                                 }
                                 break;
 
-                                // TODO: QUI
+                            // TODO: QUI
                             //Cassaforte (1) + Chiave (12)
                             case 12:
                                 if (funnel.getObject() instanceof ContainerObject && funnel.getObject().getId() == 1) {
@@ -447,14 +450,28 @@ public class NASS extends GameDescription {
                                 }
                                 break;
 
-                            //Altrimenti
+                            //Qualsiasi altro oggetto
                             default:
+                                out.println("Non puoi usarlo in questo modo.");
 
                         }
 
                     } else { //Entrambi null
-                        //Chiave mensa
-                        //Mazzo di chiavi
+                        switch (funnel.getInventoryObj().getId()) {
+
+                            //Chiave mensa
+                            case 9:
+                                break;
+
+                            //Mazzo di chiavi
+                            case 25:
+                                break;
+
+                            //Qualsiasi altro oggetto
+                            default:
+                                out.println("Non puoi usarlo in questo modo.");
+                        }
+
                     }
                 } else {
                     out.println("Non puoi farlo.");
@@ -471,6 +488,7 @@ public class NASS extends GameDescription {
                             case 5:
                                 out.println("----------------------------------------");
                                 out.println(funnel.getPerson().getInteraction(5));
+                                eventTableTape = true;
                                 break;
 
                             //Oggetto: anello (6)
@@ -505,7 +523,7 @@ public class NASS extends GameDescription {
                 }
                 break;
 
-            case LOOK:
+            case EXAMINE:
                 //Se inserisci troppe cose da guardare
                 if ((funnel.getPerson() != null && funnel.getObject() != null)
                         || (funnel.getInventoryObj() != null && funnel.getObject() != null)
@@ -517,34 +535,21 @@ public class NASS extends GameDescription {
                     if (funnel.getPerson() != null) { //Se hai inserito un NPC
                         out.println("----------------------------------------");
                         out.println(funnel.getPerson().getInteraction(0));
-                    } else if (funnel.getObject() != null) { //Se hai inserito un oggetto
+                    } else if (funnel.getObject() != null && funnel.getObject().isVisible()) { //Se hai inserito un oggetto e se è visibile
                         out.println("----------------------------------------");
                         out.println(funnel.getObject().getDescription());
                     } else if (funnel.getInventoryObj() != null) { //Se hai inserito un oggetto dell'inventario
                         out.println("----------------------------------------");
                         out.println(funnel.getInventoryObj().getDescription());
-                    } else if (funnel.getExtraWord() != null) { //Se hai inserito una parola senza significato oppure non presente nelle liste
+                    } else { //Se non hai inserito nulla di valido
                         out.println("----------------------------------------");
                         out.println("Circolare, circolare! Non c'è niente da vedere!");
-                    } else { //Se non hai inserito nulla oltre al comando
-                        out.println("----------------------------------------");
-                        out.println(getInRoom().getDescriptionLook());
-                        out.println("\n* * * * * * * * * * * * * * * * * * * *");
-                        if (getInRoom().getObj().isEmpty()) {
-                            out.println("Non ci sono oggetti nella stanza da poter raccogliere.");
-                        } else {
-                            out.println("Nella stanza ci sono questi oggetti da poter raccogliere:");
-                            for (GameObject item : getInRoom().getObj()) {
-                                if (item.isPickupable() && item.isVisible()) {
-                                    out.println(item.getName());
-                                }
-                            }
-                        }
                     }
                 }
                 break;
 
             case INTERACT:
+                //TODO: Interazione Tavolo mensa con il boolean eventTableTape
                 break;
 
             case THINK_ABOUT:
@@ -559,17 +564,21 @@ public class NASS extends GameDescription {
                     } else if (funnel.getInventoryObj() != null) { //Se hai inserito un oggetto dell'inventario
                         out.println("----------------------------------------");
                         out.println(funnel.getInventoryObj().getHint());
-                    } else if (funnel.getExtraWord() != null) { //Se hai inserito una parola senza significato oppure non presente nelle liste
+                    } else { //Se non hai inserito nulla di valido
                         out.println("----------------------------------------");
                         out.println("Non farti viaggi astrali su qualsiasi cosa, devi sbrigarti ad evadere!");
-                    } else { //Se non hai inserito nulla oltre al comando
-                        out.println("----------------------------------------");
-                        out.println("Devi riflettere su qualche oggetto...");
                     }
                 }
                 break;
 
             case DOSE:
+                if (getInRoom().getToggleDose() == null) {
+                    out.println("Non puoi usare la dose qui");
+                } else {
+                    gun.shoot();
+                    setInRoom(getInRoom().getToggleDose());
+                    getInRoom().printRoom();
+                }
                 break;
 
             case HELP:
@@ -579,6 +588,32 @@ public class NASS extends GameDescription {
                 System.err.println("Interrupted Exception: " + ex.getMessage());
             }
             break;
+
+            case LOOK:
+                if (funnel.getObject() != null || funnel.getInventoryObj() != null || funnel.getPerson() != null) {
+                    out.println("Questo comando va usato da solo.");
+                } else {
+                    out.println("----------------------------------------");
+                    out.println(getInRoom().getDescriptionLook());
+                    out.println("\n* * * * * * * * * * * * * * * * * * * *");
+                    //Lista di oggetti Pickupable e Visible nella stanza
+                    List<GameObject> pickAndVis = new ArrayList<>();
+                    for (GameObject item : getInRoom().getObj()) {
+                        if (item.isPickupable() && item.isVisible()) {
+                            pickAndVis.add(item);
+                        }
+                    }
+
+                    if (pickAndVis.isEmpty()) {
+                        out.println("Non ci sono oggetti nella stanza da poter raccogliere.");
+                    } else {
+                        out.println("Nella stanza ci sono questi oggetti da poter raccogliere:");
+                        for (GameObject item : pickAndVis) {
+                            out.println(item.getName());
+                        }
+                    }
+                }
+                break;
 
         }
 
@@ -624,7 +659,7 @@ public class NASS extends GameDescription {
 
         if (decision.equalsIgnoreCase("SI")) {
             out.println("\"La pistola è sicura se dentro c'è la dose, altrimenti ti fa un bel buco in testa e basta\" spiega Sabino, ridendo.\n"
-                    + "\"Ma come funziona?\" domani perplesso.\n"
+                    + "\"Ma come funziona?\" domandi perplesso.\n"
                     + "\"Molto semplice: ho comprato una normale pistola da Ugo, poi ho rubato una siringa dall'infermieria al piano di sopra ed\n"
                     + "ho montato tutto insieme. Nel caricatore ci sono le capsule che ho già preparato. Basta puntarti la pistola alla tempia e\n"
                     + "premere il grilletto: l'ago retrattile verrà spinto fuori dalla canna e arriverà direttamente al tuo cervello,\n"
@@ -751,11 +786,25 @@ public class NASS extends GameDescription {
             System.err.println("Errore nella lettura dell'invio. " + ex.getMessage());
         }
     }
+
+    private void visibilityChanger(Room room, int idObject) {
+        for (GameObject obj : room.getObj()) {
+            if (obj.getId() == idObject) {
+                if (obj.isVisible()) {
+                    obj.setVisible(false);
+                } else {
+                    obj.setVisible(true);
+                }
+            }
+        }
+    }
 }
 
 /* Da sistemare
  *  - Se prendi la bambola di pezza AND se hai parlato con il Capo
  *      getRooms().get(16).setToggleDose(getRooms().get(28));
  *  - eventBossQuest
- *
-*/
+ *  - visibilityChanger(getRooms().get(id),idobj);
+ *  - Spostare Castorpio da Cortile a Torre dopo USA PESETTO SU CASTORPIO
+ *  - IMPORTANTE! Gestire la presenza del personaggio nelle stanze dosi.
+ */

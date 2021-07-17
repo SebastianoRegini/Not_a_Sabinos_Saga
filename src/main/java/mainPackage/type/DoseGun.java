@@ -50,7 +50,7 @@ public class DoseGun implements Serializable{
         }
     }
 
-    public boolean shootAmmo() {
+    public boolean shoot() {
         if (isEmpty()) {
             return false;
         } else {

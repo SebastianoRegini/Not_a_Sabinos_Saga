@@ -156,11 +156,11 @@ public class NassDB {
                     give.setSynonyms(aliases);
                     commands.add(give);
 
-                } else if (code == TypeCommand.LOOK.getTypeCode()) { //Se il codice è del comando GUARDA
+                } else if (code == TypeCommand.EXAMINE.getTypeCode()) { //Se il codice è del comando ESAMINA
 
-                    Command look = new Command(TypeCommand.LOOK);
-                    look.setSynonyms(aliases);
-                    commands.add(look);
+                    Command examine = new Command(TypeCommand.EXAMINE);
+                    examine.setSynonyms(aliases);
+                    commands.add(examine);
 
                 } else if (code == TypeCommand.INTERACT.getTypeCode()) { //Se il codice è del comando INTERAGISCI
 
@@ -203,6 +203,12 @@ public class NassDB {
                     Command help = new Command(TypeCommand.HELP);
                     help.setSynonyms(aliases);
                     commands.add(help);
+                    
+                } else if (code == TypeCommand.LOOK.getTypeCode()) { //Se il codice è del comando GUARDA
+
+                    Command look = new Command(TypeCommand.LOOK);
+                    look.setSynonyms(aliases);
+                    commands.add(look);
 
                 }
             } catch (SQLException ex) {
