@@ -435,18 +435,18 @@ public class NASS extends GameDescription {
                                 }
                                 break;
 
-                            // TODO: QUI
                             //Cassaforte (1) + Chiave (12)
                             case 12:
                                 if (funnel.getObject() instanceof ContainerObject && funnel.getObject().getId() == 1) {
-                                    out.println("");
+                                    unlock((ContainerObject) funnel.getObject(), funnel.getInventoryObj(), out);
                                 }
+
                                 break;
 
                             //Scrivania (0) + Chiave (4)
                             case 4:
                                 if (funnel.getObject() instanceof ContainerObject && funnel.getObject().getId() == 0) {
-                                    out.println("");
+                                    unlock((ContainerObject) funnel.getObject(), funnel.getInventoryObj(), out);
                                 }
                                 break;
 
@@ -797,6 +797,12 @@ public class NASS extends GameDescription {
                 }
             }
         }
+    }
+
+    private void unlock(ContainerObject cObj, GameObject key, PrintStream out) {
+        cObj.setOpen(true);
+        getInventory().remove(key);
+        out.println("Hai sbloccato la serratura della " + cObj + " con la chiave.");
     }
 }
 
