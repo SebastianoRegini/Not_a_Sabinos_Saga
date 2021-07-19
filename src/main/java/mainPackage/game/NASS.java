@@ -170,6 +170,7 @@ public class NASS extends GameDescription {
     @Override
     public void nextMove(ParserFilter funnel, PrintStream out) {
         out.println();
+        Inventory temporaryInv;
 
         //Switch sul tipo di comando
         switch (funnel.getCommand().getType()) {
@@ -205,7 +206,31 @@ public class NASS extends GameDescription {
                     out.println("La porta ad est è chiusa a chiave!");
                 } else {
                     setInRoom(getInRoom().getEast());
+
+                    switch (getInRoom().getId()) {
+                        //Mensa
+                        case 10:
+                            if (!getInRoom().isVisited()) {
+                                waiting(out);
+                                out.println("Non fai in tempo ad entrare in questa stanza piena di tavoli che senti Antonio urlare dalla sua cella:\n"
+                                        + "ha visto, dalla finestrella che si affaccia proprio al corridoio interno, la tua sagoma entrare nella stanza,\n"
+                                        + "e le urla hanno attirato una guardia, che vedi passare davanti alla porta ad est.\n\n"
+                                        + "Dopo qualche minuto di urla e manganellate, il silenzio. Poi, un rumore provenire da sud-est: una porta che si apre e si chiude.\n\n"
+                                        + "Credendo che il peggio sia passato, finalmente accendi le luci della stanza...");
+                            }
+                            break;
+
+                        //Corridoio Interno
+                        case 14:
+                            if (!getRooms().get(10).isVisited()) {
+                                waiting(out);
+                                gameOver(out, 1);
+                            }
+                            break;
+                    }
+
                     getInRoom().printRoom();
+
                 }
 
                 break;
@@ -299,12 +324,19 @@ public class NASS extends GameDescription {
                 break;
 
             case INVENTORY:
-                if (getInventory().isEmpty()) {
+                //Controllo se siamo nella stanza alternativa
+                if (getInRoom().getId() < 19) {
+                    temporaryInv = getInventory();
+                } else {
+                    temporaryInv = getAlternativeInventory();
+                }
+
+                if (temporaryInv.isEmpty()) {
                     out.println("Hai le tasche vuote!");
                 } else {
                     out.println("----------------------------------------");
-                    out.println("Frugando in tutte le tue " + getInventory().getSlots() + " tasche, trovi:");
-                    for (GameObject obj : getInventory().getContaining()) {
+                    out.println("Frugando in tutte le tue " + temporaryInv.getSlots() + " tasche, trovi:");
+                    for (GameObject obj : temporaryInv.getContaining()) {
                         out.println(obj.getName());
                     }
                 }
@@ -316,7 +348,6 @@ public class NASS extends GameDescription {
                     if (funnel.getObject().isPickupable()) {
 
                         //Controllo se siamo nella stanza alternativa
-                        Inventory temporaryInv;
                         if (getInRoom().getId() < 19) {
                             temporaryInv = getInventory();
                         } else {
@@ -461,6 +492,7 @@ public class NASS extends GameDescription {
                             //Chiave mensa
                             case 9:
 
+                                //Porta est
                                 if (getInRoom().getId() == 9 || getInRoom().getId() == 10) {
                                     if (getInRoom().isEastLock() && getInRoom().getEast().isWestLock()) {
                                         getInRoom().setEastLock(false);
@@ -480,22 +512,87 @@ public class NASS extends GameDescription {
                             //Mazzo di chiavi
                             case 25:
                                 switch (getInRoom().getId()) {
-                                    //Ingresso principale e corridoio spogliatoio
+                                    //Ingresso principale e Corridoio Spogliatoio
                                     case 2:
-
+                                    case 8:
+                                        //Porta nord
+                                        if (getInRoom().isNorthLock() && getInRoom().getNorth().isSouthLock()) {
+                                            getInRoom().setNorthLock(false);
+                                            getInRoom().getNorth().setSouthLock(false);
+                                            out.println("----------------------------------------");
+                                            out.println("Hai sbloccato la porta a nord, ora puoi passare.");
+                                        } else {
+                                            out.println("----------------------------------------");
+                                            out.println("Hai già sbloccato la porta."); //TODO Bruò
+                                        }
                                         break;
+
                                     //Passaggio per la cucina
                                     case 4:
+                                        //Porta est
+                                        if (getInRoom().isEastLock() && getInRoom().getEast().isWestLock()) {
+                                            getInRoom().setEastLock(false);
+                                            getInRoom().getEast().setWestLock(false);
+                                            out.println("----------------------------------------");
+                                            out.println("Hai sbloccato la porta ad est, ora puoi passare.");
+                                        } else {
+                                            out.println("----------------------------------------");
+                                            out.println("Hai già sbloccato la porta."); //TODO Bruò
+                                        }
+
+                                        //Porta sud
+                                        if (getInRoom().isSouthLock() && getInRoom().getSouth().isNorthLock()) {
+                                            getInRoom().setSouthLock(false);
+                                            getInRoom().getSouth().setNorthLock(false);
+                                            out.println("----------------------------------------");
+                                            out.println("Hai sbloccato la porta a sud, ora puoi passare.");
+                                        } else {
+                                            out.println("----------------------------------------");
+                                            out.println("Hai già sbloccato la porta."); //TODO Bruò
+                                        }
+
                                         break;
+
                                     //Entrata zona carcere
                                     case 5:
+                                        //Porta est
+                                        if (getInRoom().isEastLock() && getInRoom().getEast().isWestLock()) {
+                                            getInRoom().setEastLock(false);
+                                            getInRoom().getEast().setWestLock(false);
+                                            out.println("----------------------------------------");
+                                            out.println("Hai sbloccato la porta ad est, ora puoi passare.");
+                                        } else {
+                                            out.println("----------------------------------------");
+                                            out.println("Hai già sbloccato la porta."); //TODO Bruò
+                                        }
+
+                                        //Porta ovest
+                                        if (getInRoom().isWestLock() && getInRoom().getWest().isEastLock()) {
+                                            getInRoom().setWestLock(false);
+                                            getInRoom().getWest().setEastLock(false);
+                                            out.println("----------------------------------------");
+                                            out.println("Hai sbloccato la porta ad ovest, ora puoi passare.");
+                                        } else {
+                                            out.println("----------------------------------------");
+                                            out.println("Hai già sbloccato la porta."); //TODO Bruò
+                                        }
+
                                         break;
+
                                     //Angolo corridoio
                                     case 6:
+                                        //Porta ovest
+                                        if (getInRoom().isWestLock() && getInRoom().getWest().isEastLock()) {
+                                            getInRoom().setWestLock(false);
+                                            getInRoom().getWest().setEastLock(false);
+                                            out.println("----------------------------------------");
+                                            out.println("Hai sbloccato la porta ad ovest, ora puoi passare.");
+                                        } else {
+                                            out.println("----------------------------------------");
+                                            out.println("Hai già sbloccato la porta."); //TODO Bruò
+                                        }
                                         break;
-                                    //Corridoio Spogliatoio
-                                    case 8:
-                                        break;
+
                                     default:
                                         out.println("Non puoi usare questa chiave qui!");
                                 }
@@ -503,7 +600,7 @@ public class NASS extends GameDescription {
 
                             //Qualsiasi altro oggetto
                             default:
-                                out.println("Non puoi usarlo in questo modo.");
+                                out.println("Non puoi usarlo!");
                         }
 
                     }
@@ -616,12 +713,9 @@ public class NASS extends GameDescription {
                 break;
 
             case HELP:
-                    try {
                 help(out);
-            } catch (InterruptedException ex) {
-                System.err.println("Interrupted Exception: " + ex.getMessage());
-            }
-            break;
+
+                break;
 
             case LOOK:
                 if (funnel.getObject() != null || funnel.getInventoryObj() != null || funnel.getPerson() != null) {
@@ -759,52 +853,126 @@ public class NASS extends GameDescription {
     }
 
     @Override
-    public void printEnd(PrintStream out) {
-        //Roba
+    public void gameOver(PrintStream out, int messageCode) {
+
+        switch (messageCode) {
+            case 0:
+                //Good Ending
+                out.println("----------------------------------------");
+                out.println("Finalmente riesci ad evadere! Ti allontani da quel posto maledetto e non ti volti mai indietro.\n"
+                        + "Riaffiorano i ricordi del processo, dei giorni interminabili passati nella tua cella, di Sabino\n"
+                        + "che ti ha aiutato con la sua strana \"droga\", di tutti i rischi che hai corso e del fatto che sei\n"
+                        + "finalmente libero.\n\n"
+                        + "Dopo esserti liberato dei vestiti da galeotto, raggiungi una stazione di servizio ma, con orrore\n"
+                        + "e stupore, fai una scoperta inquietante...");
+                break;
+
+            case 1:
+                //Antonio
+                out.println("----------------------------------------");
+                out.println("Appena Antonio ti vede passare, comincia ad urlare.\n"
+                        + "Nel tentare di placarlo, non ti accorgi dell'arrivo di una guardia, che ti immobilizza\n"
+                        + "con un colpo di taser...\n\n"
+                        + "Ti risvegli, all'alba, nella tua cella. Subito dopo, le guardie vengono a prelevarti e ti\n"
+                        + "portano all'esterno. Vieni piazzato sulla ghigliottina ed immobilizzato.\n"
+                        + "La paura cresce dentro di te mentre scruti, con la coda dell'occhio, il direttore del carcere\n"
+                        + "con la mano sollevata. Un senso di panico ti pervade quando vedi la sua mano cadere verso il basso,\n"
+                        + "poi la fredda lama della ghigliottina scivola sulla tua pelle e, un'istante dopo, tutto buio...");
+                break;
+
+            case 2:
+                //Muro
+                out.println("----------------------------------------");
+                out.println("All'alba del giorno della tua esecuzione, le guardie del turno successivo\n"
+                        + "ti trovano incastrato nel cemento. Ore dopo aver chiamato una compagnia di costruzioni,\n"
+                        + "sono riusciti a tirarti fuori da lì. \n\n"
+                        + "Successivamente, per non perdere altro tempo,ti hanno portato alla ghigliottina: dopo averti\n"
+                        + "appoggiato su di essa e aver infilato la tua testa nella struttura, hanno azionato il meccanismo.\n\n"
+                        + "L'ultima cosa che hai sentito è la fredda lama che ti ha spento con un colpo secco.");
+                break;
+
+            case 3:
+                //Cecchino
+                out.println("----------------------------------------");
+                out.println("All'improvviso senti un forte bruciore dietro la testa. Un odore di polvere da sparo\n"
+                        + "pervade le tue narici, mentre la vista si annebbia e si oscura.\n\n"
+                        + "Il tuo corpo cade a terra senza controllo e, l'ultima cosa che vedi, è la canna di un fucile,\n"
+                        + "ancora incandescente, che sporge dalla TORRE DI OSSERVAZIONE. Poi tutto nero...");
+                break;
+
+            case 4:
+                //Se usi la pistola senza dosi
+                out.println("----------------------------------------");
+                out.println("Premi il grilletto e senti la classica sensazione dell'ago che perfora il tuo cervello, come quando usi le dosi. \n"
+                        + "Questa volta, però, nessun viaggio astrale, nessun mondo parallelo, niente di niente...\n\n"
+                        + "Mentre la vista ti si annebbia e la testa comincia a pulsare forte, vedi a terra delle gocce di sangue.\n"
+                        + "Ti tocchi il viso e scopri che il sangue sta uscendo dal tuo naso.\n\n"
+                        + "Crolli a terra con l'ultimo pensiero che ritorna alle parole di Sabino:\n"
+                        + "\"La pistola è sicura se dentro c'è la dose, altrimenti ti fa un bel buco in testa e basta...\"");
+                break;
+        }
+
+        waiting(out);
+
+        out.println("==========================================================");
+        out.println("Grazie per aver giocato a NASS: Not A Sabino's Saga!\n\n"
+                + "Ora puoi andare a giocare a giochi migliori...");
+        out.println("==========================================================");
+
+        try {
+            Thread.sleep(2500);
+        } catch (InterruptedException ex) {
+            System.err.println("Interrupted Exception: " + ex.getMessage());
+        }
+
         System.exit(0);
     }
 
     @Override
-    public void gameOver(PrintStream out) {
-        //Stamperà il messaggio di game over
-        System.exit(0);
-    }
-
-    @Override
-    public void help(PrintStream out) throws InterruptedException {
+    public void help(PrintStream out) {
         out.println(""
                 + "Lo so, lo so, la brutta aria che emana questo postaccio e\n"
                 + "il pensiero che, se non ti sbrigassi, ci resteresti secco\n"
                 + "non sono amici della concentrazione, quindi ecco un paio \n"
                 + "di indicazioni, nel caso in cui ti dovessero sfuggire... \n");
 
-        Thread.sleep(2000);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+            System.err.println("Interrupted Exception: " + ex.getMessage());
+        }
 
         out.println(""
-                + "===========================================================================================================================\n"
-                + "                                                      AIUTO COMANDI                                                        \n"
-                + "  Per muoverti all'interno del gioco, usa i seguenti comandi:                                                              \n"
-                + "    >> NORD -> Spostati in direzione NORD                                                                                  \n"
-                + "    >> SUD -> Spostati in direzione SUD                                                                                    \n"
-                + "    >> EST -> Spostati in direzione EST                                                                                    \n"
-                + "    >> OVEST -> Spostati in direzione OVEST                                                                                \n"
-                + "    >> APRI <contenitore> -> Apre un contenitore                                                                           \n"
-                + "    >> INVENTARIO -> Mostra il contenuto del tuo inventario                                                                \n"
-                + "    >> PRENDI <oggetto> -> Metti l'oggetto nell'inventario                                                                 \n"
-                + "    >> LASCIA <oggetto> -> Lascia l'oggetto nella stanza                                                                   \n"
-                + "    >> USA <ogg_inventario> -> Usa un oggetto presente nell'inventario                                                     \n"
-                + "    >> DAI <ogg_inventario A <personaggio> -> Dai un tuo oggetto ad un...soggetto                                          \n"
-                + "    >> GUARDA -> Osserva l'ambiente circostante, oppure un oggetto specifico, oppure una persona                           \n"
-                + "    >> INTERAGISCI CON <personaggio>/<oggetto> -> Ti permette di interagire con qualcuno o qualcosa                        \n"
-                + "    >> RIFLETTI SU <oggetto> -> Ti permette di esaminare meglio un oggetto                                                 \n"
-                + "    >> SPARATI UNA DOSE -> Sai l'arma di Sabino? Bene, in questo modo potrai utilizzarla. Niente di illegale eh! O quasi...\n"
-                + "    >> SALVA -> Salva la partita                                                                                           \n"
-                + "    >> CARICA -> Carica la partita                                                                                         \n"
-                + "    >> ESCI -> Esci dal gioco (magari ti avesse fatto uscire dal carcere, eh?)                                             \n"
-                + "===========================================================================================================================\n"
+                + "============================================================================================================================\n"
+                + "                                                      AIUTO COMANDI                                                         \n"
+                + "  Per muoverti all'interno del gioco, usa i seguenti comandi:                                                               \n"
+                + "    >> NORD -> Spostati in direzione NORD                                                                                   \n"
+                + "    >> SUD -> Spostati in direzione SUD                                                                                     \n"
+                + "    >> EST -> Spostati in direzione EST                                                                                     \n"
+                + "    >> OVEST -> Spostati in direzione OVEST                                                                                 \n"
+                + "    >> APRI <contenitore> -> Apre un contenitore                                                                            \n"
+                + "    >> INVENTARIO -> Mostra il contenuto del tuo inventario                                                                 \n"
+                + "    >> PRENDI <oggetto> -> Metti l'oggetto nell'inventario                                                                  \n"
+                + "    >> LASCIA <oggetto> -> Lascia l'oggetto nella stanza                                                                    \n"
+                + "    >> USA <ogg_inventario> (SU <oggetto>) -> Usa un oggetto presente nell'inventario (da solo o su un altro oggetto)       \n"
+                + "    >> DAI <ogg_inventario A <personaggio> -> Dai un tuo oggetto ad un...soggetto                                           \n"
+                + "    >> GUARDA -> Ti permette di guardarti intorno nella stanza, per carpire dettagli aggiuntivi                             \n"
+                + "    >> ESAMINA <ogg_inventario>/<personaggio>/<oggetto> -> Osserva più attentamente un oggetto specifico, oppure una persona\n"
+                + "    >> INTERAGISCI CON <personaggio>/<oggetto> -> Ti permette di interagire con qualcuno o qualcosa                         \n"
+                + "    >> RIFLETTI SU <oggetto>/<ogg_inventario> -> Ti permette di ragionare meglio su un oggetto                              \n"
+                + "    >> SPARATI UNA DOSE -> Sai l'arma di Sabino? Bene, in questo modo potrai utilizzarla. Niente di illegale eh! O quasi... \n"
+                + "    >> SALVA -> Salva la partita                                                                                            \n"
+                + "    >> CARICA -> Carica la partita                                                                                          \n"
+                + "    >> ESCI -> Esci dal gioco (magari ti avesse fatto uscire dal carcere, eh?)                                              \n"
+                + "    >> AIUTO -> Mostra la schermata di comandi principali (cioè, questa...)                                                 \n"
+                + "============================================================================================================================\n"
         );
 
-        Thread.sleep(3000);
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException ex) {
+            System.err.println("Interrupted Exception: " + ex.getMessage());
+        }
 
         out.println(""
                 + "Il comando INTERAGISCI è un comando abbastanza universale, usalo con saggezza!\n\n"

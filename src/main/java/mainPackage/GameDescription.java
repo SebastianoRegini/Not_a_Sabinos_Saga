@@ -90,11 +90,7 @@ public abstract class GameDescription implements Serializable {
 
     public abstract GameDescription load() throws IOException, ClassNotFoundException;
 
-    public abstract void printEnd(PrintStream out);
+    public abstract void gameOver(PrintStream out, int messageCode);
 
-    public abstract void gameOver(PrintStream out);
-
-    public abstract void help(PrintStream out) throws InterruptedException;
-
-    //  TODO Inserire metodo astratto per l'epilogo, con vari messaggi a seconda dello score finale
+    public abstract void help(PrintStream out);
 }
