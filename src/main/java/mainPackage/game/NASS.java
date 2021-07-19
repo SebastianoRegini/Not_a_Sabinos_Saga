@@ -21,7 +21,6 @@ import mainPackage.type.DoseGun;
 import mainPackage.type.GameObject;
 import mainPackage.type.Inventory;
 import mainPackage.type.Room;
-import mainPackage.type.TypeCommand;
 import static mainPackage.utilities.NassDB.*;
 
 /*
@@ -461,10 +460,45 @@ public class NASS extends GameDescription {
 
                             //Chiave mensa
                             case 9:
+
+                                if (getInRoom().getId() == 9 || getInRoom().getId() == 10) {
+                                    if (getInRoom().isEastLock() && getInRoom().getEast().isWestLock()) {
+                                        getInRoom().setEastLock(false);
+                                        getInRoom().getEast().setWestLock(false);
+                                        out.println("----------------------------------------");
+                                        out.println("Hai sbloccato la porta ad est, ora puoi passare.");
+                                    } else {
+                                        out.println("----------------------------------------");
+                                        out.println("Hai già sbloccato la porta."); //TODO Bruò
+                                    }
+                                } else {
+                                    out.println("Non puoi usare questa chiave qui!");
+                                }
+
                                 break;
 
                             //Mazzo di chiavi
                             case 25:
+                                switch (getInRoom().getId()) {
+                                    //Ingresso principale e corridoio spogliatoio
+                                    case 2:
+
+                                        break;
+                                    //Passaggio per la cucina
+                                    case 4:
+                                        break;
+                                    //Entrata zona carcere
+                                    case 5:
+                                        break;
+                                    //Angolo corridoio
+                                    case 6:
+                                        break;
+                                    //Corridoio Spogliatoio
+                                    case 8:
+                                        break;
+                                    default:
+                                        out.println("Non puoi usare questa chiave qui!");
+                                }
                                 break;
 
                             //Qualsiasi altro oggetto
