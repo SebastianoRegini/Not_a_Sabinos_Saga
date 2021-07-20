@@ -41,6 +41,7 @@ public class NASS extends GameDescription {
     private int eventBossQuest = 0;
 
     private boolean eventTableTape = false;
+    private boolean eventNoTurnBack = false;
 
     //  OVERRIDED METHODS
     @Override
@@ -170,7 +171,7 @@ public class NASS extends GameDescription {
     @Override
     public void nextMove(ParserFilter funnel, PrintStream out) {
         out.println();
-        Inventory temporaryInv;
+        Inventory temporaryInv = null;
 
         //Switch sul tipo di comando
         switch (funnel.getCommand().getType()) {
@@ -179,7 +180,12 @@ public class NASS extends GameDescription {
                 if (getInRoom().getNorth() == null) {
                     out.println("Non è possibile andare a nord!");
                 } else if (getInRoom().isNorthLock()) {
-                    out.println("La porta a nord è chiusa a chiave!");
+                    if (getInRoom().getNorth().getId() == 12) {
+                        out.println("Intravedi, dall'apertura della porta, la guardia Castorpio intenta ad armeggiare\n"
+                                + "col suo cellulare. Non è prudente entrare adesso.");
+                    } else {
+                        out.println("La porta a nord è chiusa a chiave!");
+                    }
                 } else {
                     setInRoom(getInRoom().getNorth());
                     getInRoom().printRoom();
@@ -215,7 +221,8 @@ public class NASS extends GameDescription {
                                 out.println("Non fai in tempo ad entrare in questa stanza piena di tavoli che senti Antonio urlare dalla sua cella:\n"
                                         + "ha visto, dalla finestrella che si affaccia proprio al corridoio interno, la tua sagoma entrare nella stanza,\n"
                                         + "e le urla hanno attirato una guardia, che vedi passare davanti alla porta ad est.\n\n"
-                                        + "Dopo qualche minuto di urla e manganellate, il silenzio. Poi, un rumore provenire da sud-est: una porta che si apre e si chiude.\n\n"
+                                        + "Dopo qualche minuto di urla e manganellate, il silenzio.\n"
+                                        + "Poi, un rumore provenire da sud-est: una porta che si apre e si richiude.\n\n"
                                         + "Credendo che il peggio sia passato, finalmente accendi le luci della stanza...");
                             }
                             break;
@@ -225,6 +232,11 @@ public class NASS extends GameDescription {
                             if (!getRooms().get(10).isVisited()) {
                                 waiting(out);
                                 gameOver(out, 1);
+                            }
+                            break;
+                        case 17:
+                            if (!getInRoom().isVisited()) {
+                                eventNoTurnBack = true;
                             }
                             break;
                     }
@@ -239,7 +251,12 @@ public class NASS extends GameDescription {
                 if (getInRoom().getWest() == null) {
                     out.println("Non è possibile andare ad ovest!");
                 } else if (getInRoom().isWestLock()) {
-                    out.println("La porta ad ovest è chiusa a chiave!");
+                    if (eventNoTurnBack) {
+                        //Evento "non si torna indietro"
+                        out.println("Non puoi tornare indietro proprio adesso che sei arrivato fin qui!");
+                    } else {
+                        out.println("La porta ad ovest è chiusa a chiave!");
+                    }
                 } else {
 
                     if (getInRoom().getWest().getId() == 7 && eventEnlightRoom < 2) {
@@ -257,9 +274,27 @@ public class NASS extends GameDescription {
 
                     } else {
                         setInRoom(getInRoom().getWest());
+
+                        if (getInRoom().getId() == 2 && !getInRoom().isVisited()) {
+                            //  Disattiva il trigger noTurnBack e sblocca le serrature
+                            getRooms().get(17).setWestLock(false);
+                            getRooms().get(12).setSouthLock(false);
+                            eventNoTurnBack = false;
+
+                            //  Incontro con Barboni
+                            out.println("Appena entrato nella stanza, ti rendi conto che, davanti a te, c'è una guardia che\n"
+                                    + "sta uscendo dalla porta di fronte. Appena ti vede, tira fuori il manganello e si avvicina\n"
+                                    + "a te con passo timoroso.");
+                            if (!gun.shoot()) {
+                                waiting(out);
+                                gameOver(out, 5);
+                            } else {
+                                out.println("Immediatamente, tiri fuori la pistola e ti spari una dose prima che lui possa colpirti.");
+                                setInRoom(getInRoom().getToggleDose());
+                            }
+                        }
                         getInRoom().printRoom();
                     }
-
                 }
 
                 break;
@@ -414,6 +449,9 @@ public class NASS extends GameDescription {
                                     case 16:
                                         out.println(funnel.getPerson().getInteraction(3));
                                         getInventory().remove(funnel.getInventoryObj());
+                                        getInRoom().moveNpc(funnel.getPerson());
+                                        getInRoom().getNorth().placeNpc(funnel.getPerson());
+                                        getInRoom().setNorthLock(false);
                                         break;
 
                                     default:
@@ -681,6 +719,16 @@ public class NASS extends GameDescription {
 
             case INTERACT:
                 //TODO: Interazione Tavolo mensa con il boolean eventTableTape
+
+                //TODO: Interazione muro di carte
+                //TODO: Interazione con i carcerati
+                //TODO: Interazione con le guardie
+                //TODO: Interazione con Uks
+                //TODO: Interazione con versioni alternative dei carcerati
+                //TODO: Interazione con bottoni del muro
+                //TODO: Interazione con l'armadio dello spogliatoio
+                //TODO: Interazione con il computer dell'ufficio
+                //TODO: Interazione con il pad del cancello
                 break;
 
             case THINK_ABOUT:
@@ -910,6 +958,19 @@ public class NASS extends GameDescription {
                         + "Crolli a terra con l'ultimo pensiero che ritorna alle parole di Sabino:\n"
                         + "\"La pistola è sicura se dentro c'è la dose, altrimenti ti fa un bel buco in testa e basta...\"");
                 break;
+
+            case 5:
+                //Se non hai dosi contro Barboni
+                out.println("----------------------------------------");
+                out.println("Non avendo più dosi, cerchi di affrontarlo in un combattimento corpo a corpo, ma lui riesce a colpirti e a\n"
+                        + "stenderti. Stremato, ti senti trascinare via, poi svieni.\n"
+                        + "Ti risvegli, all'alba, nella tua cella. Hai un forte mal di testa per il colpo subito da Barboni.\n"
+                        + "Senti la porta della cella aprirsi, ma non distingui le sagome che, nel frattempo, ti trascinano fino all'esterno\n"
+                        + "del carcere. Vieni piazzato sulla ghigliottina e ti viene immobilizzata la testa dal congegno di quella macchina\n"
+                        + "infernale. Ancora non riesci a percepire bene le figure che ti stanno intorno, ma riesci a vedere una di loro\n"
+                        + "con una mano alzata. All'improvviso, il tizio sfocato con la mano alzata la abbassa di colpo. L'ultima cosa che\n"
+                        + "senti è la fredda lama che lacera la carne della tua nuca... Poi niente più...");
+                break;
         }
 
         waiting(out);
@@ -1016,3 +1077,5 @@ public class NASS extends GameDescription {
  *  - Spostare Castorpio da Cortile a Torre dopo USA PESETTO SU CASTORPIO
  *  - IMPORTANTE! Gestire la presenza del personaggio nelle stanze dosi.
  */
+//  TODO: nella stanza 2 settare i lock parziali di cortile e torre di osservazione a false
+//  TODO: interazione con Castorpio quando non è ancora svenuto (fix: inserire interazione 12 4 nel comando interact)
