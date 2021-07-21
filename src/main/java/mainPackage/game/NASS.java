@@ -141,6 +141,7 @@ public class NASS extends GameDescription {
         initObjectInRoom(incrocioCorridoioIniziale_1);
         initObjectInRoom(incrocioPrincipale_1);
         initObjectInRoom(corridoioCortile_1);
+        initObjectInRoom(corridoioCortile_2);
 
         //  NPC IN ROOMS
         initNpcInRoom(ingressoPrincipale);
@@ -148,6 +149,7 @@ public class NASS extends GameDescription {
         initNpcInRoom(corridoioMensa);
         initNpcInRoom(corridoioInterno);
         initNpcInRoom(corridoioCortile);
+        initNpcInRoom(cortile);
         initNpcInRoom(corridoioIniziale);
 
         initNpcInRoom(ingressoPrincipale_1);
@@ -165,7 +167,7 @@ public class NASS extends GameDescription {
         setAlternativeInventory(new Inventory(4));
         gun = new DoseGun(16, 8);
 
-        setInRoom(corridoioIniziale);
+        setInRoom(corridoioCortile_2);
     }
 
     @Override
@@ -388,7 +390,6 @@ public class NASS extends GameDescription {
                         } else {
                             temporaryInv = getAlternativeInventory();
                         }
-
                         if (!temporaryInv.isFull()) {
                             temporaryInv.add(funnel.getObject());
                             getInRoom().removeObj(funnel.getObject());
@@ -396,6 +397,7 @@ public class NASS extends GameDescription {
                             out.println("Hai messo in tasca: " + funnel.getObject().getName().toLowerCase() + ".");
                             if (funnel.getObject().getId() == 18) {
                                 guardUniform = true;
+                                getInRoom().getToggleDose().moveNpc(getInRoom().getToggleDose().getNpcs().remove(0));
                             }
                         } else {
                             out.println("Hai le tasche piene!");
@@ -1077,5 +1079,12 @@ public class NASS extends GameDescription {
  *  - Spostare Castorpio da Cortile a Torre dopo USA PESETTO SU CASTORPIO
  *  - IMPORTANTE! Gestire la presenza del personaggio nelle stanze dosi.
  */
-//  TODO: nella stanza 2 settare i lock parziali di cortile e torre di osservazione a false
+
+//  NEXT    --------------------------------------------------------------------------------------------------------------------------------------
+//  TODO: gestire Castorpio da legare prima di entrare nella dose (inserire stanza ToggleDose in usa fascette)
+//  TODO: gestire blocco a nord di TORRE DI OSSERVAZIONE prima di essere entrati nella dose (lock settato a false dopo toggledose???)
+
+//  AFTER   --------------------------------------------------------------------------------------------------------------------------------------
 //  TODO: interazione con Castorpio quando non è ancora svenuto (fix: inserire interazione 12 4 nel comando interact)
+//  TODO: risolvere problema LOAD e EXIT se non metti nè si nè no
+//  TODO: interact con la lanterna per uscire dal mondo della dose
