@@ -36,12 +36,17 @@ public class NASS extends GameDescription {
 
     private boolean guardUniform = false;
 
+    //  CONTANTS
+    private final int MOVES_GAMEOVER = 17; //  Il numero di mosse entro il quale bisogna legare Barboni, altrimenti game over
+
     //  EVENT SWITCHES
     private int eventEnlightRoom = 0;
     private int eventBossQuest = 0;
+    private int eventCounter = -1;
 
     private boolean eventTableTape = false;
     private boolean eventNoTurnBack = false;
+    private boolean eventLanternAlive = true;
 
     //  OVERRIDED METHODS
     @Override
@@ -189,8 +194,14 @@ public class NASS extends GameDescription {
                         out.println("La porta a nord è chiusa a chiave!");
                     }
                 } else {
-                    setInRoom(getInRoom().getNorth());
-                    getInRoom().printRoom();
+                    if (eventLanternAlive && getInRoom().getId() == 12) {
+                        out.println("Non essere imprudente! Potrebbero esserci guardie, telecamere o chissà cos'altro\n"
+                                + "dietro questa porta! Trova prima un modo per passare inosservato...");
+                    } else {
+                        setInRoom(getInRoom().getNorth());
+                        getInRoom().printRoom();
+                        checkCounter(out);
+                    }
                 }
 
                 break;
@@ -203,8 +214,8 @@ public class NASS extends GameDescription {
                 } else {
                     setInRoom(getInRoom().getSouth());
                     getInRoom().printRoom();
+                    checkCounter(out);
                 }
-
                 break;
 
             case EAST:
@@ -244,7 +255,7 @@ public class NASS extends GameDescription {
                     }
 
                     getInRoom().printRoom();
-
+                    checkCounter(out);
                 }
 
                 break;
@@ -296,6 +307,7 @@ public class NASS extends GameDescription {
                             }
                         }
                         getInRoom().printRoom();
+                        checkCounter(out);
                     }
                 }
 
@@ -445,6 +457,7 @@ public class NASS extends GameDescription {
                                     //Fascette (14)
                                     case 14:
                                         out.println(funnel.getPerson().getInteraction(2));
+                                        getInRoom().setToggleDose(getRooms().get(23));
                                         break;
 
                                     //Pesetto (16)
@@ -468,6 +481,7 @@ public class NASS extends GameDescription {
                                 if (funnel.getInventoryObj().getId() == 14) {
                                     out.println(funnel.getPerson().getInteraction(2));
                                     getInventory().remove(funnel.getInventoryObj());
+                                    eventCounter = -1;
                                 } else {
                                     out.println("Non puoi usare " + funnel.getInventoryObj().getName().toLowerCase() + " su " + funnel.getPerson().getName() + ".");
                                 }
@@ -500,7 +514,7 @@ public class NASS extends GameDescription {
                                             + "Appena aperta, riesci a vedere attraverso di essa il CORTILE della prigione, ma non fai in tempo ad oltrepassarla che\n"
                                             + "vieni scagliato verso il cosmo. All'improvviso, sei di nuovo nel mondo reale e la porta per il CORTILE è semi aperta.");
                                     getRooms().get(16).setEastLock(false);
-                                    getRooms().get(16).setToggleDose(null);
+                                    getRooms().get(16).setToggleDose(getRooms().get(28));
                                     setInRoom(getInRoom().getToggleDose());
                                 }
                                 break;
@@ -720,17 +734,39 @@ public class NASS extends GameDescription {
                 break;
 
             case INTERACT:
-                //TODO: Interazione Tavolo mensa con il boolean eventTableTape
+                if (funnel.getObject() != null && funnel.getPerson() != null) {
+                    out.println("Madonna con quante cose vuoi interagire insieme! Rilassati, non stai mica cercando di evadere da una prigione!\n"
+                            + "Ah no, aspetta... Vabbè, vale comunque la regola \"Una cosa per volta\"");
+                } else if (funnel.getObject() != null) {
+                    switch (funnel.getObject().getId()) {
+                        //  Pad
+                        case 0:
+                            break;
+                        //  Computer
+                        case 2:
+                            break;
+                        //  Calendario dell'avvento
+                        case 3:
+                            break;
+                            //  Armadio spogliatoio
+                        case 8:
+                            break;
+                            //  Tavoli mensa
+                        case 13:
+                            break;
+                            //  
+                        case 17:
+                            break;
+                            //  
+                    }
+                } else if (funnel.getPerson() != null) {
+                    switch (funnel.getPerson().getId()) {
 
-                //TODO: Interazione muro di carte
-                //TODO: Interazione con i carcerati
-                //TODO: Interazione con le guardie
-                //TODO: Interazione con Uks
-                //TODO: Interazione con versioni alternative dei carcerati
-                //TODO: Interazione con bottoni del muro
-                //TODO: Interazione con l'armadio dello spogliatoio
-                //TODO: Interazione con il computer dell'ufficio
-                //TODO: Interazione con il pad del cancello
+                    }
+                } else {
+                    out.println("Se non mi dici con chi o con cosa vuoi interagire, non posso aiutarti...");
+                }
+
                 break;
 
             case THINK_ABOUT:
@@ -973,6 +1009,15 @@ public class NASS extends GameDescription {
                         + "con una mano alzata. All'improvviso, il tizio sfocato con la mano alzata la abbassa di colpo. L'ultima cosa che\n"
                         + "senti è la fredda lama che lacera la carne della tua nuca... Poi niente più...");
                 break;
+
+            case 6:
+                //Se non leghi Barboni entro le mosse consentite
+                out.println("----------------------------------------");
+                out.println("Cos'è questo rumore?\n\n"
+                        + "All'improvviso senti scattare l'allarme e, preso dal panico, cominci a correre in cerca di un posto in cui nasconderti.\n"
+                        + "I tuoi tentativi sono vani: vieni bloccato dal cecchino della torretta (per gli amici, Talpone) e da Barboni che, dopo\n"
+                        + "essersi ripreso, si è precipitato in ufficio ed ha fatto scattare l'allarme.");
+                break;
         }
 
         waiting(out);
@@ -1069,6 +1114,15 @@ public class NASS extends GameDescription {
         getInventory().remove(key);
         out.println("Hai sbloccato la serratura della " + cObj + " con la chiave.");
     }
+
+    private void checkCounter(PrintStream out) {
+        if (eventCounter > -1) {
+            eventCounter++;
+        }
+        if (eventCounter >= MOVES_GAMEOVER) {
+            gameOver(out, 6);
+        }
+    }
 }
 
 /* Da sistemare
@@ -1076,15 +1130,25 @@ public class NASS extends GameDescription {
  *      getRooms().get(16).setToggleDose(getRooms().get(28));
  *  - eventBossQuest
  *  - visibilityChanger(getRooms().get(id),idobj);
- *  - Spostare Castorpio da Cortile a Torre dopo USA PESETTO SU CASTORPIO
  *  - IMPORTANTE! Gestire la presenza del personaggio nelle stanze dosi.
  */
-
 //  NEXT    --------------------------------------------------------------------------------------------------------------------------------------
-//  TODO: gestire Castorpio da legare prima di entrare nella dose (inserire stanza ToggleDose in usa fascette)
-//  TODO: gestire blocco a nord di TORRE DI OSSERVAZIONE prima di essere entrati nella dose (lock settato a false dopo toggledose???)
-
 //  AFTER   --------------------------------------------------------------------------------------------------------------------------------------
-//  TODO: interazione con Castorpio quando non è ancora svenuto (fix: inserire interazione 12 4 nel comando interact)
 //  TODO: risolvere problema LOAD e EXIT se non metti nè si nè no
+//  TODO: gestire numero combinazione pad aumentato in guarda cartello nel mondo della dose
+//  TODO: inserire la nuova stanza dose a Michele e Carlo dopo l'entrata in CORTILE
+//  INTERACT    ----------------------------------------------------------------------------------------------------------------------------------
+//  TODO: Interazione Tavolo mensa con il boolean eventTableTape
+//  TODO: Interazione muro di carte
+//  TODO: Interazione con i carcerati
+//  TODO: Interazione con le guardie
+//  TODO: Interazione con Uks
+//  TODO: Interazione con versioni alternative dei carcerati
+//  TODO: Interazione con bottoni del muro
+//  TODO: Interazione con l'armadio dello spogliatoio
+//  TODO: Interazione con il computer dell'ufficio
+//  TODO: Interazione con il pad del cancello
 //  TODO: interact con la lanterna per uscire dal mondo della dose
+//  TODO: interazione con Castorpio quando non è ancora svenuto (fix: inserire interazione 12 4 nel comando interact)
+//  TODO: settare a false l'interruttore eventLanternAlive con interact su lanterna
+//  TODO: contatore = 0 quando si esce dalla dose della pianta carnivora (interact con Barbuino)
