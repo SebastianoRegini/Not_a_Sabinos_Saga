@@ -49,6 +49,7 @@ public class NASS extends GameDescription {
     private boolean eventLanternAlive = true;
     private boolean eventCameraTurnedOff = false;
     private boolean eventKeyInfo = false;
+    private boolean eventExtraDose = false;
 
     //  OVERRIDED METHODS
     @Override
@@ -128,7 +129,7 @@ public class NASS extends GameDescription {
         initBoundaries(corridoioCortile_1, getRooms());
         initBoundaries(corridoioCortile_2, getRooms());
         initBoundaries(corridoioIniziale_1, getRooms());
-        
+
         initBoundaries(incrocioCorridoioIniziale, getRooms());
 
         //  OBJECTS IN ROOMS
@@ -174,7 +175,7 @@ public class NASS extends GameDescription {
         //  STARTING
         setInventory(new Inventory(6));
         setAlternativeInventory(new Inventory(4));
-        gun = new DoseGun(16, 8);
+        gun = new DoseGun(12, 9);
 
         setInRoom(corridoioIniziale);
     }
@@ -234,13 +235,13 @@ public class NASS extends GameDescription {
                         //Mensa
                         case 10:
                             if (!getInRoom().isVisited()) {
-                                waiting(out);
                                 out.println("Non fai in tempo ad entrare in questa stanza piena di tavoli che senti Antonio urlare dalla sua cella:\n"
                                         + "ha visto, dalla finestrella che si affaccia proprio al corridoio interno, la tua sagoma entrare nella stanza,\n"
                                         + "e le urla hanno attirato una guardia, che vedi passare davanti alla porta ad est.\n\n"
                                         + "Dopo qualche minuto di urla e manganellate, il silenzio.\n"
                                         + "Poi, un rumore provenire da sud-est: una porta che si apre e si richiude.\n\n"
                                         + "Credendo che il peggio sia passato, finalmente accendi le luci della stanza...");
+                                waiting(out);
                             }
                             break;
 
@@ -669,43 +670,46 @@ public class NASS extends GameDescription {
             case GIVE:
                 if (funnel.getPerson() != null && funnel.getInventoryObj() != null) {
                     //Controllo se è Ugo (2)
-                    if (funnel.getPerson().getId() == 2) {
-                        switch (funnel.getInventoryObj().getId()) {
-                            //Oggetto: cellulare (5)
-                            case 5:
-                                out.println("----------------------------------------");
-                                out.println(funnel.getPerson().getInteraction(5));
-                                eventTableTape = true;
-                                break;
+                    switch (funnel.getPerson().getId()) {
+                        case 2:
+                            switch (funnel.getInventoryObj().getId()) {
+                                //Oggetto: cellulare (5)
+                                case 5:
+                                    out.println("----------------------------------------");
+                                    out.println(funnel.getPerson().getInteraction(5));
+                                    eventTableTape = true;
+                                    break;
 
-                            //Oggetto: anello (6)
-                            case 6:
-                                out.println("----------------------------------------");
-                                out.println(funnel.getPerson().getInteraction(4));
-                                break;
+                                //Oggetto: anello (6)
+                                case 6:
+                                    out.println("----------------------------------------");
+                                    out.println(funnel.getPerson().getInteraction(4));
+                                    break;
 
-                            //Oggetto: orologio (7)
-                            case 7:
+                                //Oggetto: orologio (7)
+                                case 7:
+                                    out.println("----------------------------------------");
+                                    out.println(funnel.getPerson().getInteraction(3));
+                                    eventKeyInfo = true;
+                                    break;
+                            }
+                            out.println("Spero tu abbia ascoltato bene, non ripeterò ciò che ho detto!");
+                            break;
+                        //Controllo se è Bambine (11)
+                        case 11:
+                            //Oggetto: bambola di pezza (18)
+                            if (funnel.getInventoryObj().getId() == 18) {
                                 out.println("----------------------------------------");
-                                out.println(funnel.getPerson().getInteraction(3));
-                                eventKeyInfo = true;
-                                break;
-                        }
-                        out.println("Spero tu abbia ascoltato bene, non ripeterò ciò che ho detto!");
-                    }
-
-                    //Controllo se è Bambine (11)
-                    if (funnel.getPerson().getId() == 11) {
-                        //Oggetto: bambola di pezza (18)
-                        if (funnel.getInventoryObj().getId() == 18) {
+                                out.println(funnel.getPerson().getInteraction(2));
+                                guardUniform = false;
+                            }
+                            break;
+                        default:
+                            //Altrimenti
                             out.println("----------------------------------------");
-                            out.println(funnel.getPerson().getInteraction(2));
-                            guardUniform = false;
-                        }
+                            out.println("Non puoi dare " + funnel.getInventoryObj().getName() + " a " + funnel.getPerson().getName() + ".");
+                            break;
                     }
-                    //Altrimenti
-                    out.println("----------------------------------------");
-                    out.println("Non puoi dare " + funnel.getInventoryObj().getName() + " a " + funnel.getPerson().getName() + ".");
                 } else {
                     out.println("Puoi dare solo un oggetto delle tue tasche a qualcuno presente in questa stanza.");
                 }
@@ -838,19 +842,37 @@ public class NASS extends GameDescription {
                             break;
                         //  Pulsante triangolo
                         case 21:
-
+                            out.println("Premendo il pulsante, senti il tipico suono di un ascensore quando arriva al piano scelto.\n"
+                                    + "Davanti a te appare una figura fatta di pochi pixel, che ti apre le porte dell'ascensore e ti\n"
+                                    + "augura una buona giornata... \"Sir\"...\n"
+                                    + "Sconvolto, abbandoni quel posto e torni nell'INCROCIO PRINCIPALE.");
+                            waiting(out);
+                            setInRoom(getInRoom().getToggleDose());
+                            getInRoom().printRoom();
                             break;
                         //  Pulsante stella
                         case 22:
-
+                            gameOver(out, 2);
                             break;
                         //  Uks
                         case 23:
-
+                            out.println("La chiave inizia a tremare e vieni sbalzato verso il cosmo.\n"
+                                    + "Poi, in qualche modo che i programmatori non hanno specificato perché si erano scocciati,\n"
+                                    + "ti ritrovi di nuovo nel CORRIDOIO CORTILE.");
+                            waiting(out);
+                            setInRoom(getInRoom().getToggleDose());
+                            getInRoom().printRoom();
                             break;
                         //  Culla
                         case 26:
-
+                            out.println("Appoggi la mano su quel buco nero e vieni immediatamente risucchiato al suo interno.\n"
+                                    + "Riesci a vedere la tua intera vita in un millisecondo: la tua nascita, i tempi dell'asilo\n"
+                                    + "il primo bacio, il tuo matrimonio, il momento in cui Mary ha programmato i tuoi ricordi\n"
+                                    + "in questo videogioco di mer...cavolo, sei già di ritorno nel mondo reale... come vola il\n"
+                                    + "tempo!");
+                            waiting(out);
+                            setInRoom(getInRoom().getToggleDose());
+                            getInRoom().printRoom();
                             break;
                         default:
                             out.println("Non puoi interagire con questo oggetto!");
@@ -859,7 +881,14 @@ public class NASS extends GameDescription {
                     switch (funnel.getPerson().getId()) {
                         //  Sabino (normale)
                         case 0:
-
+                            if (eventExtraDose) {
+                                funnel.getPerson().getInteraction(2);
+                                gun.setAmmo(gun.getMagazine());
+                                out.println("Adesso hai " + gun.getAmmo() + " dosi.");
+                                eventExtraDose = false;
+                            } else {
+                                funnel.getPerson().getInteraction(1);
+                            }
                             break;
                         //  Sabino (dose)
                         case 1:
@@ -1060,7 +1089,8 @@ public class NASS extends GameDescription {
                     + "\"Cosa ridi? Ho avuto un mezzo infarto!\"\n"
                     + "\"Avresti dovuto vedere la tua faccia\" esclama, continuando a ridere.\n"
                     + "\"Ma vai a fare in cu...ehi, aspetta: ma sono fuori dalla cella!\"\n"
-                    + "Placando le risate, il tuo coinquilino conclude: \"Si, ma ora vedi di far presto e trova la via di fuga... in bocca al lupo\"\n"
+                    + "Placando le risate, il tuo coinquilino conclude: \"Si, ma ora vedi di far presto e trova la via di fuga. Ricordati solo\n"
+                    + "che hai a disposizione " + gun.getAmmo() + " dosi... in bocca al lupo\"\n"
                     + "\"Ok, vado\" rispondi e, riponendo la pistola nella zona interna della parte posteriore del pantalone, la prima cosa che ti\n"
                     + "chiedi è...");
 
@@ -1068,7 +1098,7 @@ public class NASS extends GameDescription {
 
         } else if (decision.equalsIgnoreCase("NO")) {
 
-            out.println("Ok, allora sai già tutto.");
+            out.println("Ok, allora sai già tutto.\nMi raccomando: tieni a mente che hai " + gun.getAmmo() + " dosi.");
             waiting(out);
         } else {
             out.println("Non ho capito, ma faccio finta che tu voglia saltare l'inizio.");
@@ -1124,7 +1154,9 @@ public class NASS extends GameDescription {
             case 2:
                 //Muro
                 out.println("----------------------------------------");
-                out.println("All'alba del giorno della tua esecuzione, le guardie del turno successivo\n"
+                out.println("Vieni fagocitato dal pulsante, che scopri essere fatto di miele, e ti ritrovi dentro il muro\n"
+                        + "a sud dell'INCROCIO PRINCIPALE.\n\n"
+                        + "All'alba del giorno della tua esecuzione, le guardie del turno successivo\n"
                         + "ti trovano incastrato nel cemento. Ore dopo aver chiamato una compagnia di costruzioni,\n"
                         + "sono riusciti a tirarti fuori da lì. \n\n"
                         + "Successivamente, per non perdere altro tempo,ti hanno portato alla ghigliottina: dopo averti\n"
@@ -1288,17 +1320,21 @@ public class NASS extends GameDescription {
  *  - IMPORTANTE! Gestire la presenza del personaggio nelle stanze dosi.
  */
 //  NEXT    --------------------------------------------------------------------------------------------------------------------------------------
+//  TODO: Interazione con i carcerati
+//  TODO: Interazione con le guardie
+//  TODO: Interazione con versioni alternative dei carcerati
+//  TODO: interazione con Castorpio quando non è ancora svenuto (fix: inserire interazione 12 4 nel comando interact)
+//  TODO: contatore = 0 quando si esce dalla dose della pianta carnivora (interact con Barbuino) + settare a true eventExtraDose
+//  TODO: Controllare interact degli oggetti DOPO aver creato la stringa su H2
+//  ----------------------------------------------------------------------------------------------------------------------------------------------
+//
 //  AFTER   --------------------------------------------------------------------------------------------------------------------------------------
 //  TODO: risolvere problema LOAD e EXIT se non metti nè si nè no
 //  TODO: gestire numero combinazione pad aumentato in guarda cartello nel mondo della dose
 //  TODO: eventualmente, inserire un altro gameover nel caso si recuperino 5 numeri
+//  TODO: controllare se effettivamente servono i metodi addAmmo e isFull della DoseGun
+//  TODO: stampa delle dosi dopo il loading
+//  ----------------------------------------------------------------------------------------------------------------------------------------------
+//
 //  INTERACT    ----------------------------------------------------------------------------------------------------------------------------------
-//  TODO: Interazione muro di carte
-//  TODO: Interazione con i carcerati
-//  TODO: Interazione con le guardie
-//  TODO: Interazione con Uks
-//  TODO: Interazione con versioni alternative dei carcerati
-//  TODO: Interazione con bottoni del muro
-//  TODO: interazione con Castorpio quando non è ancora svenuto (fix: inserire interazione 12 4 nel comando interact)
-//  TODO: contatore = 0 quando si esce dalla dose della pianta carnivora (interact con Barbuino)
-//  TODO: stampa iniziale delle dosi
+//  ----------------------------------------------------------------------------------------------------------------------------------------------

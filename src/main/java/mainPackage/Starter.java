@@ -97,7 +97,7 @@ public class Starter {
                             try {
                                 game = game.load();
                                 System.out.println("----------------------------------------");
-                                System.out.println("Partita caricata correttamente!\n");
+                                System.out.println("Partita caricata correttamente!");
                                 game.getInRoom().printRoom();
                             } catch (IOException | ClassNotFoundException ex) {
                                 System.err.println("Errore nel caricamento della partita: " + ex.getMessage());
