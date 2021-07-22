@@ -47,6 +47,8 @@ public class NASS extends GameDescription {
     private boolean eventTableTape = false;
     private boolean eventNoTurnBack = false;
     private boolean eventLanternAlive = true;
+    private boolean eventCameraTurnedOff = false;
+    private boolean eventKeyInfo = false;
 
     //  OVERRIDED METHODS
     @Override
@@ -126,6 +128,8 @@ public class NASS extends GameDescription {
         initBoundaries(corridoioCortile_1, getRooms());
         initBoundaries(corridoioCortile_2, getRooms());
         initBoundaries(corridoioIniziale_1, getRooms());
+        
+        initBoundaries(incrocioCorridoioIniziale, getRooms());
 
         //  OBJECTS IN ROOMS
         initObjectInRoom(parcheggio);
@@ -172,7 +176,7 @@ public class NASS extends GameDescription {
         setAlternativeInventory(new Inventory(4));
         gun = new DoseGun(16, 8);
 
-        setInRoom(corridoioCortile_2);
+        setInRoom(corridoioIniziale);
     }
 
     @Override
@@ -243,7 +247,6 @@ public class NASS extends GameDescription {
                         //Corridoio Interno
                         case 14:
                             if (!getRooms().get(10).isVisited()) {
-                                waiting(out);
                                 gameOver(out, 1);
                             }
                             break;
@@ -299,7 +302,6 @@ public class NASS extends GameDescription {
                                     + "sta uscendo dalla porta di fronte. Appena ti vede, tira fuori il manganello e si avvicina\n"
                                     + "a te con passo timoroso.");
                             if (!gun.shoot()) {
-                                waiting(out);
                                 gameOver(out, 5);
                             } else {
                                 out.println("Immediatamente, tiri fuori la pistola e ti spari una dose prima che lui possa colpirti.");
@@ -686,6 +688,7 @@ public class NASS extends GameDescription {
                             case 7:
                                 out.println("----------------------------------------");
                                 out.println(funnel.getPerson().getInteraction(3));
+                                eventKeyInfo = true;
                                 break;
                         }
                         out.println("Spero tu abbia ascoltato bene, non ripeterò ciò che ho detto!");
@@ -741,27 +744,179 @@ public class NASS extends GameDescription {
                     switch (funnel.getObject().getId()) {
                         //  Pad
                         case 0:
+                            if (passcode > 3) {
+                                gameOver(out, 0);
+                            } else {
+                                out.println("Credo ci voglia un codice numerico di 4 cifre per aprire il cancello di uscita.");
+                            }
                             break;
                         //  Computer
                         case 2:
+                            if (!eventCameraTurnedOff) {
+                                out.println("Hai spento le telecamere.");
+                            } else {
+                                out.println("Le telecamere sono già spente.");
+                            }
                             break;
                         //  Calendario dell'avvento
                         case 3:
+                            for (GameObject gO : getInRoom().getObj()) {
+                                if (gO.getId() == 4) {
+                                    out.println("Cominci a premere su tutte le caselline del calendario per controllare se ci siano dolcetti.\n"
+                                            + "Arrivato alla casella 25, dopo averla premuta, esce fuori e cade sulla scrivania una piccola\n"
+                                            + "chiave... Maledizione, cerchi cioccolatini e trovi chiavi... che schifo...");
+                                    gO.setVisible(true);
+                                    getInRoom().removeObj(funnel.getObject());
+                                    break;
+                                }
+                            }
                             break;
-                            //  Armadio spogliatoio
+                        //  Armadio spogliatoio
                         case 8:
+                            if (eventKeyInfo) {
+                                for (GameObject gO : getInRoom().getObj()) {
+                                    if (gO.getId() == 9) {
+                                        out.println("Dalle informazioni recuperate dal Sorcio, inizi a controllare introrno all'armadio e\n"
+                                                + "sotto di esso, ma niente. Dopo qualche secondo ti viene il dubbio: controlli sopra\n"
+                                                + "l'armadio e, finalmente, trovi la chiave. A questo punto ti chiedi \"Ma come cavolo faceva\n"
+                                                + "il Sorcio a sapere dove si trovava?\"\n"
+                                                + "Purtroppo non lo sa nessuno, nemmeno gli sviluppatori...");
+                                        gO.setVisible(true);
+                                        getInRoom().removeObj(funnel.getObject());
+                                        break;
+                                    }
+                                }
+                            } else {
+                                out.println("L'armadio è chiuso con un lucchetto.");
+                            }
                             break;
-                            //  Tavoli mensa
+                        //  Tavoli mensa
                         case 13:
+                            if (eventTableTape) {
+                                for (GameObject gO : getInRoom().getObj()) {
+                                    if (gO.getId() == 12) {
+                                        out.println("Stando a quello che ti ha detto il Sorcio, sotto uno di questi tavoli c'è una chiave.\n"
+                                                + "Inizi a controllarli uno per uno, finché non trovi, sotto il terzo che controlli, una\n"
+                                                + "striscia di nastro adesivo. Lo strappi via e la chiave citata da Ugo cade a terra.");
+                                        gO.setVisible(true);
+                                        getInRoom().removeObj(funnel.getObject());
+                                        break;
+                                    }
+                                }
+                            } else {
+                                out.println("Magari c'è qualcosa da fare con uno di questi tavoli, ma non sai cosa...");
+                            }
                             break;
-                            //  
-                        case 17:
+                        //  Lanterna
+                        case 19:
+                            out.println("Apri la teca della lanterna e prendi la paglia: stranamente non scotta. Una volta presa, questa\n"
+                                    + "si estingue e cala il buio, poi si spegne anche la paglia sul mucchio di fuoco. Non vedi più nulla,\n"
+                                    + "così ti accorgi di avere gli occhi chiusi. Li apri e sei tornato nel mondo reale, con la differenza\n"
+                                    + "che non vedi più le luci del corridoio a nord: si sono spente...");
+                            setInRoom(getInRoom().getToggleDose());
+                            getInRoom().setToggleDose(null);
+                            eventLanternAlive = false;
                             break;
-                            //  
+                        //  Muro di carte
+                        case 20:
+                            out.println("Cerchi di buttare giù quel muro a spallate, ma niente. Mentre quei cosi rossi maledetti continuano\n"
+                                    + "a riderti addosso. Cerchi di non arrabbiarti e fai un bel respiro profondo per calmarti. Mentre butti\n"
+                                    + "fuori l'aria, tutte le carte volano via e il muro scompare. Inizialmente stupito, ti volti e ti inoltri\n"
+                                    + "verso quell'uscita andando all'indietro e salutando elegantemente i tizi rossi con due dita medie alzate\n"
+                                    + "ed un sorriso beffardo.");
+                            setInRoom(getInRoom().getToggleDose());
+                            getInRoom().printRoom();
+                            getInRoom().setToggleDose(null);
+                            getRooms().get(13).setId(-4);
+                            getRooms().get(30).setId(13);
+                            getRooms().remove(13);
+                            getRooms().add(13, getRooms().get(29));
+                            getRooms().remove(30);
+                            getInRoom().setSouth(getRooms().get(13));
+                            getRooms().get(18).setNorth(getRooms().get(13));
+                            getRooms().get(14).setWest(getRooms().get(13));
+                            break;
+                        //  Pulsante triangolo
+                        case 21:
+
+                            break;
+                        //  Pulsante stella
+                        case 22:
+
+                            break;
+                        //  Uks
+                        case 23:
+
+                            break;
+                        //  Culla
+                        case 26:
+
+                            break;
+                        default:
+                            out.println("Non puoi interagire con questo oggetto!");
                     }
                 } else if (funnel.getPerson() != null) {
                     switch (funnel.getPerson().getId()) {
+                        //  Sabino (normale)
+                        case 0:
 
+                            break;
+                        //  Sabino (dose)
+                        case 1:
+
+                            break;
+                        //  Ugo
+                        case 2:
+
+                            break;
+                        //  Antonio
+                        case 3:
+
+                            break;
+                        //  Occhi
+                        case 4:
+
+                            break;
+                        //  Filippo (normale)
+                        case 5:
+
+                            break;
+                        //  Filippo (dose)
+                        case 6:
+
+                            break;
+                        //  Capo
+                        case 7:
+
+                            break;
+                        //  Dvce
+                        case 8:
+
+                            break;
+                        //  Michele
+                        case 9:
+
+                            break;
+                        //  Carlo
+                        case 10:
+
+                            break;
+                        //  Bambine
+                        case 11:
+
+                            break;
+                        //  Castorpio
+                        case 12:
+
+                            break;
+                        //  Barboni
+                        case 13:
+
+                            break;
+                        //  Barbuino
+                        case 14:
+
+                            break;
                     }
                 } else {
                     out.println("Se non mi dici con chi o con cosa vuoi interagire, non posso aiutarti...");
@@ -1136,19 +1291,14 @@ public class NASS extends GameDescription {
 //  AFTER   --------------------------------------------------------------------------------------------------------------------------------------
 //  TODO: risolvere problema LOAD e EXIT se non metti nè si nè no
 //  TODO: gestire numero combinazione pad aumentato in guarda cartello nel mondo della dose
-//  TODO: inserire la nuova stanza dose a Michele e Carlo dopo l'entrata in CORTILE
+//  TODO: eventualmente, inserire un altro gameover nel caso si recuperino 5 numeri
 //  INTERACT    ----------------------------------------------------------------------------------------------------------------------------------
-//  TODO: Interazione Tavolo mensa con il boolean eventTableTape
 //  TODO: Interazione muro di carte
 //  TODO: Interazione con i carcerati
 //  TODO: Interazione con le guardie
 //  TODO: Interazione con Uks
 //  TODO: Interazione con versioni alternative dei carcerati
 //  TODO: Interazione con bottoni del muro
-//  TODO: Interazione con l'armadio dello spogliatoio
-//  TODO: Interazione con il computer dell'ufficio
-//  TODO: Interazione con il pad del cancello
-//  TODO: interact con la lanterna per uscire dal mondo della dose
 //  TODO: interazione con Castorpio quando non è ancora svenuto (fix: inserire interazione 12 4 nel comando interact)
-//  TODO: settare a false l'interruttore eventLanternAlive con interact su lanterna
 //  TODO: contatore = 0 quando si esce dalla dose della pianta carnivora (interact con Barbuino)
+//  TODO: stampa iniziale delle dosi
