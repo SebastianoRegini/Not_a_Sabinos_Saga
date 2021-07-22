@@ -31,24 +31,30 @@ public class DoseGun implements Serializable{
     public int getAmmo() {
         return ammo;
     }
+    
+    // SETTER
 
-    // OTHER METHODS
-    public boolean isFull() {
-        return !(getAmmo() < getMagazine());
+    public void setAmmo(int ammo) {
+        this.ammo = ammo;
     }
+    
+    // OTHER METHODS
+//    public boolean isFull() {
+//        return !(getAmmo() < getMagazine());
+//    }
 
     public boolean isEmpty() {
         return !(getAmmo() > 0);
     }
 
-    public boolean addAmmo() {
-        if (isFull()) {
-            return false;
-        } else {
-            ++ammo;
-            return true;
-        }
-    }
+//    public boolean addAmmo() {
+//        if (isFull()) {
+//            return false;
+//        } else {
+//            ++ammo;
+//            return true;
+//        }
+//    }
 
     public boolean shoot() {
         if (isEmpty()) {
