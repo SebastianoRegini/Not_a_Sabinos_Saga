@@ -20,6 +20,7 @@ import mainPackage.type.ContainerObject;
 import mainPackage.type.DoseGun;
 import mainPackage.type.GameObject;
 import mainPackage.type.Inventory;
+import mainPackage.type.NPC;
 import mainPackage.type.Room;
 import static mainPackage.utilities.NassDB.*;
 
@@ -517,8 +518,10 @@ public class NASS extends GameDescription {
                                             + "Appena aperta, riesci a vedere attraverso di essa il CORTILE della prigione, ma non fai in tempo ad oltrepassarla che\n"
                                             + "vieni scagliato verso il cosmo. All'improvviso, sei di nuovo nel mondo reale e la porta per il CORTILE è semi aperta.");
                                     getRooms().get(16).setEastLock(false);
-                                    getRooms().get(16).setToggleDose(getRooms().get(28));
+                                    getRooms().get(16).setToggleDose(null);
                                     setInRoom(getInRoom().getToggleDose());
+
+                                    eventBossQuest++;
                                 }
                                 break;
 
@@ -701,6 +704,7 @@ public class NASS extends GameDescription {
                             if (funnel.getInventoryObj().getId() == 18) {
                                 out.println("----------------------------------------");
                                 out.println(funnel.getPerson().getInteraction(2));
+                                eventBossQuest = -1;
                                 guardUniform = false;
                             }
                             break;
@@ -879,73 +883,156 @@ public class NASS extends GameDescription {
                     }
                 } else if (funnel.getPerson() != null) {
                     switch (funnel.getPerson().getId()) {
+
                         //  Sabino (normale)
                         case 0:
                             if (eventExtraDose) {
                                 funnel.getPerson().getInteraction(2);
+
                                 gun.setAmmo(gun.getMagazine());
                                 out.println("Adesso hai " + gun.getAmmo() + " dosi.");
+
                                 eventExtraDose = false;
                             } else {
                                 funnel.getPerson().getInteraction(1);
                             }
                             break;
+
                         //  Sabino (dose)
                         case 1:
+                            funnel.getPerson().getInteraction(1);
+
+                            setInRoom(getInRoom().getToggleDose());
+                            getInRoom().setToggleDose(null);
+                            getInRoom().printRoom();
+
+                            passcode++;
+
+                            for (NPC person : getInRoom().getNpcs()) {
+                                if (person.getId() == 0) {
+                                    getInRoom().moveNpc(person);
+                                    break;
+                                }
+                            }
 
                             break;
+
                         //  Ugo
                         case 2:
 
                             break;
+
                         //  Antonio
                         case 3:
 
-                            break;
-                        //  Occhi
-                        case 4:
+                            if (getInRoom().getToggleDose() == null && getRooms().get(25).isVisited()) {
+                                //Altre opzioni di dialogo
+                            } else {
+                                //Le classiche opzioni di dialogo
+                            }
 
                             break;
+
+                        //  Occhi
+                        case 4:
+                            funnel.getPerson().getInteraction(1);
+
+                            setInRoom(getInRoom().getToggleDose());
+                            getInRoom().setToggleDose(null);
+                            getInRoom().printRoom();
+
+                            passcode++;
+
+                            break;
+
                         //  Filippo (normale)
                         case 5:
 
                             break;
+
                         //  Filippo (dose)
                         case 6:
+                            funnel.getPerson().getInteraction(1);
+
+                            GameObject temporaryObj = getInRoom().getObj().get(0);
+                            temporaryObj.setVisible(true);
+                            getAlternativeInventory().add(temporaryObj);
+                            getInRoom().removeObj(temporaryObj);
+
+                            setInRoom(getInRoom().getToggleDose());
+                            getInRoom().setToggleDose(null);
+                            getInRoom().printRoom();
 
                             break;
-                        //  Capo
+
+                        //  Capo [QUI]
                         case 7:
+                            //Incrementare eventBossQuest quando interagisce per la prima volta con il Capo
+                            //Settare la toggleDose del Corridoio Cortile
 
                             break;
+
                         //  Dvce
                         case 8:
+                            if (eventBossQuest == -1) { //Quest completata
+                                funnel.getPerson().getInteraction(2);
+
+                                setInRoom(getInRoom().getToggleDose());
+                                getInRoom().setToggleDose(null);
+
+                                passcode++;
+                            } else {
+                                funnel.getPerson().getInteraction(1);
+                                setInRoom(getInRoom().getToggleDose());
+                            }
+
+                            getInRoom().printRoom();
 
                             break;
-                        //  Michele
-                        case 9:
 
+                        //  Michele e Carlo
+                        case 9: case 10:
+                            if (eventBossQuest == -1) { //Quest completata
+                                funnel.getPerson().getInteraction(2);
+                            } else {
+                                funnel.getPerson().getInteraction(1);
+                            }
                             break;
-                        //  Carlo
-                        case 10:
 
-                            break;
                         //  Bambine
                         case 11:
-
+                            funnel.getPerson().getInteraction(1);
                             break;
+
                         //  Castorpio
                         case 12:
-
+                            if (getInRoom().getId() == 17) {
+                                funnel.getPerson().getInteraction(4);
+                            } else {
+                                funnel.getPerson().getInteraction(1);
+                            }
                             break;
+
                         //  Barboni
                         case 13:
-
+                            funnel.getPerson().getInteraction(1);
                             break;
+
                         //  Barbuino
                         case 14:
+                            funnel.getPerson().getInteraction(1);
+                            waiting(out);
+                            funnel.getPerson().getInteraction(2);
+
+                            setInRoom(getInRoom().getToggleDose());
+                            eventCounter = 0;
+                            eventExtraDose = true;
+
+                            getInRoom().setToggleDose(null);
+                            getInRoom().printRoom();
 
                             break;
+
                     }
                 } else {
                     out.println("Se non mi dici con chi o con cosa vuoi interagire, non posso aiutarti...");
@@ -984,7 +1071,6 @@ public class NASS extends GameDescription {
 
             case HELP:
                 help(out);
-
                 break;
 
             case LOOK:
@@ -1315,17 +1401,11 @@ public class NASS extends GameDescription {
 /* Da sistemare
  *  - Se prendi la bambola di pezza AND se hai parlato con il Capo
  *      getRooms().get(16).setToggleDose(getRooms().get(28));
- *  - eventBossQuest
  *  - visibilityChanger(getRooms().get(id),idobj);
  *  - IMPORTANTE! Gestire la presenza del personaggio nelle stanze dosi.
  */
 //  NEXT    --------------------------------------------------------------------------------------------------------------------------------------
 //  TODO: Interazione con i carcerati
-//  TODO: Interazione con le guardie
-//  TODO: Interazione con versioni alternative dei carcerati
-//  TODO: interazione con Castorpio quando non è ancora svenuto (fix: inserire interazione 12 4 nel comando interact)
-//  TODO: contatore = 0 quando si esce dalla dose della pianta carnivora (interact con Barbuino) + settare a true eventExtraDose
-//  TODO: Controllare interact degli oggetti DOPO aver creato la stringa su H2
 //  ----------------------------------------------------------------------------------------------------------------------------------------------
 //
 //  AFTER   --------------------------------------------------------------------------------------------------------------------------------------
@@ -1334,7 +1414,10 @@ public class NASS extends GameDescription {
 //  TODO: eventualmente, inserire un altro gameover nel caso si recuperino 5 numeri
 //  TODO: controllare se effettivamente servono i metodi addAmmo e isFull della DoseGun
 //  TODO: stampa delle dosi dopo il loading
+//  TODO: sistemare stringhe con gli spazi e i ritorni a capo giusti
 //  ----------------------------------------------------------------------------------------------------------------------------------------------
 //
-//  INTERACT    ----------------------------------------------------------------------------------------------------------------------------------
+//  REFINEMENT  ----------------------------------------------------------------------------------------------------------------------------------
+//  TODO: inserire stringa Interact per gli oggetti nel DB
+//  TODO: inserire int nella classe NPC per gestire i dialoghi
 //  ----------------------------------------------------------------------------------------------------------------------------------------------

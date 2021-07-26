@@ -1,0 +1,204 @@
+2021-07-26 18:26:25 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE NPCDIALOG SET DIALOGTEXT = 'Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.[*]' WHERE IDNPC = 4 AND IDDIALOG = 1"; SQL statement:
+UPDATE NPCDIALOG SET DIALOGTEXT = 'Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.' WHERE IDNPC = 4 AND IDDIALOG = 1 [42000-200]
+2021-07-26 18:28:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE NPCDIALOG SET DIALOGTEXT='Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.[*]' WHERE IDNPC=4 AND IDDIALOG=1"; SQL statement:
+UPDATE NPCDIALOG SET DIALOGTEXT='Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.' WHERE IDNPC=4 AND IDDIALOG=1 [42000-200]
+2021-07-26 18:29:40 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio." not found; SQL statement:
+UPDATE NPCDIALOG SET DIALOGTEXT="Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio." WHERE IDNPC=4 AND IDDIALOG=1 [42122-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:453)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.get(DbException.java:181)
+	at org.h2.expression.ExpressionColumn.getColumnException(ExpressionColumn.java:163)
+	at org.h2.expression.ExpressionColumn.optimize(ExpressionColumn.java:145)
+	at org.h2.command.dml.Update.prepare(Update.java:275)
+	at org.h2.command.Parser.prepareCommand(Parser.java:744)
+	at org.h2.engine.Session.prepareLocal(Session.java:657)
+	at org.h2.engine.Session.prepareCommand(Session.java:595)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1235)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:212)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:201)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1459)
+	at org.h2.server.web.WebApp.query(WebApp.java:1116)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1078)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1065)
+	at org.h2.server.web.WebThread.process(WebThread.java:178)
+	at org.h2.server.web.WebThread.run(WebThread.java:94)
+	at java.base/java.lang.Thread.run(Thread.java:832)
+2021-07-26 18:30:05 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE NPCDIALOG SET DIALOGTEXT='Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.[*]' WHERE IDNPC=4 AND IDDIALOG=1"; SQL statement:
+UPDATE NPCDIALOG SET DIALOGTEXT='Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.' WHERE IDNPC=4 AND IDDIALOG=1 [42000-200]
+2021-07-26 18:31:55 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE NPCDIALOG SET DIALOGTEXT='Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio[*]' WHERE IDNPC=4 AND IDDIALOG=1"; SQL statement:
+UPDATE NPCDIALOG SET DIALOGTEXT='Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio' WHERE IDNPC=4 AND IDDIALOG=1 [42000-200]
+2021-07-26 18:33:25 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE NPCDIALOG SET DIALOGTEXT = 'Avvicini la mano a quella figura, molto spaventato. 
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.[*]' WHERE IDNPC = 4 AND IDDIALOG = 1"; SQL statement:
+UPDATE NPCDIALOG SET DIALOGTEXT = 'Avvicini la mano a quella figura, molto spaventato. 
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.' WHERE IDNPC = 4 AND IDDIALOG = 1 [42000-200]
+2021-07-26 18:34:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE NPCDIALOG SET DIALOGTEXT = 'Avvicini la mano a quella figura, molto spaventato. La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te. Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere, poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.[*]' WHERE IDNPC = 4 AND IDDIALOG = 1"; SQL statement:
+UPDATE NPCDIALOG SET DIALOGTEXT = 'Avvicini la mano a quella figura, molto spaventato. La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te. Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere, poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.' WHERE IDNPC = 4 AND IDDIALOG = 1 [42000-200]
+2021-07-26 18:34:41 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE NPCDIALOG SET DIALOGTEXT = 'Avvicini la mano a quella figura, molto spaventato. La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te. Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere, poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero. Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.[*]' WHERE IDNPC = 4 AND IDDIALOG = 1"; SQL statement:
+UPDATE NPCDIALOG SET DIALOGTEXT = 'Avvicini la mano a quella figura, molto spaventato. La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te. Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere, poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero. Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.' WHERE IDNPC = 4 AND IDDIALOG = 1 [42000-200]
+2021-07-26 18:35:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE NPCDIALOG SET DIALOGTEXT = 'Avvicini la mano a quella figura, molto spaventato. La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te. Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere, poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero. Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.[*]' WHERE IDNPC = 4 AND IDDIALOG = 1;"; SQL statement:
+UPDATE NPCDIALOG SET DIALOGTEXT = 'Avvicini la mano a quella figura, molto spaventato. La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te. Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere, poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero. Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.' WHERE IDNPC = 4 AND IDDIALOG = 1; [42000-200]
+2021-07-26 18:35:17 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE NPCDIALOG SET DIALOGTEXT = 'Avvicini la mano a quella figura, molto spaventato. La striscia smussata di sangue sotto gli occhi sembra solida, cosi la afferri e, riuscendo a prenderla, la tiri verso di te. Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere, poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero. Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.[*]' WHERE IDNPC = 4 AND IDDIALOG = 1"; SQL statement:
+UPDATE NPCDIALOG SET DIALOGTEXT = 'Avvicini la mano a quella figura, molto spaventato. La striscia smussata di sangue sotto gli occhi sembra solida, cosi la afferri e, riuscendo a prenderla, la tiri verso di te. Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere, poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero. Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.' WHERE IDNPC = 4 AND IDDIALOG = 1 [42000-200]
+2021-07-26 18:38:17 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE NPCDIALOG SET DIALOGTEXT='Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.[*]' WHERE IDNPC=4 AND IDDIALOG=1;"; SQL statement:
+UPDATE NPCDIALOG SET DIALOGTEXT='Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità scompare completamente, ti ritrovi davanti ad Antonio, che ora è senza lo sfregio.' WHERE IDNPC=4 AND IDDIALOG=1; [42000-200]
+2021-07-26 18:38:40 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE NPCDIALOG SET DIALOGTEXT='Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità scompare completamente.[*]' WHERE IDNPC=4 AND IDDIALOG=1;"; SQL statement:
+UPDATE NPCDIALOG SET DIALOGTEXT='Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità scompare completamente.' WHERE IDNPC=4 AND IDDIALOG=1; [42000-200]
+2021-07-26 18:38:52 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE NPCDIALOG SET DIALOGTEXT='Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità.[*]' WHERE IDNPC=4 AND IDDIALOG=1;"; SQL statement:
+UPDATE NPCDIALOG SET DIALOGTEXT='Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurità.' WHERE IDNPC=4 AND IDDIALOG=1; [42000-200]
+2021-07-26 18:38:56 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE NPCDIALOG SET DIALOGTEXT='Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurit.[*]' WHERE IDNPC=4 AND IDDIALOG=1;"; SQL statement:
+UPDATE NPCDIALOG SET DIALOGTEXT='Avvicini la mano a quella figura, molto spaventato.
+
+La striscia smussata di sangue sotto gli occhi sembra solida, così la afferri e, riuscendo a prenderla, la tiri verso di te.
+
+Una volta tirata via, la striscia cade a terra liquefatta e gli occhi smettono di piangere,
+poi scompaiono. Mentre il buio si dirada, guardi a terra e noti che la striscia di sangue liquefatta forma un numero.
+
+Appena quell'oscurit.' WHERE IDNPC=4 AND IDDIALOG=1; [42000-200]
