@@ -69,9 +69,6 @@ public class NPC implements Serializable{
     }
 
     //  OTHER METHODS
-//    public void putInteraction(Integer index, String dialogue) {
-//        getInteractions().put(index, dialogue);
-//    }
     public String getInteraction(Integer index) {
         return getInteractions().get(index);
     }
