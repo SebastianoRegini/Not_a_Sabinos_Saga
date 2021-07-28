@@ -45,12 +45,20 @@ public class NASS extends GameDescription {
     private int eventBossQuest = 0;
     private int eventCounter = -1;
 
-    private boolean eventTableTape = false;
+    private boolean eventExtraDose = false;
     private boolean eventNoTurnBack = false;
     private boolean eventLanternAlive = true;
     private boolean eventCameraTurnedOff = false;
+
+    //  Recurring Dialog Handler
+    private boolean eventRecurringAntonio = false;
+    private boolean eventRecurringFilippo = true;
+
+    //  Rat Events
     private boolean eventKeyInfo = false;
-    private boolean eventExtraDose = false;
+    private boolean eventTableTape = false;
+    private boolean eventRing = false;
+    private boolean eventShowInfo = false;
 
     //  OVERRIDED METHODS
     @Override
@@ -178,8 +186,8 @@ public class NASS extends GameDescription {
         setAlternativeInventory(new Inventory(4));
         gun = new DoseGun(12, 9);
 
-        setInRoom(corridoioMensa);
-        
+        setInRoom(corridoioIniziale);
+
     }
 
     @Override
@@ -217,7 +225,14 @@ public class NASS extends GameDescription {
                 if (getInRoom().getSouth() == null) {
                     out.println("Non è possibile andare a sud!");
                 } else if (getInRoom().isSouthLock()) {
-                    out.println("La porta a sud è chiusa a chiave!");
+
+                    if (eventNoTurnBack) {
+                        //Evento "non si torna indietro"
+                        out.println("Non puoi tornare indietro proprio adesso che sei arrivato fin qui!");
+                    } else {
+                        out.println("La porta a sud è chiusa a chiave!");
+                    }
+
                 } else {
                     setInRoom(getInRoom().getSouth());
                     getInRoom().printRoom();
@@ -295,10 +310,11 @@ public class NASS extends GameDescription {
                         setInRoom(getInRoom().getWest());
 
                         if (getInRoom().getId() == 2 && !getInRoom().isVisited()) {
-                            //  Disattiva il trigger noTurnBack e sblocca le serrature
+                            //  Disattiva i trigger e sblocca le serrature
                             getRooms().get(17).setWestLock(false);
                             getRooms().get(12).setSouthLock(false);
                             eventNoTurnBack = false;
+                            eventRecurringFilippo = false;
 
                             //  Incontro con Barboni
                             out.println("Appena entrato nella stanza, ti rendi conto che, davanti a te, c'è una guardia che\n"
@@ -521,6 +537,7 @@ public class NASS extends GameDescription {
                                     getRooms().get(16).setEastLock(false);
                                     getRooms().get(16).setToggleDose(null);
                                     setInRoom(getInRoom().getToggleDose());
+                                    getInRoom().printRoom();
 
                                     eventBossQuest++;
                                 }
@@ -680,20 +697,21 @@ public class NASS extends GameDescription {
                                 //Oggetto: cellulare (5)
                                 case 5:
                                     out.println("----------------------------------------");
-                                    out.println(funnel.getPerson().getInteraction(5));
+                                    out.println(funnel.getPerson().getInteraction(7));
                                     eventTableTape = true;
                                     break;
 
                                 //Oggetto: anello (6)
                                 case 6:
                                     out.println("----------------------------------------");
-                                    out.println(funnel.getPerson().getInteraction(4));
+                                    out.println(funnel.getPerson().getInteraction(8));
+                                    eventRing = true;
                                     break;
 
                                 //Oggetto: orologio (7)
                                 case 7:
                                     out.println("----------------------------------------");
-                                    out.println(funnel.getPerson().getInteraction(3));
+                                    out.println(funnel.getPerson().getInteraction(6));
                                     eventKeyInfo = true;
                                     break;
                             }
@@ -754,6 +772,7 @@ public class NASS extends GameDescription {
                             + "Ah no, aspetta... Vabbè, vale comunque la regola \"Una cosa per volta\"");
                 } else if (funnel.getObject() != null) {
                     switch (funnel.getObject().getId()) {
+
                         //  Pad
                         case 0:
                             if (passcode > 3) {
@@ -762,6 +781,7 @@ public class NASS extends GameDescription {
                                 out.println("Credo ci voglia un codice numerico di 4 cifre per aprire il cancello di uscita.");
                             }
                             break;
+
                         //  Computer
                         case 2:
                             if (!eventCameraTurnedOff) {
@@ -770,6 +790,7 @@ public class NASS extends GameDescription {
                                 out.println("Le telecamere sono già spente.");
                             }
                             break;
+
                         //  Calendario dell'avvento
                         case 3:
                             for (GameObject gO : getInRoom().getObj()) {
@@ -783,6 +804,7 @@ public class NASS extends GameDescription {
                                 }
                             }
                             break;
+
                         //  Armadio spogliatoio
                         case 8:
                             if (eventKeyInfo) {
@@ -802,6 +824,7 @@ public class NASS extends GameDescription {
                                 out.println("L'armadio è chiuso con un lucchetto.");
                             }
                             break;
+
                         //  Tavoli mensa
                         case 13:
                             if (eventTableTape) {
@@ -819,6 +842,7 @@ public class NASS extends GameDescription {
                                 out.println("Magari c'è qualcosa da fare con uno di questi tavoli, ma non sai cosa...");
                             }
                             break;
+
                         //  Lanterna
                         case 19:
                             out.println("Apri la teca della lanterna e prendi la paglia: stranamente non scotta. Una volta presa, questa\n"
@@ -827,8 +851,10 @@ public class NASS extends GameDescription {
                                     + "che non vedi più le luci del corridoio a nord: si sono spente...");
                             setInRoom(getInRoom().getToggleDose());
                             getInRoom().setToggleDose(null);
+                            getInRoom().printRoom();
                             eventLanternAlive = false;
                             break;
+
                         //  Muro di carte
                         case 20:
                             out.println("Cerchi di buttare giù quel muro a spallate, ma niente. Mentre quei cosi rossi maledetti continuano\n"
@@ -839,6 +865,7 @@ public class NASS extends GameDescription {
                             setInRoom(getInRoom().getToggleDose());
                             getInRoom().printRoom();
                             getInRoom().setToggleDose(null);
+
                             getRooms().get(13).setId(-4);
                             getRooms().get(30).setId(13);
                             getRooms().remove(13);
@@ -848,6 +875,7 @@ public class NASS extends GameDescription {
                             getRooms().get(18).setNorth(getRooms().get(13));
                             getRooms().get(14).setWest(getRooms().get(13));
                             break;
+
                         //  Pulsante triangolo
                         case 21:
                             out.println("Premendo il pulsante, senti il tipico suono di un ascensore quando arriva al piano scelto.\n"
@@ -858,10 +886,12 @@ public class NASS extends GameDescription {
                             setInRoom(getInRoom().getToggleDose());
                             getInRoom().printRoom();
                             break;
+
                         //  Pulsante stella
                         case 22:
                             gameOver(out, 2);
                             break;
+
                         //  Uks
                         case 23:
                             out.println("La chiave inizia a tremare e vieni sbalzato verso il cosmo.\n"
@@ -871,6 +901,7 @@ public class NASS extends GameDescription {
                             setInRoom(getInRoom().getToggleDose());
                             getInRoom().printRoom();
                             break;
+
                         //  Culla
                         case 26:
                             out.println("Appoggi la mano su quel buco nero e vieni immediatamente risucchiato al suo interno.\n"
@@ -923,16 +954,54 @@ public class NASS extends GameDescription {
 
                         //  Ugo
                         case 2:
+                            if (!eventShowInfo) {
+                                out.println(funnel.getPerson().getInteraction(1));
+                                eventShowInfo = true;
+                            } else if (!(eventKeyInfo && eventTableTape && eventRing)) {
+
+                                out.println(funnel.getPerson().getInteraction(2));
+
+                                if (!eventKeyInfo) {
+                                    out.println(funnel.getPerson().getInteraction(3));
+                                }
+
+                                if (!eventTableTape) {
+                                    out.println(funnel.getPerson().getInteraction(4));
+                                }
+
+                                if (!eventRing) {
+                                    out.println(funnel.getPerson().getInteraction(5));
+                                }
+                            } else {
+                                out.println(funnel.getPerson().getInteraction(9));
+                            }
 
                             break;
 
                         //  Antonio
                         case 3:
 
-                            if (getInRoom().getToggleDose() == null && getRooms().get(25).isVisited()) {
-                                //Altre opzioni di dialogo
+                            if (!eventRing) {
+                                out.println(funnel.getPerson().getInteraction(1));
                             } else {
-                                //Le classiche opzioni di dialogo
+                                if (!getRooms().get(25).isVisited()) {
+
+                                    if (getInRoom().getToggleDose() == null) {
+                                        out.println(funnel.getPerson().getInteraction(2));
+                                        getInRoom().setToggleDose(getRooms().get(25));
+                                    } else {
+                                        out.println(funnel.getPerson().getInteraction(3));
+                                    }
+
+                                } else {
+
+                                    if (eventRecurringAntonio) {
+                                        out.println(funnel.getPerson().getInteraction(5));
+                                    } else {
+                                        out.println(funnel.getPerson().getInteraction(4));
+                                        eventRecurringAntonio = true;
+                                    }
+                                }
                             }
 
                             break;
@@ -951,6 +1020,16 @@ public class NASS extends GameDescription {
 
                         //  Filippo (normale)
                         case 5:
+                            if (!getRooms().get(22).isVisited()) {
+                                out.println(funnel.getPerson().getInteraction(1));
+                            } else {
+                                if (eventRecurringFilippo) {
+                                    out.println(funnel.getPerson().getInteraction(2));
+                                } else {
+                                    out.println(funnel.getPerson().getInteraction(3));
+                                    eventRecurringFilippo = true;
+                                }
+                            }
 
                             break;
 
@@ -1127,7 +1206,8 @@ public class NASS extends GameDescription {
     }
 
     @Override
-    public void printStart(PrintStream out) {
+    public void printStart(PrintStream out
+    ) {
         out.println("========================================================================================================================\n"
                 + "BENVENUTO IN NASS\n"
                 + "\n"
@@ -1227,7 +1307,8 @@ public class NASS extends GameDescription {
     }
 
     @Override
-    public void gameOver(PrintStream out, int messageCode) {
+    public void gameOver(PrintStream out, int messageCode
+    ) {
 
         switch (messageCode) {
             case 0:
@@ -1327,7 +1408,8 @@ public class NASS extends GameDescription {
     }
 
     @Override
-    public void help(PrintStream out) {
+    public void help(PrintStream out
+    ) {
         out.println(""
                 + "Lo so, lo so, la brutta aria che emana questo postaccio e\n"
                 + "il pensiero che, se non ti sbrigassi, ci resteresti secco\n"
@@ -1409,6 +1491,7 @@ public class NASS extends GameDescription {
         if (eventCounter > -1) {
             eventCounter++;
         }
+
         if (eventCounter >= MOVES_GAMEOVER) {
             gameOver(out, 6);
         }
@@ -1422,13 +1505,9 @@ public class NASS extends GameDescription {
  *  - IMPORTANTE! Gestire la presenza del personaggio nelle stanze dosi.
  */
 //  NEXT    --------------------------------------------------------------------------------------------------------------------------------------
-//  TODO: Interazione con i carcerati
 //  TODO: risolvere problema LOAD e EXIT se non metti nè si nè no
 //  TODO: gestire numero combinazione pad aumentato in guarda cartello nel mondo della dose
 //  TODO: Sinonimo Chiave#2 e controllare altre chiavi
-//  TODO: Sistemare in qualche modo inventario dose perché stampa tasche
-//  TODO: Inserire printRoom() subito dopo interazione con filippo dose
-//  TODO: Cambiare "sud" quando sei in Torre di Osservazione e quando eventNoTurnBack==true
 //  ----------------------------------------------------------------------------------------------------------------------------------------------
 //
 //  AFTER   --------------------------------------------------------------------------------------------------------------------------------------
