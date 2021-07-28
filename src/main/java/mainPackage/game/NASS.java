@@ -178,7 +178,8 @@ public class NASS extends GameDescription {
         setAlternativeInventory(new Inventory(4));
         gun = new DoseGun(12, 9);
 
-        setInRoom(corridoioIniziale);
+        setInRoom(corridoioMensa);
+        
     }
 
     @Override
@@ -706,6 +707,9 @@ public class NASS extends GameDescription {
                                 out.println(funnel.getPerson().getInteraction(2));
                                 eventBossQuest = -1;
                                 guardUniform = false;
+                                setInRoom(getInRoom().getToggleDose());
+                                getInRoom().setToggleDose(null);
+                                getInRoom().printRoom();
                             }
                             break;
                         default:
@@ -887,20 +891,20 @@ public class NASS extends GameDescription {
                         //  Sabino (normale)
                         case 0:
                             if (eventExtraDose) {
-                                funnel.getPerson().getInteraction(2);
+                                out.println(funnel.getPerson().getInteraction(2));
 
                                 gun.setAmmo(gun.getMagazine());
                                 out.println("Adesso hai " + gun.getAmmo() + " dosi.");
 
                                 eventExtraDose = false;
                             } else {
-                                funnel.getPerson().getInteraction(1);
+                                out.println(funnel.getPerson().getInteraction(1));
                             }
                             break;
 
                         //  Sabino (dose)
                         case 1:
-                            funnel.getPerson().getInteraction(1);
+                            out.println(funnel.getPerson().getInteraction(1));
 
                             setInRoom(getInRoom().getToggleDose());
                             getInRoom().setToggleDose(null);
@@ -935,7 +939,7 @@ public class NASS extends GameDescription {
 
                         //  Occhi
                         case 4:
-                            funnel.getPerson().getInteraction(1);
+                            out.println(funnel.getPerson().getInteraction(1));
 
                             setInRoom(getInRoom().getToggleDose());
                             getInRoom().setToggleDose(null);
@@ -952,7 +956,7 @@ public class NASS extends GameDescription {
 
                         //  Filippo (dose)
                         case 6:
-                            funnel.getPerson().getInteraction(1);
+                            out.println(funnel.getPerson().getInteraction(1));
 
                             GameObject temporaryObj = getInRoom().getObj().get(0);
                             temporaryObj.setVisible(true);
@@ -965,24 +969,31 @@ public class NASS extends GameDescription {
 
                             break;
 
-                        //  Capo [QUI]
+                        //  Capo
                         case 7:
-                            //Incrementare eventBossQuest quando interagisce per la prima volta con il Capo
-                            //Settare la toggleDose del Corridoio Cortile
-
+                            if (eventBossQuest == 0 || (getRooms().get(16).getToggleDose() == null && eventBossQuest == 1)) {
+                                out.println(funnel.getPerson().getInteraction(1));
+                                eventBossQuest++;
+                            } else if (eventBossQuest == -1) {
+                                out.println(funnel.getPerson().getInteraction(3));
+                                out.println(funnel.getPerson().getInteraction(4));
+                                eventBossQuest = -2;
+                            } else {
+                                out.println(funnel.getPerson().getInteraction(2));
+                            }
                             break;
 
                         //  Dvce
                         case 8:
-                            if (eventBossQuest == -1) { //Quest completata
-                                funnel.getPerson().getInteraction(2);
+                            if (eventBossQuest < 0) { //Quest completata
+                                out.println(funnel.getPerson().getInteraction(2));
 
                                 setInRoom(getInRoom().getToggleDose());
                                 getInRoom().setToggleDose(null);
 
                                 passcode++;
                             } else {
-                                funnel.getPerson().getInteraction(1);
+                                out.println(funnel.getPerson().getInteraction(1));
                                 setInRoom(getInRoom().getToggleDose());
                             }
 
@@ -991,38 +1002,39 @@ public class NASS extends GameDescription {
                             break;
 
                         //  Michele e Carlo
-                        case 9: case 10:
-                            if (eventBossQuest == -1) { //Quest completata
-                                funnel.getPerson().getInteraction(2);
+                        case 9:
+                        case 10:
+                            if (eventBossQuest < 0) { //Quest completata
+                                out.println(funnel.getPerson().getInteraction(2));
                             } else {
-                                funnel.getPerson().getInteraction(1);
+                                out.println(funnel.getPerson().getInteraction(1));
                             }
                             break;
 
                         //  Bambine
                         case 11:
-                            funnel.getPerson().getInteraction(1);
+                            out.println(funnel.getPerson().getInteraction(1));
                             break;
 
                         //  Castorpio
                         case 12:
                             if (getInRoom().getId() == 17) {
-                                funnel.getPerson().getInteraction(4);
+                                out.println(funnel.getPerson().getInteraction(4));
                             } else {
-                                funnel.getPerson().getInteraction(1);
+                                out.println(funnel.getPerson().getInteraction(1));
                             }
                             break;
 
                         //  Barboni
                         case 13:
-                            funnel.getPerson().getInteraction(1);
+                            out.println(funnel.getPerson().getInteraction(1));
                             break;
 
                         //  Barbuino
                         case 14:
-                            funnel.getPerson().getInteraction(1);
+                            out.println(funnel.getPerson().getInteraction(1));
                             waiting(out);
-                            funnel.getPerson().getInteraction(2);
+                            out.println(funnel.getPerson().getInteraction(2));
 
                             setInRoom(getInRoom().getToggleDose());
                             eventCounter = 0;
@@ -1060,6 +1072,11 @@ public class NASS extends GameDescription {
                 break;
 
             case DOSE:
+
+                if (eventBossQuest > 1 && getInRoom().getId() == 16) {
+                    getInRoom().setToggleDose(getRooms().get(28));
+                }
+
                 if (getInRoom().getToggleDose() == null) {
                     out.println("Non puoi usare la dose qui");
                 } else {
@@ -1406,18 +1423,30 @@ public class NASS extends GameDescription {
  */
 //  NEXT    --------------------------------------------------------------------------------------------------------------------------------------
 //  TODO: Interazione con i carcerati
+//  TODO: risolvere problema LOAD e EXIT se non metti nè si nè no
+//  TODO: gestire numero combinazione pad aumentato in guarda cartello nel mondo della dose
+//  TODO: Sinonimo Chiave#2 e controllare altre chiavi
+//  TODO: Sistemare in qualche modo inventario dose perché stampa tasche
+//  TODO: Inserire printRoom() subito dopo interazione con filippo dose
+//  TODO: Cambiare "sud" quando sei in Torre di Osservazione e quando eventNoTurnBack==true
 //  ----------------------------------------------------------------------------------------------------------------------------------------------
 //
 //  AFTER   --------------------------------------------------------------------------------------------------------------------------------------
-//  TODO: risolvere problema LOAD e EXIT se non metti nè si nè no
-//  TODO: gestire numero combinazione pad aumentato in guarda cartello nel mondo della dose
+//  TODO: trasformare codice ridondante in metodi (se si riesce e se si può, creare delle classi nel caso possa avere senso)
 //  TODO: eventualmente, inserire un altro gameover nel caso si recuperino 5 numeri
 //  TODO: controllare se effettivamente servono i metodi addAmmo e isFull della DoseGun
 //  TODO: stampa delle dosi dopo il loading
 //  TODO: sistemare stringhe con gli spazi e i ritorni a capo giusti
+//  TODO: sistemare l'ingresso in Cortile se si ha la divisa addosso
 //  ----------------------------------------------------------------------------------------------------------------------------------------------
 //
 //  REFINEMENT  ----------------------------------------------------------------------------------------------------------------------------------
 //  TODO: inserire stringa Interact per gli oggetti nel DB
 //  TODO: inserire int nella classe NPC per gestire i dialoghi
 //  ----------------------------------------------------------------------------------------------------------------------------------------------
+// PER CONTROLLI -----
+//        for (Room r : getRooms()){
+//            System.out.println("Room " + r.getId() + " at position " + getRooms().indexOf(r));
+//        }
+//        
+//        System.exit(0);
