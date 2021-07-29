@@ -46,11 +46,11 @@ public class UWManager {
     public static List<String> removeWords(String playerComm, Set<String> uselessWords) {
         List<String> usefulWords = new ArrayList<>();
         
-        String[] singleWords = playerComm.trim().toLowerCase().split("\\W+");
+        String[] singleWords = playerComm.trim().toLowerCase().split("[\\W&&[^#]]");
         
         for(String temp : singleWords){
-            if(!uselessWords.contains(temp)){
-                usefulWords.add(temp);
+            if(!uselessWords.contains(temp)){ 
+               usefulWords.add(temp);
             }
         }
         return usefulWords;

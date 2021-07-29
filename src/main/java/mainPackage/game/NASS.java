@@ -235,6 +235,11 @@ public class NASS extends GameDescription {
 
                 } else {
                     setInRoom(getInRoom().getSouth());
+                    
+                    if(getInRoom().getId()==17 && !guardUniform){
+                        gameOver(out, 3);
+                    }
+                    
                     getInRoom().printRoom();
                     checkCounter(out);
                 }
@@ -268,9 +273,15 @@ public class NASS extends GameDescription {
                                 gameOver(out, 1);
                             }
                             break;
+                            
+                        //Cortile
                         case 17:
                             if (!getInRoom().isVisited()) {
                                 eventNoTurnBack = true;
+                            }else{
+                                if(!guardUniform){
+                                    gameOver(out, 3);
+                                }
                             }
                             break;
                     }
@@ -1159,9 +1170,12 @@ public class NASS extends GameDescription {
                 if (getInRoom().getToggleDose() == null) {
                     out.println("Non puoi usare la dose qui");
                 } else {
-                    gun.shoot();
-                    setInRoom(getInRoom().getToggleDose());
-                    getInRoom().printRoom();
+                    if (gun.shoot()) {
+                        setInRoom(getInRoom().getToggleDose());
+                        getInRoom().printRoom();
+                    } else {
+                        gameOver(out, 4);
+                    }
                 }
                 break;
 
@@ -1387,7 +1401,13 @@ public class NASS extends GameDescription {
                 out.println("Cos'è questo rumore?\n\n"
                         + "All'improvviso senti scattare l'allarme e, preso dal panico, cominci a correre in cerca di un posto in cui nasconderti.\n"
                         + "I tuoi tentativi sono vani: vieni bloccato dal cecchino della torretta (per gli amici, Talpone) e da Barboni che, dopo\n"
-                        + "essersi ripreso, si è precipitato in ufficio ed ha fatto scattare l'allarme.");
+                        + "essersi ripreso, si è precipitato in ufficio ed ha fatto scattare l'allarme.\n\n"
+                        + "Dopo essere stato riaccompagnato in cella, vai a dormire. La mattina successiva le guardie vengono a prenderti e ti\n"
+                        + "scortano verso la ghigliottina: vieni immobilizzato su quell'arnese e il direttore del carcere dà il comando per\n"
+                        + "attivare il meccanismo. Per tutto il tempo resti apatico, pensando allo stupido errore che hai commesso: non legare\n"
+                        + "Barboni. Pensi e ripensi a quello sbaglio, a quella singola cosa a cui non hai prestato attenzione, che ha fatto la\n"
+                        + "grande differenza tra la libertà e l'essere ormai su quella macchina di morte.\n"
+                        + "Il ripetersi di quel pensiero si spegne bruscamente mentre la lama attraversa la tua nuca e tutto si fa buio...");
                 break;
         }
 
@@ -1507,7 +1527,6 @@ public class NASS extends GameDescription {
 //  NEXT    --------------------------------------------------------------------------------------------------------------------------------------
 //  TODO: risolvere problema LOAD e EXIT se non metti nè si nè no
 //  TODO: gestire numero combinazione pad aumentato in guarda cartello nel mondo della dose
-//  TODO: Sinonimo Chiave#2 e controllare altre chiavi
 //  ----------------------------------------------------------------------------------------------------------------------------------------------
 //
 //  AFTER   --------------------------------------------------------------------------------------------------------------------------------------
