@@ -23,13 +23,15 @@ public class ParserFilter {
     
     private NPC person;
     
+    private String extraWord;
 
     // CONSTRUCTOR
-    public ParserFilter(Command command, GameObject object, GameObject inventoryObj, NPC person) {
+    public ParserFilter(Command command, GameObject object, GameObject inventoryObj, NPC person, String extraWord) {
         this.command = command;
         this.object = object;
         this.inventoryObj = inventoryObj;
         this.person = person;
+        this.extraWord = extraWord;
     }
     
     // SETTERS
@@ -49,6 +51,10 @@ public class ParserFilter {
         this.person = person;
     }
 
+    public void setExtraWord(String extraWord) {
+        this.extraWord = extraWord;
+    }
+
     // GETTERS
     public Command getCommand() {
         return command;
@@ -64,6 +70,10 @@ public class ParserFilter {
 
     public NPC getPerson() {
         return person;
+    }
+
+    public String getExtraWord() {
+        return extraWord;
     }
     
 }

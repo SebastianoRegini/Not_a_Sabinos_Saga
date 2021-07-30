@@ -70,7 +70,7 @@ public class Parser {
                     //Controllo Oggetto
                     objectIndex = whatObject(filteredWords.get(1), extObj);
                     if (objectIndex > -1) {
-                        return new ParserFilter(commands.get(commandIndex), extObj.get(objectIndex), null, null);
+                        return new ParserFilter(commands.get(commandIndex), extObj.get(objectIndex), null, null, null);
                     }
 
                     //Controllo NPC
@@ -81,12 +81,12 @@ public class Parser {
                             //Controllo NPC+OggettoInventario
                             inventoryIndex = whatObject(filteredWords.get(2), inventory);
                             if (inventoryIndex > -1) {
-                                return new ParserFilter(commands.get(commandIndex), null, inventory.get(inventoryIndex), npcs.get(npcIndex));
+                                return new ParserFilter(commands.get(commandIndex), null, inventory.get(inventoryIndex), npcs.get(npcIndex), null);
                             } else {
-                                return new ParserFilter(commands.get(commandIndex), null, null, npcs.get(npcIndex));
+                                return new ParserFilter(commands.get(commandIndex), null, null, npcs.get(npcIndex), null);
                             }
                         } else {
-                            return new ParserFilter(commands.get(commandIndex), null, null, npcs.get(npcIndex));
+                            return new ParserFilter(commands.get(commandIndex), null, null, npcs.get(npcIndex), null);
                         }
                     }
 
@@ -98,33 +98,33 @@ public class Parser {
                             //Controllo OggettoInventario+Oggetto
                             objectIndex = whatObject(filteredWords.get(2), extObj);
                             if (objectIndex > -1) {
-                                return new ParserFilter(commands.get(commandIndex), extObj.get(objectIndex), inventory.get(inventoryIndex), null);
+                                return new ParserFilter(commands.get(commandIndex), extObj.get(objectIndex), inventory.get(inventoryIndex), null, null);
 
                             } else if ((npcIndex = whatNPC(filteredWords.get(2), npcs)) > -1) {
 
                                 //Controllo OggettoInventario+NPC
-                                return new ParserFilter(commands.get(commandIndex), null, inventory.get(inventoryIndex), npcs.get(npcIndex));
+                                return new ParserFilter(commands.get(commandIndex), null, inventory.get(inventoryIndex), npcs.get(npcIndex), null);
 
                             } else {
-                                return new ParserFilter(commands.get(commandIndex), null, inventory.get(inventoryIndex), null);
+                                return new ParserFilter(commands.get(commandIndex), null, inventory.get(inventoryIndex), null, null);
                             }
                         } else {
-                            return new ParserFilter(commands.get(commandIndex), null, inventory.get(inventoryIndex), null);
+                            return new ParserFilter(commands.get(commandIndex), null, inventory.get(inventoryIndex), null, null);
                         }
                     }
 
                     //Ritorno nel caso in cui non ricopra nessuna delle categorie
                     //  Cattura parola inutile
-                    return new ParserFilter(commands.get(commandIndex), null, null, null);
+                    return new ParserFilter(commands.get(commandIndex), null, null, null, filteredWords.get(1));
 
                 } else {
-                    return new ParserFilter(commands.get(commandIndex), null, null, null);
+                    return new ParserFilter(commands.get(commandIndex), null, null, null, null);
                 }
             } else {
-                return new ParserFilter(null, null, null, null);
+                return new ParserFilter(null, null, null, null, null);
             }
         } else {
-            return new ParserFilter(null, null, null, null);
+            return new ParserFilter(null, null, null, null, null);
         }
     }
 }

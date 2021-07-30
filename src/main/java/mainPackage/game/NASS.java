@@ -235,11 +235,11 @@ public class NASS extends GameDescription {
 
                 } else {
                     setInRoom(getInRoom().getSouth());
-                    
-                    if(getInRoom().getId()==17 && !guardUniform){
+
+                    if (getInRoom().getId() == 17 && !guardUniform) {
                         gameOver(out, 3);
                     }
-                    
+
                     getInRoom().printRoom();
                     checkCounter(out);
                 }
@@ -273,13 +273,13 @@ public class NASS extends GameDescription {
                                 gameOver(out, 1);
                             }
                             break;
-                            
+
                         //Cortile
                         case 17:
                             if (!getInRoom().isVisited()) {
                                 eventNoTurnBack = true;
-                            }else{
-                                if(!guardUniform){
+                            } else {
+                                if (!guardUniform) {
                                     gameOver(out, 3);
                                 }
                             }
@@ -360,21 +360,21 @@ public class NASS extends GameDescription {
                                 switch (temporaryContObj.getId()) {
 
                                     //Contenitore: Scrivania 
-                                    case 0:
-                                        out.println("Tiri via completamente il cassetto dalla scrivania e ne rovesci il contenuto\n"
+                                    case 27:
+                                        out.print("Tiri via completamente il cassetto dalla scrivania e ne rovesci il contenuto\n"
                                                 + "su quest'ultima. Dopo aver finito, lanci via il cassetto e controlli cosa c'era:\n"
-                                                + "insieme a molte cianfrusaglie inutili e cancelleria, trovi un");
+                                                + "insieme a molte cianfrusaglie inutili e cancelleria, trovi un ");
                                         break;
 
                                     //Contenitore: Cassaforte
-                                    case 1:
-                                        out.println("Infili la chiave e ruoti fino a sentire il rumore della serratura che si sblocca,\n"
+                                    case 28:
+                                        out.print("Infili la chiave e ruoti fino a sentire il rumore della serratura che si sblocca,\n"
                                                 + "provi a tirare ma è incastrata. Tiri con un colpo forte e deciso e la porta si\n"
                                                 + "spalanca, ma l'urto fa cadere e rotolare un ");
                                         break;
 
                                     //Contenitore: Tasca
-                                    case 2:
+                                    case 29:
                                         out.print("Apri la tasca per vedere cosa c'è dentro, ma il grembiule è vecchio e rovinato:\n"
                                                 + "il tuo tirare, unito al peso della roba al suo interno, la fanno strappare\n"
                                                 + "e fanno cadere a terra un ");
@@ -554,17 +554,17 @@ public class NASS extends GameDescription {
                                 }
                                 break;
 
-                            //Cassaforte (1) + Chiave (12)
+                            //Cassaforte (28) + Chiave (12)
                             case 12:
-                                if (funnel.getObject() instanceof ContainerObject && funnel.getObject().getId() == 1) {
+                                if (funnel.getObject() instanceof ContainerObject && funnel.getObject().getId() == 28) {
                                     unlock((ContainerObject) funnel.getObject(), funnel.getInventoryObj(), out);
                                 }
 
                                 break;
 
-                            //Scrivania (0) + Chiave (4)
+                            //Scrivania (27) + Chiave (4)
                             case 4:
-                                if (funnel.getObject() instanceof ContainerObject && funnel.getObject().getId() == 0) {
+                                if (funnel.getObject() instanceof ContainerObject && funnel.getObject().getId() == 27) {
                                     unlock((ContainerObject) funnel.getObject(), funnel.getInventoryObj(), out);
                                 }
                                 break;
@@ -860,6 +860,10 @@ public class NASS extends GameDescription {
                                     + "si estingue e cala il buio, poi si spegne anche la paglia sul mucchio di fuoco. Non vedi più nulla,\n"
                                     + "così ti accorgi di avere gli occhi chiusi. Li apri e sei tornato nel mondo reale, con la differenza\n"
                                     + "che non vedi più le luci del corridoio a nord: si sono spente...");
+                            if (guardUniform) {
+                                out.println("Noti, inoltre, di avere indosso la divisa da guardia carceraria di Castorpio.\n"
+                                        + "Per qualche motivo, non riesci a togliertela... Poco male, almeno puoi passare inosservato...");
+                            }
                             setInRoom(getInRoom().getToggleDose());
                             getInRoom().setToggleDose(null);
                             getInRoom().printRoom();
@@ -1129,6 +1133,7 @@ public class NASS extends GameDescription {
                             setInRoom(getInRoom().getToggleDose());
                             eventCounter = 0;
                             eventExtraDose = true;
+                            getRooms().get(18).setToggleDose(getRooms().get(29));
 
                             getInRoom().setToggleDose(null);
                             getInRoom().printRoom();
@@ -1167,7 +1172,7 @@ public class NASS extends GameDescription {
                     getInRoom().setToggleDose(getRooms().get(28));
                 }
 
-                if (getInRoom().getToggleDose() == null) {
+                if (getInRoom().getToggleDose() == null || getInRoom().getId() > 18) {
                     out.println("Non puoi usare la dose qui");
                 } else {
                     if (gun.shoot()) {
@@ -1504,7 +1509,7 @@ public class NASS extends GameDescription {
     private void unlock(ContainerObject cObj, GameObject key, PrintStream out) {
         cObj.setOpen(true);
         getInventory().remove(key);
-        out.println("Hai sbloccato la serratura della " + cObj + " con la chiave.");
+        out.println("Hai sbloccato la serratura della " + cObj.getName() + " con la chiave.");
     }
 
     private void checkCounter(PrintStream out) {
