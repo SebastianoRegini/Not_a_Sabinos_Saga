@@ -184,7 +184,7 @@ public class NASS extends GameDescription {
         //  STARTING
         setInventory(new Inventory(6));
         setAlternativeInventory(new Inventory(4));
-        gun = new DoseGun(12, 9);
+        gun = new DoseGun(12, 12);
 
         setInRoom(corridoioIniziale);
 
@@ -426,7 +426,7 @@ public class NASS extends GameDescription {
 
             case PICK_UP:
                 if (funnel.getObject() != null) {
-                    if (funnel.getObject().isPickupable()) {
+                    if (funnel.getObject().isPickupable() && funnel.getObject().isVisible()) {
 
                         //Controllo se siamo nella stanza alternativa
                         if (getInRoom().getId() < 19) {
@@ -535,8 +535,9 @@ public class NASS extends GameDescription {
                                     funnel.getObject().setVisible(false);
                                     out.println("Sporgendoti, sei riuscito a coprire l'obiettivo della telecamera con la carta stagnola.\n"
                                             + "Hai acceso la luce con l'interruttore proprio vicino alla porta e ora, finalmente, puoi entrare.");
+                                    
+                                    getInventory().remove(funnel.getInventoryObj());
                                 }
-                                getInventory().remove(funnel.getInventoryObj());
                                 break;
 
                             //Uks (23) + Porticina (24)
@@ -551,6 +552,8 @@ public class NASS extends GameDescription {
                                     getInRoom().printRoom();
 
                                     eventBossQuest++;
+                                    
+                                    getAlternativeInventory().remove(funnel.getInventoryObj());
                                 }
                                 break;
 
@@ -575,7 +578,7 @@ public class NASS extends GameDescription {
 
                         }
 
-                    } else { //Entrambi null
+                    } else { //Entrambi null (solo oggetto dell'inventario
                         switch (funnel.getInventoryObj().getId()) {
 
                             //Chiave mensa
@@ -590,7 +593,7 @@ public class NASS extends GameDescription {
                                         out.println("Hai sbloccato la porta ad est, ora puoi passare.");
                                     } else {
                                         out.println("----------------------------------------");
-                                        out.println("Hai già sbloccato la porta."); //TODO Bruò
+                                        out.println("Hai già sbloccato la porta ad est.");
                                     }
                                 } else {
                                     out.println("Non puoi usare questa chiave qui!");
@@ -612,7 +615,7 @@ public class NASS extends GameDescription {
                                             out.println("Hai sbloccato la porta a nord, ora puoi passare.");
                                         } else {
                                             out.println("----------------------------------------");
-                                            out.println("Hai già sbloccato la porta."); //TODO Bruò
+                                            out.println("Hai già sbloccato la porta a nord.");
                                         }
                                         break;
 
@@ -626,7 +629,7 @@ public class NASS extends GameDescription {
                                             out.println("Hai sbloccato la porta ad est, ora puoi passare.");
                                         } else {
                                             out.println("----------------------------------------");
-                                            out.println("Hai già sbloccato la porta."); //TODO Bruò
+                                            out.println("Hai già sbloccato la porta ad est.");
                                         }
 
                                         //Porta sud
@@ -637,7 +640,7 @@ public class NASS extends GameDescription {
                                             out.println("Hai sbloccato la porta a sud, ora puoi passare.");
                                         } else {
                                             out.println("----------------------------------------");
-                                            out.println("Hai già sbloccato la porta."); //TODO Bruò
+                                            out.println("Hai già sbloccato la porta a sud.");
                                         }
 
                                         break;
@@ -652,7 +655,7 @@ public class NASS extends GameDescription {
                                             out.println("Hai sbloccato la porta ad est, ora puoi passare.");
                                         } else {
                                             out.println("----------------------------------------");
-                                            out.println("Hai già sbloccato la porta."); //TODO Bruò
+                                            out.println("Hai già sbloccato la porta ad est.");
                                         }
 
                                         //Porta ovest
@@ -663,7 +666,7 @@ public class NASS extends GameDescription {
                                             out.println("Hai sbloccato la porta ad ovest, ora puoi passare.");
                                         } else {
                                             out.println("----------------------------------------");
-                                            out.println("Hai già sbloccato la porta."); //TODO Bruò
+                                            out.println("Hai già sbloccato la porta ad ovest.");
                                         }
 
                                         break;
@@ -678,7 +681,7 @@ public class NASS extends GameDescription {
                                             out.println("Hai sbloccato la porta ad ovest, ora puoi passare.");
                                         } else {
                                             out.println("----------------------------------------");
-                                            out.println("Hai già sbloccato la porta."); //TODO Bruò
+                                            out.println("Hai già sbloccato la porta ad ovest.");
                                         }
                                         break;
 
@@ -727,6 +730,7 @@ public class NASS extends GameDescription {
                                     break;
                             }
                             out.println("Spero tu abbia ascoltato bene, non ripeterò ciò che ho detto!");
+                            getInventory().remove(funnel.getInventoryObj());
                             break;
                         //Controllo se è Bambine (11)
                         case 11:
@@ -736,6 +740,9 @@ public class NASS extends GameDescription {
                                 out.println(funnel.getPerson().getInteraction(2));
                                 eventBossQuest = -1;
                                 guardUniform = false;
+
+                                getAlternativeInventory().remove(funnel.getInventoryObj());
+
                                 setInRoom(getInRoom().getToggleDose());
                                 getInRoom().setToggleDose(null);
                                 getInRoom().printRoom();
@@ -753,6 +760,7 @@ public class NASS extends GameDescription {
                 break;
 
             case EXAMINE:
+
                 //Se inserisci troppe cose da guardare
                 if ((funnel.getPerson() != null && funnel.getObject() != null)
                         || (funnel.getInventoryObj() != null && funnel.getObject() != null)
@@ -764,15 +772,23 @@ public class NASS extends GameDescription {
                     if (funnel.getPerson() != null) { //Se hai inserito un NPC
                         out.println("----------------------------------------");
                         out.println(funnel.getPerson().getInteraction(0));
-                    } else if (funnel.getObject() != null && funnel.getObject().isVisible()) { //Se hai inserito un oggetto e se è visibile
-                        out.println("----------------------------------------");
-                        out.println(funnel.getObject().getDescription());
+                    } else if (funnel.getObject() != null) { //Se hai inserito un oggetto
+                        if (funnel.getObject().isVisible()) {
+                            out.println("----------------------------------------");
+                            out.println(funnel.getObject().getDescription());
+                        } else {
+                            out.println("----------------------------------------");
+                            out.println("Circolare, circolare! Non c'è niente da vedere!");
+                        }
                     } else if (funnel.getInventoryObj() != null) { //Se hai inserito un oggetto dell'inventario
                         out.println("----------------------------------------");
                         out.println(funnel.getInventoryObj().getDescription());
-                    } else { //Se non hai inserito nulla di valido
+                    } else if (funnel.getExtraWord() != null) { //Se hai inserito qualcosa di non valido
                         out.println("----------------------------------------");
                         out.println("Circolare, circolare! Non c'è niente da vedere!");
+                    } else { //Se non hai inserito nulla di valido
+                        out.println("----------------------------------------");
+                        out.println("Devi riferirti a qualcosa o qualcuno in particolare, sennò non posso aiutarti...");
                     }
                 }
                 break;
@@ -928,6 +944,7 @@ public class NASS extends GameDescription {
                             setInRoom(getInRoom().getToggleDose());
                             getInRoom().printRoom();
                             break;
+
                         default:
                             out.println("Non puoi interagire con questo oggetto!");
                     }
@@ -1141,6 +1158,8 @@ public class NASS extends GameDescription {
                             break;
 
                     }
+                } else if (funnel.getExtraWord() != null) {
+                    out.println("Non è qualcosa di valido con cui interagire!");
                 } else {
                     out.println("Se non mi dici con chi o con cosa vuoi interagire, non posso aiutarti...");
                 }
@@ -1159,9 +1178,11 @@ public class NASS extends GameDescription {
                     } else if (funnel.getInventoryObj() != null) { //Se hai inserito un oggetto dell'inventario
                         out.println("----------------------------------------");
                         out.println(funnel.getInventoryObj().getHint());
-                    } else { //Se non hai inserito nulla di valido
+                    } else if (funnel.getExtraWord() != null) { //Se hai inserito una parola non valida
                         out.println("----------------------------------------");
                         out.println("Non farti viaggi astrali su qualsiasi cosa, devi sbrigarti ad evadere!");
+                    } else { //Se non hai inserito nulla
+                        out.println("Devi dirmi su cosa vuoi che ti dia indizi... Coraggio, riprova!");
                     }
                 }
                 break;
