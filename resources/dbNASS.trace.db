@@ -1,0 +1,26 @@
+2021-08-10 17:46:43 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE ROOM SET DESCRIPTION_LOOK='Un corridoio con un pavimento sporco d'erba e qualche sassolino.
+Ad est c'è la porta del CORTILE, dalla cui base si intravede un flebile fascio di luce.
+
+Ad ovest, invece, incappi nell'INCROCIO PRINCIPALE del carcere, mentre a nord non c'è nient'altro che un muro con una telecamera.
+ 
+A sud vedi una cella spoglia, quella di Michele e Carlo, con due letti e un mobiletto senza una gamba, mezzo bruciato e spezzato.[*]' WHERE ID=16;"; SQL statement:
+UPDATE ROOM SET DESCRIPTION_LOOK='Un corridoio con un pavimento sporco d'erba e qualche sassolino.
+Ad est c'è la porta del CORTILE, dalla cui base si intravede un flebile fascio di luce.
+
+Ad ovest, invece, incappi nell'INCROCIO PRINCIPALE del carcere, mentre a nord non c'è nient'altro che un muro con una telecamera.
+ 
+A sud vedi una cella spoglia, quella di Michele e Carlo, con due letti e un mobiletto senza una gamba, mezzo bruciato e spezzato.' WHERE ID=16; [42000-200]
+2021-08-10 17:47:03 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE ROOM SET DESCRIPTION_LOOK='Un corridoio con un pavimento sporco d''erba e qualche sassolino.
+Ad est c''è la porta del CORTILE, dalla cui base si intravede un flebile fascio di luce.
+
+Ad ovest, invece, incappi nell''INCROCIO PRINCIPALE del carcere, mentre a nord non c''è nient'altro che un muro con una telecamera.
+ 
+A sud vedi una cella spoglia, quella di Michele e Carlo, con due letti e un mobiletto senza una gamba, mezzo bruciato e spezzato.[*]' WHERE ID=16"; SQL statement:
+UPDATE ROOM SET DESCRIPTION_LOOK='Un corridoio con un pavimento sporco d''erba e qualche sassolino.
+Ad est c''è la porta del CORTILE, dalla cui base si intravede un flebile fascio di luce.
+
+Ad ovest, invece, incappi nell''INCROCIO PRINCIPALE del carcere, mentre a nord non c''è nient'altro che un muro con una telecamera.
+ 
+A sud vedi una cella spoglia, quella di Michele e Carlo, con due letti e un mobiletto senza una gamba, mezzo bruciato e spezzato.' WHERE ID=16 [42000-200]
