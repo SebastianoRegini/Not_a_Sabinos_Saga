@@ -49,6 +49,7 @@ public class NASS extends GameDescription {
     private boolean eventNoTurnBack = false;
     private boolean eventLanternAlive = true;
     private boolean eventCameraTurnedOff = false;
+    private boolean eventRecurringSignInteraction = false;
 
     //  Recurring Dialog Handler
     private boolean eventRecurringAntonio = false;
@@ -875,11 +876,25 @@ public class NASS extends GameDescription {
 
                         //Cartello dose
                         case 17:
-                            out.println("Qualcosa");
-                            //L'interazione con il cartello, se NON HAI PRESO LA BAMBOLA (eventBossQuest >= 0 e <=2) e se TOGGLE DOSE TORRE DI OSSERVAZIONE è visited, ti dà passcode++
+                            if (eventBossQuest >= 0 && !guardUniform && !eventRecurringSignInteraction /*&& getRooms().get(23).isVisited()*/) { //TODO
+                                out.println("Il cartello di solito è molto affettuoso, ma adesso ti osserva con disapprovazione.\n"
+                                        + "Si stacca dalla parete e ti raggiunge, con le...ehm...\"braccia\" conserte e scuote la\n"
+                                        + "testa in cenno di delusione. Non sai perché fa così e, mentre ci pensi, lui ti porge\n"
+                                        + "la...ehm...MANO!? Tu gliela stringi e un forte calore te la ustiona!\n"
+                                        + "Urli dal dolore e stacchi la mano dalla sua, la osservi e noti che la bruciatura forma\n"
+                                        + "un numero! Poi il dolore si intensifica, strizzi gli occhi e urli ancora e poi,\n"
+                                        + "all'improvviso, il dolore cessa e, quando riapri gli occhi, ti ritrovi nel parcheggio\n"
+                                        + "del mondo reale.");
+                                passcode++;
+                                eventRecurringSignInteraction = true;
+                            } else {
+                                out.println("Il cartello è molto affettuoso: si stacca dalla parete per venire ad abbracciarti...\n"
+                                        + "Ovviamente tu ti spaventi vedendolo precipitarsi verso di te e cominci a correre, ma lui\n"
+                                        + "ti afferra, ti abbraccia e, in un baleno, ti ritrovi nel parcheggio del mondo reale.");
+                            }
+
                             //Esci dal mondo della dose e ritorni nel parcheggio
                             setInRoom(getInRoom().getToggleDose());
-                            getInRoom().setToggleDose(null);
                             getInRoom().printRoom();
                             break;
 
@@ -1211,7 +1226,7 @@ public class NASS extends GameDescription {
 
             case DOSE:
 
-                if (eventBossQuest > 1 && getInRoom().getId() == 16) {
+                if (eventBossQuest > 2 && getInRoom().getId() == 16) {
                     getInRoom().setToggleDose(getRooms().get(28));
                 }
 
@@ -1567,34 +1582,3 @@ public class NASS extends GameDescription {
         }
     }
 }
-
-/* Da sistemare
- *  - Se prendi la bambola di pezza AND se hai parlato con il Capo
- *      getRooms().get(16).setToggleDose(getRooms().get(28));
- *  - visibilityChanger(getRooms().get(id),idobj);
- *  - IMPORTANTE! Gestire la presenza del personaggio nelle stanze dosi.
- */
-//  NEXT    --------------------------------------------------------------------------------------------------------------------------------------
-//  TODO: risolvere problema LOAD e EXIT se non metti nè si nè no
-//  TODO: gestire numero combinazione pad aumentato in guarda cartello nel mondo della dose
-//  ----------------------------------------------------------------------------------------------------------------------------------------------
-//
-//  AFTER   --------------------------------------------------------------------------------------------------------------------------------------
-//  TODO: trasformare codice ridondante in metodi (se si riesce e se si può, creare delle classi nel caso possa avere senso)
-//  TODO: eventualmente, inserire un altro gameover nel caso si recuperino 5 numeri
-//  TODO: controllare se effettivamente servono i metodi addAmmo e isFull della DoseGun
-//  TODO: stampa delle dosi dopo il loading
-//  TODO: sistemare stringhe con gli spazi e i ritorni a capo giusti
-//  TODO: sistemare l'ingresso in Cortile se si ha la divisa addosso
-//  ----------------------------------------------------------------------------------------------------------------------------------------------
-//
-//  REFINEMENT  ----------------------------------------------------------------------------------------------------------------------------------
-//  TODO: inserire stringa Interact per gli oggetti nel DB
-//  TODO: inserire int nella classe NPC per gestire i dialoghi
-//  ----------------------------------------------------------------------------------------------------------------------------------------------
-// PER CONTROLLI -----
-//        for (Room r : getRooms()){
-//            System.out.println("Room " + r.getId() + " at position " + getRooms().indexOf(r));
-//        }
-//        
-//        System.exit(0);
