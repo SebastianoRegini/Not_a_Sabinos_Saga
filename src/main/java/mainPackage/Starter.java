@@ -64,14 +64,12 @@ public class Starter {
             if (filter.getCommand() != null) {
                 switch (filter.getCommand().getType()) {
                     case SAVE: 
-                        try {
+                       try {
                         if (game.isSaved()) {
                             System.out.println("----------------------------------------");
                             System.out.println("Non ci sono modifiche da salvare.");
                         } else {
-                            game.save();
-                            System.out.println("----------------------------------------");
-                            System.out.println("Partita salvata correttamente!");
+                            game.save(System.out);
                         }
                     } catch (IOException ex) {
                         System.err.println("Errore nel salvataggio della partita: " + ex.getMessage());
@@ -90,14 +88,13 @@ public class Starter {
                                 load = false;
                             } else if (!carica.equalsIgnoreCase("SI")) {
                                 System.out.println("Onestamente, non ho capito se vuoi caricare o meno...");
+                                load = false;
                             }
                         }
 
                         if (load) {
                             try {
-                                game = game.load();
-                                System.out.println("----------------------------------------");
-                                System.out.println("Partita caricata correttamente!");
+                                game = game.load(System.out);
                                 game.getInRoom().printRoom();
                             } catch (IOException | ClassNotFoundException ex) {
                                 System.err.println("Errore nel caricamento della partita: " + ex.getMessage());
@@ -117,6 +114,7 @@ public class Starter {
 
                             } else if (!esci.equalsIgnoreCase("SI")) {
                                 System.out.println("Onestamente, non ho capito se vuoi uscire o meno...");
+                                exit = false;
                             }
                         }
 
