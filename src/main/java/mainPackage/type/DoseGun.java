@@ -1,8 +1,7 @@
 /*
  * NOT A SABINO'S SAGA - MS_C ©2021
  * This is surely not a Sabino's Saga. Anyway, Sabino is still here...
-*/
-
+ */
 package mainPackage.type;
 
 import java.io.Serializable;
@@ -11,7 +10,7 @@ import java.io.Serializable;
  *
  * @author MS_C
  */
-public class DoseGun implements Serializable{
+public class DoseGun implements Serializable {
 
     //  ATTRIBUTES
     private final int magazine;
@@ -31,30 +30,16 @@ public class DoseGun implements Serializable{
     public int getAmmo() {
         return ammo;
     }
-    
-    // SETTER
 
+    // SETTER
     public void setAmmo(int ammo) {
         this.ammo = ammo;
     }
-    
-    // OTHER METHODS
-//    public boolean isFull() {
-//        return !(getAmmo() < getMagazine());
-//    }
 
+    // OTHER METHODS
     public boolean isEmpty() {
         return !(getAmmo() > 0);
     }
-
-//    public boolean addAmmo() {
-//        if (isFull()) {
-//            return false;
-//        } else {
-//            ++ammo;
-//            return true;
-//        }
-//    }
 
     public boolean shoot() {
         if (isEmpty()) {

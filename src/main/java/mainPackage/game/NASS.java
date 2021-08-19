@@ -13,6 +13,7 @@ import java.io.PrintStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import mainPackage.parser.ParserFilter;
 import mainPackage.GameDescription;
@@ -37,7 +38,7 @@ public class NASS extends GameDescription {
 
     private boolean guardUniform = false;
 
-    //  CONTANTS
+    //  CONSTANTS
     private final int MOVES_GAMEOVER = 17; //  Il numero di mosse entro il quale bisogna legare Barboni, altrimenti game over
 
     //  EVENT SWITCHES
@@ -51,11 +52,11 @@ public class NASS extends GameDescription {
     private boolean eventCameraTurnedOff = false;
     private boolean eventRecurringSignInteraction = false;
 
-    //  Recurring Dialog Handler
+    //  RECURRING DIALOG HANDLERS
     private boolean eventRecurringAntonio = false;
     private boolean eventRecurringFilippo = true;
 
-    //  Rat Events
+    //  RAT EVENTS
     private boolean eventKeyInfo = false;
     private boolean eventTableTape = false;
     private boolean eventRing = false;
@@ -196,7 +197,7 @@ public class NASS extends GameDescription {
         out.println();
         Inventory temporaryInv = null;
 
-        //Switch sul tipo di comando
+        //  COMMANDS SWITCH
         switch (funnel.getCommand().getType()) {
 
             case NORTH:
@@ -228,7 +229,6 @@ public class NASS extends GameDescription {
                 } else if (getInRoom().isSouthLock()) {
 
                     if (eventNoTurnBack) {
-                        //Evento "non si torna indietro"
                         out.println("Non puoi tornare indietro proprio adesso che sei arrivato fin qui!");
                     } else {
                         out.println("La porta a sud è chiusa a chiave!");
@@ -298,7 +298,6 @@ public class NASS extends GameDescription {
                     out.println("Non è possibile andare ad ovest!");
                 } else if (getInRoom().isWestLock()) {
                     if (eventNoTurnBack) {
-                        //Evento "non si torna indietro"
                         out.println("Non puoi tornare indietro proprio adesso che sei arrivato fin qui!");
                     } else {
                         out.println("La porta ad ovest è chiusa a chiave!");
@@ -386,7 +385,7 @@ public class NASS extends GameDescription {
                                     out.println(item.getName().toLowerCase());
                                     getInRoom().addObj(item);
                                 }
-                                temporaryContObj.getContained().clear(); //Svuoto il ContainerObj
+                                temporaryContObj.getContained().clear();
 
                             } else {
                                 out.println("Hai già aperto " + temporaryContObj.getName().toLowerCase() + ".");
@@ -398,6 +397,8 @@ public class NASS extends GameDescription {
                     } else {
                         out.println("Non puoi aprire " + funnel.getObject().getName().toLowerCase() + ".");
                     }
+                } else if (funnel.getExtraWord() != null) {
+                    out.println("Non è un oggetto valido da aprire!");
                 } else {
                     out.println("Non penso tu abbia capito come si usa questo comando.\n"
                             + "Se hai bisogno di chiarimenti, usa AIUTO");
@@ -406,7 +407,7 @@ public class NASS extends GameDescription {
                 break;
 
             case INVENTORY:
-                //Controllo se siamo nella stanza alternativa
+                //Controlla se siamo nella stanza alternativa
                 if (getInRoom().getId() < 19) {
                     temporaryInv = getInventory();
                 } else {
@@ -429,7 +430,7 @@ public class NASS extends GameDescription {
                 if (funnel.getObject() != null) {
                     if (funnel.getObject().isPickupable() && funnel.getObject().isVisible()) {
 
-                        //Controllo se siamo nella stanza alternativa
+                        //Controlla se siamo nella stanza alternativa
                         if (getInRoom().getId() < 19) {
                             temporaryInv = getInventory();
                         } else {
@@ -444,7 +445,7 @@ public class NASS extends GameDescription {
                                 guardUniform = true;
                                 getInRoom().getToggleDose().moveNpc(getInRoom().getToggleDose().getNpcs().remove(0));
 
-                                eventBossQuest++; //3
+                                eventBossQuest++; //~3
                             }
                         } else {
                             out.println("Hai le tasche piene!");
@@ -527,7 +528,7 @@ public class NASS extends GameDescription {
                                 out.println("Non puoi usare oggetti su " + funnel.getPerson().getName() + ".");
                         }
 
-                    } else if (funnel.getObject() != null) {
+                    } else if (funnel.getObject() != null && funnel.getObject().isVisible()) {
 
                         switch (funnel.getInventoryObj().getId()) {
 
@@ -581,7 +582,7 @@ public class NASS extends GameDescription {
 
                         }
 
-                    } else { //Entrambi null (solo oggetto dell'inventario
+                    } else { //Entrambi null (solo oggetto dell'inventario)
                         switch (funnel.getInventoryObj().getId()) {
 
                             //Chiave mensa
@@ -735,6 +736,7 @@ public class NASS extends GameDescription {
                             out.println("Spero tu abbia ascoltato bene, non ripeterò ciò che ho detto!");
                             getInventory().remove(funnel.getInventoryObj());
                             break;
+                            
                         //Controllo se è Bambine (11)
                         case 11:
                             //Oggetto: bambola di pezza (18)
@@ -751,8 +753,8 @@ public class NASS extends GameDescription {
                                 getInRoom().printRoom();
                             }
                             break;
+                            
                         default:
-                            //Altrimenti
                             out.println("----------------------------------------");
                             out.println("Non puoi dare " + funnel.getInventoryObj().getName() + " a " + funnel.getPerson().getName() + ".");
                             break;
@@ -789,7 +791,7 @@ public class NASS extends GameDescription {
                     } else if (funnel.getExtraWord() != null) { //Se hai inserito qualcosa di non valido
                         out.println("----------------------------------------");
                         out.println("Circolare, circolare! Non c'è niente da vedere!");
-                    } else { //Se non hai inserito nulla di valido
+                    } else { //Se non hai inserito nulla
                         out.println("----------------------------------------");
                         out.println("Devi riferirti a qualcosa o qualcuno in particolare, sennò non posso aiutarti...");
                     }
@@ -874,9 +876,9 @@ public class NASS extends GameDescription {
                             }
                             break;
 
-                        //Cartello dose
+                        //  Cartello dose
                         case 17:
-                            if (eventBossQuest >= 0 && !guardUniform && !eventRecurringSignInteraction /*&& getRooms().get(23).isVisited()*/) { //TODO
+                            if (eventBossQuest >= 0 && !guardUniform && !eventRecurringSignInteraction ) {
                                 out.println("Il cartello di solito è molto affettuoso, ma adesso ti osserva con disapprovazione.\n"
                                         + "Si stacca dalla parete e ti raggiunge, con le...ehm...\"braccia\" conserte e scuote la\n"
                                         + "testa in cenno di delusione. Non sai perché fa così e, mentre ci pensi, lui ti porge\n"
@@ -893,7 +895,7 @@ public class NASS extends GameDescription {
                                         + "ti afferra, ti abbraccia e, in un baleno, ti ritrovi nel parcheggio del mondo reale.");
                             }
 
-                            //Esci dal mondo della dose e ritorni nel parcheggio
+                            //  Esci dal mondo della dose e ritorni nel parcheggio
                             setInRoom(getInRoom().getToggleDose());
                             getInRoom().printRoom();
                             break;
@@ -1114,7 +1116,7 @@ public class NASS extends GameDescription {
                         case 7:
                             if (eventBossQuest == 0 || (getRooms().get(16).getToggleDose() == null && eventBossQuest == 1)) {
                                 out.println(funnel.getPerson().getInteraction(1));
-                                eventBossQuest++; //1 o 2
+                                eventBossQuest++; //1, 2 o 3
                             } else if (eventBossQuest == -1) {
                                 out.println(funnel.getPerson().getInteraction(3));
                                 out.println(funnel.getPerson().getInteraction(4));
@@ -1126,7 +1128,7 @@ public class NASS extends GameDescription {
 
                         //  Dvce
                         case 8:
-                            if (eventBossQuest < 0) { //Quest completata
+                            if (eventBossQuest < 0) { //Quest del Capo completata
                                 out.println(funnel.getPerson().getInteraction(2));
 
                                 setInRoom(getInRoom().getToggleDose());
@@ -1145,7 +1147,7 @@ public class NASS extends GameDescription {
                         //  Michele e Carlo
                         case 9:
                         case 10:
-                            if (eventBossQuest < 0) { //Quest completata
+                            if (eventBossQuest < 0) { //Quest del Capo completata
                                 out.println(funnel.getPerson().getInteraction(2));
                             } else {
                                 out.println(funnel.getPerson().getInteraction(1));
@@ -1283,8 +1285,7 @@ public class NASS extends GameDescription {
     }
 
     @Override
-    public void printStart(PrintStream out
-    ) {
+    public void printStart(PrintStream out) {
         out.println("========================================================================================================================\n"
                 + "BENVENUTO IN NASS\n"
                 + "\n"
@@ -1369,26 +1370,40 @@ public class NASS extends GameDescription {
     }
 
     @Override
-    public void save() throws IOException {
+    public void save(PrintStream out) throws IOException {
         ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream("./saves/NASS.dat"));
         outStream.writeObject(this);
         outStream.close();
 
         this.setSaved(true); //Indica se il file è stato salvato
+
+        out.println("----------------------------------------");
+        out.println("Partita salvata correttamente!");
     }
 
     @Override
-    public GameDescription load() throws IOException, ClassNotFoundException {
+    public GameDescription load(PrintStream out) throws IOException, ClassNotFoundException {
         ObjectInputStream inStream = new ObjectInputStream(new FileInputStream("./saves/NASS.dat"));
         NASS game = (NASS) inStream.readObject();
         inStream.close();
+
+        out.println("----------------------------------------");
+        out.println("Partita caricata correttamente!");
+
+        Random rand = new Random();
+        int doses = game.gun.getAmmo() + (rand.nextInt(3) - 1);
+
+        if (doses == -1) {
+            doses = 0;
+        }
+
+        out.println("Se la memoria non ti inganna, hai circa " + doses + " dosi.");
 
         return game;
     }
 
     @Override
-    public void gameOver(PrintStream out, int messageCode
-    ) {
+    public void gameOver(PrintStream out, int messageCode) {
 
         switch (messageCode) {
             case 0:
@@ -1403,7 +1418,7 @@ public class NASS extends GameDescription {
                 break;
 
             case 1:
-                //Antonio
+                //Se passi davanti alla cella di Antonio prima che Castorpio si sposti in Torre di Osservazione
                 out.println("----------------------------------------");
                 out.println("Appena Antonio ti vede passare, comincia ad urlare.\n"
                         + "Nel tentare di placarlo, non ti accorgi dell'arrivo di una guardia, che ti immobilizza\n"
@@ -1416,7 +1431,7 @@ public class NASS extends GameDescription {
                 break;
 
             case 2:
-                //Muro
+                //Se sbagli pulsante di interazione con il muro
                 out.println("----------------------------------------");
                 out.println("Vieni fagocitato dal pulsante, che scopri essere fatto di miele, e ti ritrovi dentro il muro\n"
                         + "a sud dell'INCROCIO PRINCIPALE.\n\n"
@@ -1429,7 +1444,7 @@ public class NASS extends GameDescription {
                 break;
 
             case 3:
-                //Cecchino
+                //Se esci dal cortile senza uniforme
                 out.println("----------------------------------------");
                 out.println("All'improvviso senti un forte bruciore dietro la testa. Un odore di polvere da sparo\n"
                         + "pervade le tue narici, mentre la vista si annebbia e si oscura.\n\n"
@@ -1494,8 +1509,7 @@ public class NASS extends GameDescription {
     }
 
     @Override
-    public void help(PrintStream out
-    ) {
+    public void help(PrintStream out) {
         out.println(""
                 + "Lo so, lo so, la brutta aria che emana questo postaccio e il pensiero che, se non ti sbrigassi, ci resteresti secco\n"
                 + "non sono amici della concentrazione, quindi ecco un paio di indicazioni, nel caso in cui ti dovessero sfuggire... \n");

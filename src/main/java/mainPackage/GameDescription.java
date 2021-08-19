@@ -86,9 +86,9 @@ public abstract class GameDescription implements Serializable {
 
     public abstract void printStart(PrintStream out);
 
-    public abstract void save() throws IOException;
+    public abstract void save(PrintStream out) throws IOException;
 
-    public abstract GameDescription load() throws IOException, ClassNotFoundException;
+    public abstract GameDescription load(PrintStream out) throws IOException, ClassNotFoundException;
 
     public abstract void gameOver(PrintStream out, int messageCode);
 
