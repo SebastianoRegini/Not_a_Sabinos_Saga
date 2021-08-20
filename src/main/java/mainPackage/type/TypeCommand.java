@@ -25,14 +25,13 @@ public enum TypeCommand implements Serializable{
     EXAMINE(11),
     INTERACT(12),
     THINK_ABOUT(13),
-    DOSE(14), //Comando esclusivo per la dose e la pistola per dosi
+    DOSE(14), //Comando esclusivo per la DoseGun
     SAVE(15),
     LOAD(16),
     END(17),
     HELP(18),
     LOOK(19);
      
-
     private final int code;
 
     TypeCommand(int code) {

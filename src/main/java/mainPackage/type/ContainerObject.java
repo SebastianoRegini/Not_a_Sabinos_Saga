@@ -15,7 +15,7 @@ import java.util.List;
 public class ContainerObject extends GameObject {
 
     //  ATTRIBUTES
-    private boolean open = false;   //  Se è bloccato e necessita di essere aperto con qualcosa
+    private boolean open = false;   //  Indica se è bloccato e necessita di essere aperto con qualcosa
 
     private List<GameObject> contained = new ArrayList<>();
 
@@ -43,7 +43,7 @@ public class ContainerObject extends GameObject {
         return contained;
     }
 
-    //  OURS METHODS
+    //  OTHER METHODS
     public void addO(GameObject o) {
         this.getContained().add(o);
     }

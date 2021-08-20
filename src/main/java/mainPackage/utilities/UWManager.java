@@ -21,15 +21,15 @@ import java.util.Set;
  */
 public class UWManager {
 
+    //  METHODS
     public static Set<String> loadWords(File fW) {
 
-        //  Nuovo insieme per inserire le parole da non considerare
         Set<String> setWords = new HashSet<>();
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(fW));
             try {
-                //  Il metodo ready controlla se il file non è vuoto
+                
                 while (br.ready()) {
                     setWords.add(br.readLine().trim().toLowerCase());
                 }

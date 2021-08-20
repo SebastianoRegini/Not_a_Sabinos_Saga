@@ -6,7 +6,6 @@ package mainPackage.type;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -22,16 +21,14 @@ public class NPC implements Serializable{
 
     private final String name;
 
-//    private final String description;
     private Set<String> synonyms;
 
     private Map<Integer, String> interactions;
 
-    //  CONSTRUCTORS
+    //  CONSTRUCTOR
     public NPC(int id, String name) {
         this.id = id;
         this.name = name;
-//        this.description = description;
     }
 
     //  SETTERS
@@ -55,10 +52,6 @@ public class NPC implements Serializable{
     public String getName() {
         return name;
     }
-//
-//    public String getDescription() {
-//        return description;
-//    }
 
     public Set<String> getSynonyms() {
         return synonyms;
@@ -68,7 +61,7 @@ public class NPC implements Serializable{
         return interactions;
     }
 
-    //  OTHER METHODS
+    //  OTHER METHOD
     public String getInteraction(Integer index) {
         return getInteractions().get(index);
     }

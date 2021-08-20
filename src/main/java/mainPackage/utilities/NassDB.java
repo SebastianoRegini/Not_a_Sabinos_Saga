@@ -31,18 +31,19 @@ public class NassDB {
 
     //  ATTRIBUTES
     private static Connection connection;
-    //  CONNECTION STRING
+    
+    //  Stringa di connessione
     private static final String CONNECTION_STRING = "jdbc:h2:./resources/dbNASS";
 
-    //  SELECT STRINGS
-    //  Commands
+    //  Stringhe di SELECT
+    //  Comandi
     private static final String SELECT_COMMAND_TYPES = "SELECT DISTINCT type FROM command";
 
-    //  Rooms and Boundaries
+    //  Stanze e Confini
     private static final String SELECT_ROOM = "SELECT * FROM room WHERE id=";
     private static final String SELECT_BOUNDARY = "SELECT * FROM nswe WHERE id=";
 
-    //  Objects and Objects in room/container
+    //  Oggetti e collocazione
     private static final String SELECT_OBJECT = "SELECT * FROM object WHERE id=";
     private static final String SELECT_OB_ROOM = "SELECT idObject FROM ro WHERE idRoom=";
     private static final String SELECT_CON_ROOM = "SELECT idContainer FROM rc WHERE idRoom=";
@@ -54,13 +55,14 @@ public class NassDB {
     private static final String SELECT_DIALOG = "SELECT idDialog,dialogText FROM npcDialog WHERE idNpc=";
     private static final String SELECT_NPC_ROOM = "SELECT idNpc FROM rn WHERE idRoom=";
 
-    //  Aliases
+    //  Alias
     private static final String SELECT_COMMAND_ALIASES = "SELECT alias FROM command WHERE type=";
     private static final String SELECT_OBJECT_ALIASES = "SELECT alias FROM aliasObject WHERE idObject=";
     private static final String SELECT_CONTAINER_ALIASES = "SELECT alias FROM aliasContainer WHERE id=";
     private static final String SELECT_NPC_ALIASES = "SELECT alias FROM aliasNpc WHERE id=";
 
-    //  MANAGE CONNECTION AND DISCONNECTION
+    //  METHODS
+    //  Gestione Connessione
     public static void connectDB() throws SQLException {
         Properties dbProp = new Properties();
         dbProp.setProperty("user", "Sabino");
@@ -68,18 +70,19 @@ public class NassDB {
         connection = DriverManager.getConnection(CONNECTION_STRING, dbProp);
     }
 
+    //  Gestione Disconnessione
     public static void disconnectDB() throws SQLException {
         if (connection != null) {
             connection.close();
         }
     }
 
-    //  FETCH FROM DB
-    //  Commands
+    //  Recupero da DB
+    //  Comandi
     public static void initCommands(List<Command> commands) throws SQLException {
         List<Integer> typeCodes = new ArrayList<>();
 
-        //Recupero i codici dei tipi da DB
+        //  Recupero i codici dei tipi da DB
         PreparedStatement pstm = connection.prepareStatement(SELECT_COMMAND_TYPES);
         ResultSet rs = pstm.executeQuery();
 
@@ -90,12 +93,13 @@ public class NassDB {
         rs.close();
         pstm.close();
 
-        //Per ogni codice, associo il codice di TypeCommand e costruisco il comando, associando il relativo set di alias
+        /*  Per ogni codice recuperato, associo il codice di TypeCommand
+         *  e costruisco il comando, associando il relativo Set di Alias
+        */
         for (Integer code : typeCodes) {
             try {
                 Set<String> aliases = selectAliases(SELECT_COMMAND_ALIASES, code);
 
-                //Catena di if per il riconoscimento dei comandi
                 if (code == TypeCommand.NORTH.getTypeCode()) { //Se il codice è del comando NORD
 
                     Command north = new Command(TypeCommand.NORTH);
@@ -218,11 +222,12 @@ public class NassDB {
         }
     }
 
-    //  Rooms
+    //  Stanze
     public static Room initRoom(int idRoom, List<Room> map) throws SQLException {
         PreparedStatement pstm = connection.prepareStatement(SELECT_ROOM + idRoom);
         ResultSet rs = pstm.executeQuery();
         Room r = null;
+        
         while (rs.next()) {
             r = new Room(rs.getInt(1), rs.getString(2).trim(), rs.getString(3).trim(), rs.getString(4).trim(), rs.getString(5).trim());
             map.add(r);
@@ -235,9 +240,9 @@ public class NassDB {
 
     }
 
-    //  Boundaries
+    //  Confini della mappa
     public static void initBoundaries(Room r, List<Room> map) throws SQLException {
-        //Sono inizializzate a -2 in quanto nel DB il -1 indica che la stanza non ha adiacenza in quella direzione
+        //  Sono inizializzate a -2 in quanto nel DB il -1 indica che la stanza non ha adiacenza in quella direzione
         int idN = -2;
         int idS = -2;
         int idW = -2;
@@ -247,16 +252,17 @@ public class NassDB {
         PreparedStatement pstm = connection.prepareStatement(SELECT_BOUNDARY + r.getId());
         ResultSet rs = pstm.executeQuery();
         while (rs.next()) {
-            idN = rs.getInt(2); //Seconda colonna della table ottenuta
+            idN = rs.getInt(2);
             r.setNorthLock(rs.getBoolean(3));
-            idS = rs.getInt(4); //Quarta colonna della table ottenuta
+            idS = rs.getInt(4);
             r.setSouthLock(rs.getBoolean(5));
-            idW = rs.getInt(6); //Sesta colonna della table ottenuta
+            idW = rs.getInt(6);
             r.setWestLock(rs.getBoolean(7));
-            idE = rs.getInt(8); //Ottava colonna della table ottenuta
+            idE = rs.getInt(8);
             r.setEastLock(rs.getBoolean(9));
-            idTD = rs.getInt(10); //Decima colonna della table ottenuta
+            idTD = rs.getInt(10);
         }
+        
         rs.close();
         pstm.close();
 
@@ -291,7 +297,7 @@ public class NassDB {
 
         List<Integer> idObjsList = new ArrayList<>();
 
-        //Recupera dalla table 'ro' solo gli id degli oggetti nella stanza passata in input
+        //  Recupera dalla table 'ro' solo gli id degli oggetti nella stanza passata in input
         PreparedStatement pstm = connection.prepareStatement(SELECT_OB_ROOM + room.getId());
         ResultSet rs = pstm.executeQuery();
 
@@ -302,7 +308,7 @@ public class NassDB {
         rs.close();
         pstm.close();
 
-        //Recupera dalla table 'object' un oggetto alla volta, in base all'id contenuto in idObjs
+        //  Recupera dalla table 'object' un oggetto alla volta, in base all'id contenuto in idObjs
         for (Integer idObj : idObjsList) {
             try {
                 Set<String> aliases = selectAliases(SELECT_OBJECT_ALIASES, idObj);
@@ -331,7 +337,7 @@ public class NassDB {
 
         List<Integer> idContainerList = new ArrayList<>();
 
-        //Recupera dalla table 'rc' solo gli id dei container nella stanza passata in input
+        //  Recupera dalla table 'rc' solo gli id dei container nella stanza passata in input
         PreparedStatement pstm = connection.prepareStatement(SELECT_CON_ROOM + room.getId());
         ResultSet rs = pstm.executeQuery();
 
@@ -342,7 +348,7 @@ public class NassDB {
         rs.close();
         pstm.close();
 
-        //Recupera dalla table 'container' un oggetto alla volta, in base all'id contenuto in idObjs
+        //  Recupera dalla table 'container' un oggetto alla volta, in base all'id contenuto in idObjs
         for (Integer idCont : idContainerList) {
 
             try {
@@ -371,9 +377,9 @@ public class NassDB {
 
     //  NPC (in Room)
     public static void initNpcInRoom(Room room) throws SQLException {
-        List<Integer> idNpcsList = new ArrayList<>(); //Conterrà gli id degli NPC di una relativa room
+        List<Integer> idNpcsList = new ArrayList<>();
 
-        //Recupero gli NPC presenti nella stanza passata in input
+        //  Recupero gli NPC presenti nella stanza passata in input
         PreparedStatement pstm = connection.prepareStatement(SELECT_NPC_ROOM + room.getId());
         ResultSet rs = pstm.executeQuery();
 
@@ -384,7 +390,7 @@ public class NassDB {
         rs.close();
         pstm.close();
 
-        //Recupero le informazioni degli NPC selezionati e li posiziono nella stanza
+        //  Recupero le informazioni degli NPC selezionati e li posiziono nella stanza
         for (Integer idNpc : idNpcsList) {
 
             try {
@@ -411,7 +417,7 @@ public class NassDB {
         }
     }
 
-    //  UTILITY
+    //  UTILITY METHODS
     private static Set<String> selectAliases(String selectTable, int idSubject) throws SQLException {
         Set<String> aliases = new HashSet<>();
 
@@ -448,7 +454,7 @@ public class NassDB {
         List<Integer> idContainedList = new ArrayList<>();
         List<GameObject> contained = new ArrayList<>();
 
-        //Recupero gli ID degli oggetti contenuti
+        //  Recupero gli ID degli oggetti contenuti
         PreparedStatement pstm = connection.prepareStatement(selectTable + idCont);
         ResultSet rs = pstm.executeQuery();
 
@@ -459,7 +465,7 @@ public class NassDB {
         rs.close();
         pstm.close();
 
-        //Recupero le informazioni degli oggetti contenuti
+        //  Recupero le informazioni degli oggetti contenuti
         for (Integer idObj : idContainedList) {
             try {
                 Set<String> aliases = selectAliases(SELECT_OBJECT_ALIASES, idObj);

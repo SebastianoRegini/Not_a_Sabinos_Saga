@@ -60,7 +60,7 @@ public class Starter {
                 filter = parser.parse(newCommand, game.getCommands(), game.getInRoom().getObj(), game.getInRoom().getNpcs(), game.getAlternativeInventory().getContaining());
             }
 
-            //Controllo END, SAVE, LOAD
+            //  END, SAVE, LOAD Management
             if (filter.getCommand() != null) {
                 switch (filter.getCommand().getType()) {
                     case SAVE: 
@@ -136,7 +136,8 @@ public class Starter {
                         game.nextMove(filter, System.out);
                 }
             } else {
-                System.out.println("Non hai messo un comando valido!");
+                System.out.println("----------------------------------------");
+                System.out.println("Non hai messo un comando valido!\n");
             }
 
         } while (in.hasNextLine());

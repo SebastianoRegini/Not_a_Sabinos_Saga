@@ -26,7 +26,6 @@ public class Parser {
     }
 
     //  METHODS
-    //  Recognize things
     private int whatCommand(String token, List<Command> commands) {
         for (int i = 0; i < commands.size(); i++) {
             if (commands.get(i).getSynonyms().contains(token)) {
@@ -54,7 +53,6 @@ public class Parser {
         return -1;
     }
 
-    //  Parse
     public ParserFilter parse(String playerComm, List<Command> commands, List<GameObject> extObj, List<NPC> npcs, List<GameObject> inventory) {
         List<String> filteredWords = UWManager.removeWords(playerComm, uselessWords);
 
@@ -113,8 +111,8 @@ public class Parser {
                         }
                     }
 
-                    //Ritorno nel caso in cui non ricopra nessuna delle categorie
-                    //  Cattura parola inutile
+                    //  Ritorno nel caso in cui non ricopra nessuna delle categorie
+                    //  Cattura parola extra
                     return new ParserFilter(commands.get(commandIndex), null, null, null, filteredWords.get(1));
 
                 } else {
