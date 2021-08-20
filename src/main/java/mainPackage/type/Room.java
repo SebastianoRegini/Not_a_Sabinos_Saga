@@ -45,7 +45,7 @@ public class Room implements Serializable{
 
     private List<NPC> npcs = new ArrayList<>(); //Rappresenta gli NPC delle stanze adiacenti a this
 
-    //  CONSTRUCTORS
+    //  CONSTRUCTOR
     public Room(int id, String name, String prefix, String suffix, String descriptionLook) {
         this.id = id;
         this.name = name;
@@ -175,13 +175,11 @@ public class Room implements Serializable{
     //  OTHER METHODS
     public void printRoom() {
         if (isVisited()) {
-            System.out.println("----------------------------------------");
             System.out.println("Sei in " + getName().toUpperCase() + ".\n");
             if (!getSuffix().equals("")) {
                 System.out.println(getSuffix() + "\n");
             }
         } else {
-            System.out.println("----------------------------------------");
             if (!getPrefix().equals("")) {
                 System.out.println(getPrefix() + "\n");
             }
@@ -209,7 +207,7 @@ public class Room implements Serializable{
         this.getNpcs().remove(n);
     }
 
-    // OVERRIDED METHODS
+    //  OVERRIDED
     @Override
     public int hashCode() {
         int hash = 3;

@@ -15,6 +15,7 @@ import mainPackage.type.NPC;
  */
 public class ParserFilter {
     
+    //  ATTRIBUTES
     private Command command;
     
     private GameObject object;

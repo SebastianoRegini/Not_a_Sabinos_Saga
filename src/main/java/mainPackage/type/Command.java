@@ -20,7 +20,7 @@ public class Command implements Serializable{
     private final TypeCommand type;
     private Set<String> synonyms;
 
-    //  CONSTRUCTORS
+    //  CONSTRUCTOR
     public Command(TypeCommand type) {
         this.type = type;
     }
@@ -43,7 +43,7 @@ public class Command implements Serializable{
         this.synonyms = new HashSet<>(Arrays.asList(synonyms));
     }
 
-    //  OVERRIDES
+    //  OVERRIDED
     @Override
     public int hashCode() {
         int hash = 7;

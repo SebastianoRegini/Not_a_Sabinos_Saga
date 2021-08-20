@@ -24,7 +24,7 @@ public class Inventory implements Serializable{
         this.slots = slots;
     }
 
-    //  SETTERS
+    //  SETTER
     public void setContaining(List<GameObject> containing) {
         this.containing = containing;
     }
@@ -38,7 +38,7 @@ public class Inventory implements Serializable{
         return containing;
     }
 
-    //  UTILITY METHOD
+    //  OTHER METHODS
     public boolean isFull() {
         return (containing.size() >= slots);
     }
@@ -47,7 +47,6 @@ public class Inventory implements Serializable{
         return (containing.isEmpty());
     }
 
-    //  IN-GAME METHODS
     public void add(GameObject obj) {
         containing.add(obj);
     }

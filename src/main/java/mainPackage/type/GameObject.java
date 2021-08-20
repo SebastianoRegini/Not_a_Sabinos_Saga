@@ -83,6 +83,7 @@ public class GameObject implements Serializable{
         return visible;
     }
 
+    //  OVERRIDED
     @Override
     public int hashCode() {
         int hash = 7;

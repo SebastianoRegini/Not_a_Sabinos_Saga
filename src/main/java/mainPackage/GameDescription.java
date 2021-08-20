@@ -22,9 +22,10 @@ import mainPackage.type.Room;
 public abstract class GameDescription implements Serializable {
 
     //  ATTRIBUTES
-    //  Non inseriamo la lista degli NPC  e degli oggetti/oggetti contenitori
-    //  perché verranno piazzati tutti nelle stanze o negli
-    //  oggetti contenitori
+    /*  Non inseriamo la lista degli NPC  e degli oggetti/oggetti contenitori
+     *  perché verranno piazzati tutti nelle stanze o negli
+     *  oggetti contenitori
+    */
     private boolean saved = true;
 
     private final List<Room> rooms = new ArrayList<>();
