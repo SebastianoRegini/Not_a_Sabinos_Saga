@@ -21,7 +21,7 @@ public class Room implements Serializable{
 
     private final String prefix;
 
-    private String suffix;
+    private final String suffix;
 
     private final String descriptionLook;
 
@@ -57,10 +57,6 @@ public class Room implements Serializable{
     //  SETTERS
     public void setId(int id) {
         this.id = id;
-    }
-
-    public void setSuffix(String suffix) {
-        this.suffix = suffix;
     }
 
     public void setNorth(Room north) {
